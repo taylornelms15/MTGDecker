@@ -1,0 +1,545 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		956119CF206535B5008943A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119CE206535B5008943A3 /* AppDelegate.swift */; };
+		956119D1206535B5008943A3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119D0206535B5008943A3 /* ViewController.swift */; };
+		956119D4206535B5008943A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119D2206535B5008943A3 /* Main.storyboard */; };
+		956119D7206535B5008943A3 /* MTGDecker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 956119D5206535B5008943A3 /* MTGDecker.xcdatamodeld */; };
+		956119D9206535B5008943A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 956119D8206535B5008943A3 /* Assets.xcassets */; };
+		956119DC206535B5008943A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119DA206535B5008943A3 /* LaunchScreen.storyboard */; };
+		956119E7206535B5008943A3 /* MTGDeckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119E6206535B5008943A3 /* MTGDeckerTests.swift */; };
+		956119F2206535B5008943A3 /* MTGDeckerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119F1206535B5008943A3 /* MTGDeckerUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		956119E3206535B5008943A3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 956119C3206535B5008943A3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 956119CA206535B5008943A3;
+			remoteInfo = MTGDecker;
+		};
+		956119EE206535B5008943A3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 956119C3206535B5008943A3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 956119CA206535B5008943A3;
+			remoteInfo = MTGDecker;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		956119CB206535B5008943A3 /* MTGDecker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MTGDecker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		956119CE206535B5008943A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		956119D0206535B5008943A3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		956119D3206535B5008943A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		956119D6206535B5008943A3 /* MTGDecker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MTGDecker.xcdatamodel; sourceTree = "<group>"; };
+		956119D8206535B5008943A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		956119DB206535B5008943A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		956119DD206535B5008943A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		956119E2206535B5008943A3 /* MTGDeckerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MTGDeckerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		956119E6206535B5008943A3 /* MTGDeckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTGDeckerTests.swift; sourceTree = "<group>"; };
+		956119E8206535B5008943A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		956119ED206535B5008943A3 /* MTGDeckerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MTGDeckerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		956119F1206535B5008943A3 /* MTGDeckerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTGDeckerUITests.swift; sourceTree = "<group>"; };
+		956119F3206535B5008943A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		956119C8206535B5008943A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956119DF206535B5008943A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956119EA206535B5008943A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		956119C2206535B5008943A3 = {
+			isa = PBXGroup;
+			children = (
+				956119CD206535B5008943A3 /* MTGDecker */,
+				956119E5206535B5008943A3 /* MTGDeckerTests */,
+				956119F0206535B5008943A3 /* MTGDeckerUITests */,
+				956119CC206535B5008943A3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		956119CC206535B5008943A3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				956119CB206535B5008943A3 /* MTGDecker.app */,
+				956119E2206535B5008943A3 /* MTGDeckerTests.xctest */,
+				956119ED206535B5008943A3 /* MTGDeckerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		956119CD206535B5008943A3 /* MTGDecker */ = {
+			isa = PBXGroup;
+			children = (
+				956119CE206535B5008943A3 /* AppDelegate.swift */,
+				956119D0206535B5008943A3 /* ViewController.swift */,
+				956119D2206535B5008943A3 /* Main.storyboard */,
+				956119D8206535B5008943A3 /* Assets.xcassets */,
+				956119DA206535B5008943A3 /* LaunchScreen.storyboard */,
+				956119DD206535B5008943A3 /* Info.plist */,
+				956119D5206535B5008943A3 /* MTGDecker.xcdatamodeld */,
+			);
+			path = MTGDecker;
+			sourceTree = "<group>";
+		};
+		956119E5206535B5008943A3 /* MTGDeckerTests */ = {
+			isa = PBXGroup;
+			children = (
+				956119E6206535B5008943A3 /* MTGDeckerTests.swift */,
+				956119E8206535B5008943A3 /* Info.plist */,
+			);
+			path = MTGDeckerTests;
+			sourceTree = "<group>";
+		};
+		956119F0206535B5008943A3 /* MTGDeckerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				956119F1206535B5008943A3 /* MTGDeckerUITests.swift */,
+				956119F3206535B5008943A3 /* Info.plist */,
+			);
+			path = MTGDeckerUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		956119CA206535B5008943A3 /* MTGDecker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 956119F6206535B5008943A3 /* Build configuration list for PBXNativeTarget "MTGDecker" */;
+			buildPhases = (
+				956119C7206535B5008943A3 /* Sources */,
+				956119C8206535B5008943A3 /* Frameworks */,
+				956119C9206535B5008943A3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MTGDecker;
+			productName = MTGDecker;
+			productReference = 956119CB206535B5008943A3 /* MTGDecker.app */;
+			productType = "com.apple.product-type.application";
+		};
+		956119E1206535B5008943A3 /* MTGDeckerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 956119F9206535B5008943A3 /* Build configuration list for PBXNativeTarget "MTGDeckerTests" */;
+			buildPhases = (
+				956119DE206535B5008943A3 /* Sources */,
+				956119DF206535B5008943A3 /* Frameworks */,
+				956119E0206535B5008943A3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				956119E4206535B5008943A3 /* PBXTargetDependency */,
+			);
+			name = MTGDeckerTests;
+			productName = MTGDeckerTests;
+			productReference = 956119E2206535B5008943A3 /* MTGDeckerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		956119EC206535B5008943A3 /* MTGDeckerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 956119FC206535B5008943A3 /* Build configuration list for PBXNativeTarget "MTGDeckerUITests" */;
+			buildPhases = (
+				956119E9206535B5008943A3 /* Sources */,
+				956119EA206535B5008943A3 /* Frameworks */,
+				956119EB206535B5008943A3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				956119EF206535B5008943A3 /* PBXTargetDependency */,
+			);
+			name = MTGDeckerUITests;
+			productName = MTGDeckerUITests;
+			productReference = 956119ED206535B5008943A3 /* MTGDeckerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		956119C3206535B5008943A3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = Taylor;
+				TargetAttributes = {
+					956119CA206535B5008943A3 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					956119E1206535B5008943A3 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 956119CA206535B5008943A3;
+					};
+					956119EC206535B5008943A3 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 956119CA206535B5008943A3;
+					};
+				};
+			};
+			buildConfigurationList = 956119C6206535B5008943A3 /* Build configuration list for PBXProject "MTGDecker" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 956119C2206535B5008943A3;
+			productRefGroup = 956119CC206535B5008943A3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				956119CA206535B5008943A3 /* MTGDecker */,
+				956119E1206535B5008943A3 /* MTGDeckerTests */,
+				956119EC206535B5008943A3 /* MTGDeckerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		956119C9206535B5008943A3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				956119DC206535B5008943A3 /* LaunchScreen.storyboard in Resources */,
+				956119D9206535B5008943A3 /* Assets.xcassets in Resources */,
+				956119D4206535B5008943A3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956119E0206535B5008943A3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956119EB206535B5008943A3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		956119C7206535B5008943A3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				956119D7206535B5008943A3 /* MTGDecker.xcdatamodeld in Sources */,
+				956119D1206535B5008943A3 /* ViewController.swift in Sources */,
+				956119CF206535B5008943A3 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956119DE206535B5008943A3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				956119E7206535B5008943A3 /* MTGDeckerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956119E9206535B5008943A3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				956119F2206535B5008943A3 /* MTGDeckerUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		956119E4206535B5008943A3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 956119CA206535B5008943A3 /* MTGDecker */;
+			targetProxy = 956119E3206535B5008943A3 /* PBXContainerItemProxy */;
+		};
+		956119EF206535B5008943A3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 956119CA206535B5008943A3 /* MTGDecker */;
+			targetProxy = 956119EE206535B5008943A3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		956119D2206535B5008943A3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				956119D3206535B5008943A3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		956119DA206535B5008943A3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				956119DB206535B5008943A3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		956119F4206535B5008943A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		956119F5206535B5008943A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		956119F7206535B5008943A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = MTGDecker/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDecker;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		956119F8206535B5008943A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = MTGDecker/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDecker;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		956119FA206535B5008943A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = MTGDeckerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDeckerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MTGDecker.app/MTGDecker";
+			};
+			name = Debug;
+		};
+		956119FB206535B5008943A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = MTGDeckerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDeckerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MTGDecker.app/MTGDecker";
+			};
+			name = Release;
+		};
+		956119FD206535B5008943A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				INFOPLIST_FILE = MTGDeckerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDeckerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = MTGDecker;
+			};
+			name = Debug;
+		};
+		956119FE206535B5008943A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				INFOPLIST_FILE = MTGDeckerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDeckerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = MTGDecker;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		956119C6206535B5008943A3 /* Build configuration list for PBXProject "MTGDecker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				956119F4206535B5008943A3 /* Debug */,
+				956119F5206535B5008943A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		956119F6206535B5008943A3 /* Build configuration list for PBXNativeTarget "MTGDecker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				956119F7206535B5008943A3 /* Debug */,
+				956119F8206535B5008943A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		956119F9206535B5008943A3 /* Build configuration list for PBXNativeTarget "MTGDeckerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				956119FA206535B5008943A3 /* Debug */,
+				956119FB206535B5008943A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		956119FC206535B5008943A3 /* Build configuration list for PBXNativeTarget "MTGDeckerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				956119FD206535B5008943A3 /* Debug */,
+				956119FE206535B5008943A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		956119D5206535B5008943A3 /* MTGDecker.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				956119D6206535B5008943A3 /* MTGDecker.xcdatamodel */,
+			);
+			currentVersion = 956119D6206535B5008943A3 /* MTGDecker.xcdatamodel */;
+			path = MTGDecker.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 956119C3206535B5008943A3 /* Project object */;
+}
