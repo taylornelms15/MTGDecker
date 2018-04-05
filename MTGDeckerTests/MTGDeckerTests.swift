@@ -7,14 +7,39 @@
 //
 
 import XCTest
+import MTGSDKSwift
 @testable import MTGDecker
 
 class MTGDeckerTests: XCTestCase {
     
+    let magic: Magic = Magic();
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+
+        magic.fetchPageSize="100";
+        magic.fetchPageTotal = "1";
+        Magic.enableLogging = true;
+       // let color = CardSearchParameter(parameterType: .colors, value: "black")
+        // let cmc = CardSearchParameter(parameterType: .cmc, value: "2")
+        let setCode = CardSearchParameter(parameterType: .set, value: "XLN")
+        
+        magic.fetchCards([setCode]) {
+            cards, error in
+            
+            if let error = error {
+                NSLog("\(error)");
+            }
+            
+            for c in cards! {
+                NSLog(c.name!);
+            }
+            
+        }
+        
+        sleep(3)
+        
+    }//setUp
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
@@ -22,15 +47,14 @@ class MTGDeckerTests: XCTestCase {
     }
     
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+
     }
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measure {
+        //self.measure{
             // Put the code you want to measure the time of here.
-        }
+        //}
     }
     
 }

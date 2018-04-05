@@ -9,15 +9,107 @@
 import UIKit
 import CoreData
 
+///Default player id
+var DEFAULT_PLAYER_ID: Int64 = Int64(1)
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+ 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //Put initial card names and set sources in
+        let context: NSManagedObjectContext = self.persistentContainer.viewContext
+        initPlayerList(context)
+        initCardNameList(context)
+        
+        
         return true
+    }
+    
+    fileprivate func initPlayerList(_ context: NSManagedObjectContext){
+        
+        let playerFR: NSFetchRequest<Player> = Player.fetchRequest()
+        var results: [Player] = []
+        do{
+            results = try context.fetch(playerFR)
+        }
+        catch{
+            NSLog("Error fetching player list from core data: \(error)")
+        }
+        
+        if results.count == 0{
+            let newPlayer: Player = Player(context: context)
+            newPlayer.id = DEFAULT_PLAYER_ID
+            newPlayer.name = "Player 1"
+            
+            do{
+                try context.save()
+            }
+            catch{
+                NSLog("Error saving player to core data: \(error)")
+            }
+        }//if no player
+        
+
+        
+    }//initPlayerList
+    
+    private func getCurrentPlayer(_ context: NSManagedObjectContext) -> Player{
+        let playerFR: NSFetchRequest<Player> = Player.fetchRequest()
+        var results: [Player] = []
+        do{
+            results = try context.fetch(playerFR)
+        }
+        catch{
+            NSLog("Error fetching player list from core data: \(error)")
+        }
+        
+        //TODO: expand functionality to allow for multiple players
+        results.sort { (player1, player2) -> Bool in
+            return player1.id < player2.id
+        }//sorts players by id, so can get the smallest one
+        
+        return results[0]
+        
+    }//getCurrentPlayer
+    
+    fileprivate func initCardNameList(_ context: NSManagedObjectContext) {
+        let cnlFR: NSFetchRequest<CardNameList> = CardNameList.fetchRequest()
+        
+        var results: [CardNameList] = []
+        
+        do {
+            results = try context.fetch(cnlFR)
+        } catch {
+            print("Failed")
+        }
+        
+        var myCardNameList: CardNameList;
+        
+        if results.count == 0{
+            myCardNameList = CardNameList(context: context)
+            myCardNameList.sourceSetCodes = Set<String>()
+            myCardNameList.cardNames = [];
+            
+            myCardNameList.initiateFromFiles()
+            
+            do{
+                try context.save()
+            }
+            catch {
+                NSLog("\(error)")
+            }
+        }
+        else{
+            myCardNameList = results[0];
+            
+        }//else
+        
+        DispatchQueue.global(qos: .utility).async{
+            myCardNameList.updateCardNames(context: context)
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

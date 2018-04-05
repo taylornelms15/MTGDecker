@@ -7,14 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		956119CF206535B5008943A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119CE206535B5008943A3 /* AppDelegate.swift */; };
-		956119D1206535B5008943A3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119D0206535B5008943A3 /* ViewController.swift */; };
-		956119D4206535B5008943A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119D2206535B5008943A3 /* Main.storyboard */; };
+		9500686C206AC09C0047B1B6 /* DeckDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */; };
+		9533B07F2073E684009D570A /* CardImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9533B07E2073E684009D570A /* CardImageViewController.swift */; };
+		9533B0802073E727009D570A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119D2206535B5008943A3 /* Main.storyboard */; };
+		955C6301206A93690096319E /* PlayerSelectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C6300206A93690096319E /* PlayerSelectTableViewController.swift */; };
+		955C6304206A988C0096319E /* PlayerSelTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C6303206A988C0096319E /* PlayerSelTableView.swift */; };
+		955C6306206A9B440096319E /* PlayerSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C6305206A9B440096319E /* PlayerSelectCell.swift */; };
+		955C6308206AA3A80096319E /* DeckSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C6307206AA3A80096319E /* DeckSelectViewController.swift */; };
+		955C630A206AA4110096319E /* DeckSelectTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C6309206AA4110096319E /* DeckSelectTableView.swift */; };
+		955C630D206AA4940096319E /* DeckSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C630C206AA4940096319E /* DeckSelectCell.swift */; };
 		956119D7206535B5008943A3 /* MTGDecker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 956119D5206535B5008943A3 /* MTGDecker.xcdatamodeld */; };
 		956119D9206535B5008943A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 956119D8206535B5008943A3 /* Assets.xcassets */; };
 		956119DC206535B5008943A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119DA206535B5008943A3 /* LaunchScreen.storyboard */; };
 		956119E7206535B5008943A3 /* MTGDeckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119E6206535B5008943A3 /* MTGDeckerTests.swift */; };
 		956119F2206535B5008943A3 /* MTGDeckerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119F1206535B5008943A3 /* MTGDeckerUITests.swift */; };
+		95A22B3720686F2400331C4B /* CardNameList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A22B3520686F2400331C4B /* CardNameList.swift */; };
+		95A22B3B2068769400331C4B /* CentralNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A22B3A2068769400331C4B /* CentralNavController.swift */; };
+		95D280FA2069AF66008648D0 /* CardNameStarter.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 95D280F92069AF66008648D0 /* CardNameStarter.rtf */; };
+		95D280FC2069B097008648D0 /* SetCodeStarter.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 95D280FB2069B097008648D0 /* SetCodeStarter.rtf */; };
+		95D2810D2069B90A008648D0 /* Subcondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D280FD2069B90A008648D0 /* Subcondition.swift */; };
+		95D2810F2069B90A008648D0 /* DeckNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D280FF2069B90A008648D0 /* DeckNew.swift */; };
+		95D281132069B90A008648D0 /* MulliganRuleset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D281032069B90A008648D0 /* MulliganRuleset.swift */; };
+		95D281152069B90A008648D0 /* Condition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D281052069B90A008648D0 /* Condition.swift */; };
+		95D281172069B90A008648D0 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D281072069B90A008648D0 /* Player.swift */; };
+		95D281192069B90A008648D0 /* MCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D281092069B90A008648D0 /* MCard.swift */; };
+		95D2811B2069B90A008648D0 /* KeepRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D2810B2069B90A008648D0 /* KeepRule.swift */; };
+		95D2811F2069BABE008648D0 /* SuccessRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D2811D2069BABE008648D0 /* SuccessRule.swift */; };
+		95F4EF2A2072DA1D00F5465C /* MTGSDKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95F4EF292072DA1D00F5465C /* MTGSDKSwift.framework */; };
+		95F4EF2B2072DA1D00F5465C /* MTGSDKSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 95F4EF292072DA1D00F5465C /* MTGSDKSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		95F4EF2D2072DA5B00F5465C /* MTGSDKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95F4EF292072DA1D00F5465C /* MTGSDKSwift.framework */; };
+		95F4EF2E2072DA6600F5465C /* MTGSDKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95F4EF292072DA1D00F5465C /* MTGSDKSwift.framework */; };
+		95F4EF312072E50D00F5465C /* MCardImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F4EF2F2072E50D00F5465C /* MCardImage.swift */; };
+		95F4EF3520732BD000F5465C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119CE206535B5008943A3 /* AppDelegate.swift */; };
+		95F6721A206AF4F900D0034D /* CardTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F67219206AF4F900D0034D /* CardTableView.swift */; };
+		95F6721C206AF58800D0034D /* CardTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F6721B206AF58800D0034D /* CardTableCell.swift */; };
+		95F6721E206AFFC700D0034D /* CardSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F6721D206AFFC700D0034D /* CardSearchViewController.swift */; };
+		95F67221206B0AD400D0034D /* CardSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F67220206B0AD400D0034D /* CardSearchCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,10 +62,31 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		95F4EF2C2072DA1D00F5465C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				95F4EF2B2072DA1D00F5465C /* MTGSDKSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailViewController.swift; sourceTree = "<group>"; };
+		9533B07E2073E684009D570A /* CardImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageViewController.swift; sourceTree = "<group>"; };
+		955C6300206A93690096319E /* PlayerSelectTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectTableViewController.swift; sourceTree = "<group>"; };
+		955C6303206A988C0096319E /* PlayerSelTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelTableView.swift; sourceTree = "<group>"; };
+		955C6305206A9B440096319E /* PlayerSelectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectCell.swift; sourceTree = "<group>"; };
+		955C6307206AA3A80096319E /* DeckSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckSelectViewController.swift; sourceTree = "<group>"; };
+		955C6309206AA4110096319E /* DeckSelectTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckSelectTableView.swift; sourceTree = "<group>"; };
+		955C630C206AA4940096319E /* DeckSelectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckSelectCell.swift; sourceTree = "<group>"; };
 		956119CB206535B5008943A3 /* MTGDecker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MTGDecker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		956119CE206535B5008943A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		956119D0206535B5008943A3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		956119D3206535B5008943A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		956119D6206535B5008943A3 /* MTGDecker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MTGDecker.xcdatamodel; sourceTree = "<group>"; };
 		956119D8206535B5008943A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -49,6 +98,24 @@
 		956119ED206535B5008943A3 /* MTGDeckerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MTGDeckerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		956119F1206535B5008943A3 /* MTGDeckerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTGDeckerUITests.swift; sourceTree = "<group>"; };
 		956119F3206535B5008943A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		95A22B3520686F2400331C4B /* CardNameList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNameList.swift; sourceTree = "<group>"; };
+		95A22B3A2068769400331C4B /* CentralNavController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralNavController.swift; sourceTree = "<group>"; };
+		95D280F92069AF66008648D0 /* CardNameStarter.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = CardNameStarter.rtf; sourceTree = "<group>"; };
+		95D280FB2069B097008648D0 /* SetCodeStarter.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = SetCodeStarter.rtf; sourceTree = "<group>"; };
+		95D280FD2069B90A008648D0 /* Subcondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subcondition.swift; sourceTree = "<group>"; };
+		95D280FF2069B90A008648D0 /* DeckNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckNew.swift; sourceTree = "<group>"; };
+		95D281032069B90A008648D0 /* MulliganRuleset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MulliganRuleset.swift; sourceTree = "<group>"; };
+		95D281052069B90A008648D0 /* Condition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Condition.swift; sourceTree = "<group>"; };
+		95D281072069B90A008648D0 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		95D281092069B90A008648D0 /* MCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCard.swift; sourceTree = "<group>"; };
+		95D2810B2069B90A008648D0 /* KeepRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepRule.swift; sourceTree = "<group>"; };
+		95D2811D2069BABE008648D0 /* SuccessRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessRule.swift; sourceTree = "<group>"; };
+		95F4EF292072DA1D00F5465C /* MTGSDKSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MTGSDKSwift.framework; path = Carthage/Build/iOS/MTGSDKSwift.framework; sourceTree = "<group>"; };
+		95F4EF2F2072E50D00F5465C /* MCardImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCardImage.swift; sourceTree = "<group>"; };
+		95F67219206AF4F900D0034D /* CardTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTableView.swift; sourceTree = "<group>"; };
+		95F6721B206AF58800D0034D /* CardTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTableCell.swift; sourceTree = "<group>"; };
+		95F6721D206AFFC700D0034D /* CardSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSearchViewController.swift; sourceTree = "<group>"; };
+		95F67220206B0AD400D0034D /* CardSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSearchCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95F4EF2A2072DA1D00F5465C /* MTGSDKSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95F4EF2E2072DA6600F5465C /* MTGSDKSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,19 +139,53 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95F4EF2D2072DA5B00F5465C /* MTGSDKSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		955C6302206A95520096319E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				95A22B3A2068769400331C4B /* CentralNavController.swift */,
+				955C6300206A93690096319E /* PlayerSelectTableViewController.swift */,
+				955C6307206AA3A80096319E /* DeckSelectViewController.swift */,
+				9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */,
+				95F6721D206AFFC700D0034D /* CardSearchViewController.swift */,
+				9533B07E2073E684009D570A /* CardImageViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		955C630E206AA4AA0096319E /* Player Select Views */ = {
+			isa = PBXGroup;
+			children = (
+				955C6303206A988C0096319E /* PlayerSelTableView.swift */,
+				955C6305206A9B440096319E /* PlayerSelectCell.swift */,
+			);
+			path = "Player Select Views";
+			sourceTree = "<group>";
+		};
+		955C630F206AA4B90096319E /* Deck Select Views */ = {
+			isa = PBXGroup;
+			children = (
+				955C6309206AA4110096319E /* DeckSelectTableView.swift */,
+				955C630C206AA4940096319E /* DeckSelectCell.swift */,
+			);
+			path = "Deck Select Views";
+			sourceTree = "<group>";
+		};
 		956119C2206535B5008943A3 = {
 			isa = PBXGroup;
 			children = (
+				95F4EF292072DA1D00F5465C /* MTGSDKSwift.framework */,
 				956119CD206535B5008943A3 /* MTGDecker */,
 				956119E5206535B5008943A3 /* MTGDeckerTests */,
 				956119F0206535B5008943A3 /* MTGDeckerUITests */,
 				956119CC206535B5008943A3 /* Products */,
+				95A4E8A0206852970013CC2E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,13 +202,17 @@
 		956119CD206535B5008943A3 /* MTGDecker */ = {
 			isa = PBXGroup;
 			children = (
+				955C6302206A95520096319E /* Controller */,
+				95A22B392068768200331C4B /* View */,
+				956119FF206535EC008943A3 /* Model */,
 				956119CE206535B5008943A3 /* AppDelegate.swift */,
-				956119D0206535B5008943A3 /* ViewController.swift */,
 				956119D2206535B5008943A3 /* Main.storyboard */,
 				956119D8206535B5008943A3 /* Assets.xcassets */,
 				956119DA206535B5008943A3 /* LaunchScreen.storyboard */,
 				956119DD206535B5008943A3 /* Info.plist */,
 				956119D5206535B5008943A3 /* MTGDecker.xcdatamodeld */,
+				95D280FB2069B097008648D0 /* SetCodeStarter.rtf */,
+				95D280F92069AF66008648D0 /* CardNameStarter.rtf */,
 			);
 			path = MTGDecker;
 			sourceTree = "<group>";
@@ -128,6 +235,58 @@
 			path = MTGDeckerUITests;
 			sourceTree = "<group>";
 		};
+		956119FF206535EC008943A3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				95F4EF2F2072E50D00F5465C /* MCardImage.swift */,
+				95D281072069B90A008648D0 /* Player.swift */,
+				95D280FF2069B90A008648D0 /* DeckNew.swift */,
+				95D281092069B90A008648D0 /* MCard.swift */,
+				95D2811D2069BABE008648D0 /* SuccessRule.swift */,
+				95D281032069B90A008648D0 /* MulliganRuleset.swift */,
+				95D2810B2069B90A008648D0 /* KeepRule.swift */,
+				95D281052069B90A008648D0 /* Condition.swift */,
+				95D280FD2069B90A008648D0 /* Subcondition.swift */,
+				95A22B3520686F2400331C4B /* CardNameList.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		95A22B392068768200331C4B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				95F6721F206B0AC100D0034D /* Card Search Views */,
+				95F67218206AF4D500D0034D /* Deck Detail Views */,
+				955C630F206AA4B90096319E /* Deck Select Views */,
+				955C630E206AA4AA0096319E /* Player Select Views */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		95A4E8A0206852970013CC2E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		95F67218206AF4D500D0034D /* Deck Detail Views */ = {
+			isa = PBXGroup;
+			children = (
+				95F67219206AF4F900D0034D /* CardTableView.swift */,
+				95F6721B206AF58800D0034D /* CardTableCell.swift */,
+			);
+			path = "Deck Detail Views";
+			sourceTree = "<group>";
+		};
+		95F6721F206B0AC100D0034D /* Card Search Views */ = {
+			isa = PBXGroup;
+			children = (
+				95F67220206B0AD400D0034D /* CardSearchCell.swift */,
+			);
+			path = "Card Search Views";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -138,6 +297,7 @@
 				956119C7206535B5008943A3 /* Sources */,
 				956119C8206535B5008943A3 /* Frameworks */,
 				956119C9206535B5008943A3 /* Resources */,
+				95F4EF2C2072DA1D00F5465C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -191,20 +351,26 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Taylor;
 				TargetAttributes = {
 					956119CA206535B5008943A3 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = Q74732HCD9;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 					956119E1206535B5008943A3 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = Q74732HCD9;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 956119CA206535B5008943A3;
 					};
 					956119EC206535B5008943A3 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = Q74732HCD9;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 956119CA206535B5008943A3;
 					};
@@ -235,9 +401,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95D280FC2069B097008648D0 /* SetCodeStarter.rtf in Resources */,
+				9533B0802073E727009D570A /* Main.storyboard in Resources */,
 				956119DC206535B5008943A3 /* LaunchScreen.storyboard in Resources */,
+				95D280FA2069AF66008648D0 /* CardNameStarter.rtf in Resources */,
 				956119D9206535B5008943A3 /* Assets.xcassets in Resources */,
-				956119D4206535B5008943A3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,9 +430,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95A22B3720686F2400331C4B /* CardNameList.swift in Sources */,
+				95F6721C206AF58800D0034D /* CardTableCell.swift in Sources */,
+				955C6304206A988C0096319E /* PlayerSelTableView.swift in Sources */,
+				9500686C206AC09C0047B1B6 /* DeckDetailViewController.swift in Sources */,
+				955C630D206AA4940096319E /* DeckSelectCell.swift in Sources */,
+				95D281172069B90A008648D0 /* Player.swift in Sources */,
 				956119D7206535B5008943A3 /* MTGDecker.xcdatamodeld in Sources */,
-				956119D1206535B5008943A3 /* ViewController.swift in Sources */,
-				956119CF206535B5008943A3 /* AppDelegate.swift in Sources */,
+				95F4EF312072E50D00F5465C /* MCardImage.swift in Sources */,
+				95D2810F2069B90A008648D0 /* DeckNew.swift in Sources */,
+				95F6721A206AF4F900D0034D /* CardTableView.swift in Sources */,
+				95D281192069B90A008648D0 /* MCard.swift in Sources */,
+				95D281132069B90A008648D0 /* MulliganRuleset.swift in Sources */,
+				95F6721E206AFFC700D0034D /* CardSearchViewController.swift in Sources */,
+				95F4EF3520732BD000F5465C /* AppDelegate.swift in Sources */,
+				955C630A206AA4110096319E /* DeckSelectTableView.swift in Sources */,
+				95D2810D2069B90A008648D0 /* Subcondition.swift in Sources */,
+				955C6306206A9B440096319E /* PlayerSelectCell.swift in Sources */,
+				95D281152069B90A008648D0 /* Condition.swift in Sources */,
+				955C6301206A93690096319E /* PlayerSelectTableViewController.swift in Sources */,
+				95D2811B2069B90A008648D0 /* KeepRule.swift in Sources */,
+				95A22B3B2068769400331C4B /* CentralNavController.swift in Sources */,
+				95D2811F2069BABE008648D0 /* SuccessRule.swift in Sources */,
+				95F67221206B0AD400D0034D /* CardSearchCell.swift in Sources */,
+				9533B07F2073E684009D570A /* CardImageViewController.swift in Sources */,
+				955C6308206AA3A80096319E /* DeckSelectViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,15 +518,23 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -359,7 +557,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -378,15 +576,23 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -403,7 +609,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -416,11 +622,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = Q74732HCD9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MTGDecker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDecker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -428,11 +641,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = Q74732HCD9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MTGDecker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDecker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -441,11 +661,18 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = Q74732HCD9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MTGDeckerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDeckerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MTGDecker.app/MTGDecker";
 			};
 			name = Debug;
@@ -455,11 +682,18 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = Q74732HCD9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MTGDeckerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDeckerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MTGDecker.app/MTGDecker";
 			};
 			name = Release;
@@ -468,11 +702,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = Q74732HCD9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MTGDeckerUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDeckerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = MTGDecker;
 			};
 			name = Debug;
@@ -481,11 +722,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = Q74732HCD9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MTGDeckerUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Taylor.MTGDeckerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = MTGDecker;
 			};
 			name = Release;
@@ -509,6 +757,7 @@
 				956119F8206535B5008943A3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		956119F9206535B5008943A3 /* Build configuration list for PBXNativeTarget "MTGDeckerTests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +766,7 @@
 				956119FB206535B5008943A3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		956119FC206535B5008943A3 /* Build configuration list for PBXNativeTarget "MTGDeckerUITests" */ = {
 			isa = XCConfigurationList;
@@ -525,6 +775,7 @@
 				956119FE206535B5008943A3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
