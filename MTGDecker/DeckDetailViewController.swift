@@ -23,8 +23,12 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
     var context: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var deck: Deck?
+    var builder: DeckBuilder?
     
     override func viewDidLoad() {
+        
+        //Important: must set the deck for the DeckDetailViewController as part of preparing for the segue into it
+        self.builder = DeckBuilder(inContext: context, deck: deck!)
         
         cardTable.delegate = self;
         NotificationCenter.default.addObserver(forName: .cardAddNotification, object: nil, queue: nil) { (notification) in
@@ -32,7 +36,6 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
         }
         NotificationCenter.default.addObserver(forName: .cardCellRemoveNotification, object: nil, queue: nil) { (notification) in
             self.removeCardCell(notification.object as! CardTableCell)
-            
         }
         
     }//viewDidLoad
@@ -125,158 +128,27 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
         
     }//deckEditButtonPress
 
-    //MARK: Card Manipulation
-    
-    func cardWasAdded(){
-        cardTable.reloadData()
-    }
-    
-    func addCardsByNames(cardNames: Set<String>){
-        
-        for cardName in cardNames{
-            self.addCardByName(cardName)
-        }//for each card in the set
-        
+    /**
+     Adds cards to the deck object by way of card names. Does so by first checking the Core Data database for the card (in case it were added in another deck, or added and then removed). If the card isn't there, pulls its info from the internet.
+     Called by the CardSearchVC. Immediately throws the job to the DeckBuilder object; however, method pulled in here to better encapsulate the flow of information.
+   
+     -parameter nameList: A set of strings indicating the names of cards we wish to add to the deck
+     
+     */
+    func addCardsByNames(nameList: Set<String>){
+        self.builder!.addCardsByNames(cardNames: nameList)
     }//addCardsByNames
     
+    /**
+        Called from a notification when a card is added. Currently, just reloads the table data
+     */
+    func cardWasAdded(){
+        DispatchQueue.main.async {//big ol' thread shenanigans to make the compiler happy
+            self.cardTable.reloadData()
+        }
+    }//cardWasAdded
     
-    func addCardByName(_ cardName: String){
-        
-        let cardFR: NSFetchRequest<MCard> = MCard.fetchRequest()
-        cardFR.predicate = NSPredicate(format: "name = %@", cardName)
-        var results: [MCard] = []
-        do{
-            results = try context.fetch(cardFR)
-        }
-        catch{
-            NSLog("Error fetching card from card list in core data: \(error)")
-        }
 
-        if (results.count > 0){
-            let referencedCard: MCard = results[0]
-            self.deck!.addCard(referencedCard, context: context)
-            
-        }//if we already have the card in the app somewhere
-        
-        else{
-            pullCardFromInternet(cardName)
-        }//if we don't have the card in the app somewhere
-        
-        NotificationCenter.default.post(name: .cardAddNotification, object: nil)
-        
-        return
-        
-    }//addCardByName
-    
-    private func pullCardFromInternet(_ cardName: String) {
-        let magic: Magic = Magic()
-        let nameParam: CardSearchParameter = CardSearchParameter(parameterType: .name, value: cardName)
-        var cardResults: [Card] = []
-        
-        let fetchCardDispatchGroup: DispatchGroup = DispatchGroup()
-        
-        fetchCardDispatchGroup.enter()
-        
-        magic.fetchCards([nameParam]) {
-            cards, error in
-            
-            if let error = error {
-                NSLog("\(error)")
-            }
-            
-            let filteredCards: [Card] = cards!.filter({ (card) -> Bool in
-                if (card.name == nil || card.name! != cardName){
-                    return false
-                }
-                return true
-            })//filters card results so that searching for "Flight" doesn't allow back "Vow of Flight"
-            
-            
-            var setCode: String = ""
-            if filteredCards.count != 0{
-                let printedSets: [String] = filteredCards[0].printings!
-                setCode = printedSets.last!
-            }
-            
-            let setParam: CardSearchParameter = CardSearchParameter(parameterType: .set, value: setCode)
-            
-            magic.fetchCards([nameParam, setParam], completion: { (recentCards, error) in
-                if let error = error{
-                    NSLog("\(error)")
-                }
-                
-                let cards: [Card] = recentCards!.filter({ (card) -> Bool in
-                    if (card.name == nil || card.name! != cardName){
-                        return false
-                    }
-                    return true
-                })//filters card results so that searching for "Flight" doesn't allow back "Vow of Flight"
-                
-                for card in cards{
-                    cardResults.append(card)
-                }
-                
-                fetchCardDispatchGroup.leave()
-                
-            })
-            
-        }//fetch the card for that name
-        
-        fetchCardDispatchGroup.wait()
-        
-        self.addCardByCard(cardResults[0])
-        
-    }//pullCardFromInternet
-    
-    func addCardByCard(_ card: Card){
-        
-        let myCard: MCard = MCard(context: context)
-        
-        myCard.copyFromCard(card: card)
-        
-        self.deck!.addCard(myCard, context: context)
-        
-        DispatchQueue.global(qos: .utility).async {
-            self.pullCardImageFromInternet(card: card, intoMCard: myCard)
-        }
-        
-        do{
-            try context.save()
-        }catch{
-            NSLog("Error: could not save card into deck. \(error)")
-        }
-        
-    }//addCardByCard
-    
-    func pullCardImageFromInternet(card: Card, intoMCard: MCard){
-        let magic: Magic = Magic()
-        magic.fetchImageForCard(card) { (image, error) in
-            
-            if (error != nil){
-                NSLog("Error fetching card image for \(card.name!):\n\(error!)")
-            }//if there was an error
-            
-            if (image == nil){
-                NSLog("Error: no image found for \(card.name!).")
-                return;//no need to do another thing
-            }//if no image came back
-            
-            let cardImage: MCardImage = MCardImage(context: self.context)
-            cardImage.image = image!
-            intoMCard.image = cardImage
-            
-            print("We found a card image for card \(card.name!)")
-            
-            do{
-                try self.context.save()
-            }catch{
-                NSLog("Error: could not saving card image. \(error)")
-            }
-            
-            
-        }//fetchImageForCard
-    }//pullCardImageFromInternet
-    
     
     func removeCardCell(_ cell: CardTableCell){
         //confirm we want to remove it
@@ -377,10 +249,7 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
         resultCell.setCellCard(resultCard)
         resultCell.setDeck(self.deck!)
         resultCell.setCellQuantity(resultQuantity)
-        
-        if resultCard.name == "Adorable Kitten"{
-            
-        }
+        resultCell.setPath(indexPath)
         
         return resultCell
         
@@ -404,7 +273,4 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
     
 }//DeckDetailViewController
 
-extension Notification.Name{
-    static let cardAddNotification = Notification.Name(rawValue: "cardAdd")
-    static let cardCellRemoveNotification = Notification.Name(rawValue: "cardCellRemove")
-}
+

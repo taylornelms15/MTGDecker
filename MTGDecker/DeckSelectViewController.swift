@@ -60,6 +60,7 @@ class DeckSelectViewController: UITableViewController{
         case let cell as DeckSelectCell://if we're going to the detail for a chosen deck
             let targetDeck: Deck = cell.deck!
             (segue.destination as! DeckDetailViewController).deck = targetDeck
+
             break;
         default:
             break;

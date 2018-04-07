@@ -44,16 +44,15 @@ class CardSearchViewController: UIViewController, UITableViewDataSource, UITable
         
         cardSearchTable.dataSource = self
         cardSearchTable.delegate = self
-
-        
+ 
     }//viewDidLoad
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        //Regardless of how we get out, we're adding the marked cards
         
+        //Regardless of how we get out, we're adding the marked cards
         view.endEditing(true)
-        parentDeckDetailVC?.addCardsByNames(cardNames: namesToAddSet)
+        parentDeckDetailVC?.addCardsByNames(nameList: namesToAddSet)
         
     }//viewWillDisappear
     

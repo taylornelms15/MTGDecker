@@ -20,15 +20,18 @@ class CardTableCell: UITableViewCell{
     var card: MCard?
     var parentDeck: Deck?
     var quantity: Int = 0
+    var cellPosition: IndexPath?
     
     func setCellCard(_ card: MCard){
         self.card = card
         
         nameLabel.text = self.card!.name
 
-        
-        
     }//setCellCard
+    
+    func setPath(_ path: IndexPath){
+        self.cellPosition = path
+    }
     
     func setDeck(_ deck: Deck){
         self.parentDeck = deck;
