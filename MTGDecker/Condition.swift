@@ -16,6 +16,9 @@ public class Condition: NSManagedObject {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Condition> {
         return NSFetchRequest<Condition>(entityName: "Condition")
     }
+    public static func entityDescription(context: NSManagedObjectContext)->NSEntityDescription{
+        return NSEntityDescription.entity(forEntityName: String(describing: self), in: context)!
+    }//entityDescription
     
     @NSManaged public var id: Int64
     @NSManaged public var name: String?

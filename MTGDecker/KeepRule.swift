@@ -15,6 +15,9 @@ public class KeepRule: NSManagedObject {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<KeepRule> {
         return NSFetchRequest<KeepRule>(entityName: "KeepRule")
     }
+    public static func entityDescription(context: NSManagedObjectContext)->NSEntityDescription{
+        return NSEntityDescription.entity(forEntityName: String(describing: self), in: context)!
+    }//entityDescription
     
     @NSManaged public var id: Int64
     @NSManaged public var name: String?

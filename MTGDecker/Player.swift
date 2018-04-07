@@ -15,6 +15,9 @@ public class Player: NSManagedObject {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Player> {
         return NSFetchRequest<Player>(entityName: "Player")
     }
+    public static func entityDescription(context: NSManagedObjectContext)->NSEntityDescription{
+        return NSEntityDescription.entity(forEntityName: String(describing: self), in: context)!
+    }//entityDescription
     
     @NSManaged public var id: Int64
     @NSManaged public var name: String?

@@ -16,6 +16,9 @@ public class MCardImage: NSManagedObject {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<MCardImage> {
         return NSFetchRequest<MCardImage>(entityName: "MCardImage")
     }
+    public static func entityDescription(context: NSManagedObjectContext)->NSEntityDescription{
+        return NSEntityDescription.entity(forEntityName: String(describing: self), in: context)!
+    }//entityDescription
     
     @NSManaged public var imageData: NSData?
     @NSManaged public var inv_mcard: MCard?

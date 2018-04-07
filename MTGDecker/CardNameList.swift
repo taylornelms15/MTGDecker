@@ -26,6 +26,9 @@ public class CardNameList: NSManagedObject {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<CardNameList> {
         return NSFetchRequest<CardNameList>(entityName: "CardNameList")
     }
+    public static func entityDescription(context: NSManagedObjectContext)->NSEntityDescription{
+        return NSEntityDescription.entity(forEntityName: String(describing: self), in: context)!
+    }//entityDescription
     
     @NSManaged public var cardNames: [String]?
     @NSManaged public var sourceSetCodes: Set<String>

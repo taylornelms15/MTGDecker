@@ -132,7 +132,7 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
      Adds cards to the deck object by way of card names. Does so by first checking the Core Data database for the card (in case it were added in another deck, or added and then removed). If the card isn't there, pulls its info from the internet.
      Called by the CardSearchVC. Immediately throws the job to the DeckBuilder object; however, method pulled in here to better encapsulate the flow of information.
    
-     -parameter nameList: A set of strings indicating the names of cards we wish to add to the deck
+     - parameter nameList: A set of strings indicating the names of cards we wish to add to the deck
      
      */
     func addCardsByNames(nameList: Set<String>){

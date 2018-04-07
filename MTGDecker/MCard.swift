@@ -18,6 +18,9 @@ public class MCard: NSManagedObject, Comparable {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<MCard> {
         return NSFetchRequest<MCard>(entityName: "MCard")
     }
+    public static func entityDescription(context: NSManagedObjectContext)->NSEntityDescription{
+        return NSEntityDescription.entity(forEntityName: String(describing: self), in: context)!
+    }//entityDescription
     
     public static let typePriorityArray: [String] =     ["Land", "Planeswalker", "Creature", "Artifact", "Enchantment", "Instant", "Sorcery"]
     public static let typeSortArray: [String] =         ["Planeswalker", "Creature", "Enchantment", "Artifact", "Sorcery", "Instant", "Land"]
@@ -59,7 +62,7 @@ public class MCard: NSManagedObject, Comparable {
     @NSManaged public var blackCost: Int16
     @NSManaged public var redCost: Int16
     @NSManaged public var greenCost: Int16
-    @NSManaged public var colorlessCost: Int16
+    @NSManaged public var colorlessCost: Int16//Example: Endbringer
     @NSManaged public var anymanaCost: Int16
     @NSManaged public var xmanaCost: Int16
     @NSManaged public var whiteblueCost: Int16
@@ -70,17 +73,42 @@ public class MCard: NSManagedObject, Comparable {
     @NSManaged public var whiteblackCost: Int16
     @NSManaged public var blueredCost: Int16
     @NSManaged public var blackgreenCost: Int16
-    @NSManaged public var redwhiteCost: Int16
+    @NSManaged public var redwhiteCost: Int16//Example: Naya Hushblade
     @NSManaged public var greenblueCost: Int16
     @NSManaged public var whitephyCost: Int16
-    @NSManaged public var bluephyCost: Int16
-    @NSManaged public var blackphyCost: Int16
+    @NSManaged public var bluephyCost: Int16//Example: Phyrexian Metamorph
+    @NSManaged public var blackphyCost: Int16//Example: Vault Skirge
     @NSManaged public var redphyCost: Int16
     @NSManaged public var greenphyCost: Int16
 
+    //MARK: type inclusion functions
+    public func isLand()->Bool{
+        return types!.contains("Land")
+    }
+    public func isPlaneswalker()->Bool{
+        return types!.contains("Planeswalker")
+    }
+    public func isCreature()->Bool{
+        return types!.contains("Creature")
+    }
+    public func isArtifact()->Bool{
+        return types!.contains("Artifact")
+    }
+    public func isEnchantment()->Bool{
+        return types!.contains("Enchantment")
+    }
+    public func isInstant()->Bool{
+        return types!.contains("Instant")
+    }
+    public func isSorcery()->Bool{
+        return types!.contains("Sorcery")
+    }
+    public func isBasic()->Bool{
+        if (supertypes == nil){return false}
+        return supertypes!.contains("Basic")
+    }
     
-    
-    
+    //MARK: Make the MCard
     
     public func copyFromCard(card: Card){
         name = card.name!
@@ -231,12 +259,12 @@ public class MCard: NSManagedObject, Comparable {
                 }//switch
                 if (Int(cost) != nil){
                     //TODO: handle monocolor hybrids, such as {2/W}; as written, they are treated as uncolored
-                    colorlessCost += Int16(Int(cost)!)
+                    anymanaCost += Int16(Int(cost)!)
                 }//if the cost is an int
             }//for each token in the card cost
             
             
-            print("Card: \(self.name); mana cost string: \(manaString); w: \(whiteCost), u: \(blueCost), b: \(blackCost), r: \(redCost), g: \(greenCost)")
+            //print("Card: \(self.name); mana cost string: \(manaString); w: \(whiteCost), u: \(blueCost), b: \(blackCost), r: \(redCost), g: \(greenCost), any:\(anymanaCost)")
             
         }//if manastring exists
         
