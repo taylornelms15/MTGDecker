@@ -130,8 +130,15 @@ class DeckBuilder{
     func addCardByCard(_ card: Card){
         
         self.context.performAndWait {
-            let myCard: MCard = MCard(context: context)
             
+            var myCard: MCard = MCard(context: context)
+            
+            if card.types!.contains("Land"){
+                context.delete(myCard)
+                
+                myCard = MCardLand(context: context)
+            }
+
             myCard.copyFromCard(card: card)
             
             self.deck.addCard(myCard, context: context)

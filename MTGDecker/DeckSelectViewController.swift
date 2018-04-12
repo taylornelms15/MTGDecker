@@ -94,6 +94,33 @@ class DeckSelectViewController: UITableViewController{
         
     }//addDeckButtonPress
     
+    /**
+     Function that handles deck deletion
+     */
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            let deckToRemove: Deck = deckList![indexPath.row]
+
+            deckList!.remove(at: indexPath.row)
+            
+            deckSelectTable.deleteRows(at: [indexPath], with: .automatic)
+            
+            context!.perform {
+                self.context!.delete(deckToRemove)
+                
+                do{
+                    try self.context!.save()
+                } catch{
+                    NSLog("Error saving deck-deletion: \(error)")
+                }
+            }//perform block
+            
+            
+            
+        }//if deleting
+    }//commit editing style (delete deck)
+    
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (deckList != nil){
             return deckList!.count;
@@ -120,6 +147,14 @@ class DeckSelectViewController: UITableViewController{
         performSegue(withIdentifier: "DeckDetailSegue", sender: sourceCell)
         
     }//accessoryButtonTapped
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }//canEditRowAt
+
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.delete
+    }
     
     
     

@@ -103,10 +103,27 @@ public class MCard: NSManagedObject, Comparable {
     public func isSorcery()->Bool{
         return types!.contains("Sorcery")
     }
-    public func isBasic()->Bool{
-        if (supertypes == nil){return false}
-        return supertypes!.contains("Basic")
-    }
+    
+    //MARK: costs/effects
+    /**
+     Tries a number of mana pools; returns one that works, or nil if none do
+    */
+    public func canPayCostFrom(pools: [ManaPool]) -> ManaPool?{
+        for pool in pools{
+            if self.canPayCostFrom(pool: pool){
+                return pool
+            }
+        }
+        return nil
+    }//canPayCostFrom pools
+    
+    public func canPayCostFrom(pool: ManaPool) -> Bool{
+        if (whiteCost == 0 && blueCost == 0 && blackCost == 0 && redCost == 0 && greenCost == 0 && anymanaCost == 0 && colorlessCost == 0 && whiteblueCost == 0 && blueblackCost == 0 && blackredCost == 0 && redgreenCost == 0 && greenwhiteCost == 0 && whiteblackCost == 0 && blueredCost == 0 && blackgreenCost == 0 && redwhiteCost == 0 && greenblueCost == 0 && xmanaCost == 0 && whitephyCost == 0 && bluephyCost == 0 && blackphyCost == 0 && redphyCost == 0 && greenphyCost == 0){
+            return true
+        }//if CMC == 0
+
+        return pool.canCoverCost(ofCard: self)
+    }//canPayCostFrom pool
     
     //MARK: Make the MCard
     
@@ -262,9 +279,6 @@ public class MCard: NSManagedObject, Comparable {
                     anymanaCost += Int16(Int(cost)!)
                 }//if the cost is an int
             }//for each token in the card cost
-            
-            
-            //print("Card: \(self.name); mana cost string: \(manaString); w: \(whiteCost), u: \(blueCost), b: \(blackCost), r: \(redCost), g: \(greenCost), any:\(anymanaCost)")
             
         }//if manastring exists
         

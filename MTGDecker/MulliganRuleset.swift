@@ -27,4 +27,4 @@ public class MulliganRuleset: NSManagedObject {
     @NSManaged public var keepRule5: KeepRule?
     @NSManaged public var keepRule6: KeepRule?
     @NSManaged public var keepRule7: KeepRule?
-}
+}//MulliganRuleset

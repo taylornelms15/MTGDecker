@@ -21,9 +21,18 @@ public class KeepRule: NSManagedObject {
     
     @NSManaged public var id: Int64
     @NSManaged public var name: String?
-    @NSManaged public var conditions: NSSet?
+    @NSManaged private var conditions: NSSet?
     @NSManaged public var inv_mulliganruleset4: MulliganRuleset?
     @NSManaged public var inv_mulliganruleset5: NSSet?
     @NSManaged public var inv_mulliganruleset6: NSSet?
     @NSManaged public var inv_mulliganruleset7: NSSet?
-}
+    
+    public var conditionList: Set<Condition>?{
+        get{
+            return self.conditions as? Set<Condition>
+        }
+        set{
+            conditions = newValue as NSSet?
+        }
+    }//conditionList
+}//KeepRule

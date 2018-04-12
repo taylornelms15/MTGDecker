@@ -24,6 +24,16 @@ public class Condition: NSManagedObject {
     @NSManaged public var name: String?
     @NSManaged public var inv_keeprule: NSSet?
     @NSManaged public var inv_successrule: NSSet?
-    @NSManaged public var subconditions: NSSet?
-}
+    @NSManaged private var subconditions: NSSet?
+    
+    ///Wraps up the private NSManaged NSSet object; thereby handles generics and casting
+    public var subconditionList: Set<Subcondition>?{
+        get{
+            return subconditions as? Set<Subcondition>
+        }
+        set{
+            subconditions = newValue as NSSet?
+        }
+    }//subconditionList
+}//Condition
 

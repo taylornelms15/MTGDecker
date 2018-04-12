@@ -70,8 +70,16 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
             
             print("No image yet for card \(forCard.name)")
             
-            //TODO: error-handle
-            return;
+            let imageURL = forCard.imageURL!
+            
+            NotificationCenter.default.addObserver(forName: .cardImageAddNotification , object: forCard, queue: nil) { (notification) in
+                self.presentCardImage(forCard: forCard)
+            }
+            
+            DispatchQueue.global().async {
+                self.builder!.pullCardImageByNameAndURL(name: forCard.name, url: imageURL, intoMCard: forCard)
+            }
+
         }//if the card has no image
         
         let cardImage: UIImage = forCard.image!.image

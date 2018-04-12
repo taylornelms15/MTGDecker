@@ -11,6 +11,9 @@
 		9533B07F2073E684009D570A /* CardImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9533B07E2073E684009D570A /* CardImageViewController.swift */; };
 		9533B0802073E727009D570A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119D2206535B5008943A3 /* Main.storyboard */; };
 		9533B0822077D78B009D570A /* DeckBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9533B0812077D78B009D570A /* DeckBuilder.swift */; };
+		95578439207C2A28007F45E8 /* MCardLand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95578438207C2A27007F45E8 /* MCardLand.swift */; };
+		9557843B207E4E12007F45E8 /* FieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9557843A207E4E12007F45E8 /* FieldState.swift */; };
+		9557843D207E68FA007F45E8 /* ManaPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9557843C207E68FA007F45E8 /* ManaPool.swift */; };
 		955C6301206A93690096319E /* PlayerSelectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C6300206A93690096319E /* PlayerSelectTableViewController.swift */; };
 		955C6304206A988C0096319E /* PlayerSelTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C6303206A988C0096319E /* PlayerSelTableView.swift */; };
 		955C6306206A9B440096319E /* PlayerSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C6305206A9B440096319E /* PlayerSelectCell.swift */; };
@@ -82,6 +85,9 @@
 		9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailViewController.swift; sourceTree = "<group>"; };
 		9533B07E2073E684009D570A /* CardImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageViewController.swift; sourceTree = "<group>"; };
 		9533B0812077D78B009D570A /* DeckBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBuilder.swift; sourceTree = "<group>"; };
+		95578438207C2A27007F45E8 /* MCardLand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCardLand.swift; sourceTree = "<group>"; };
+		9557843A207E4E12007F45E8 /* FieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldState.swift; sourceTree = "<group>"; };
+		9557843C207E68FA007F45E8 /* ManaPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManaPool.swift; sourceTree = "<group>"; };
 		955C6300206A93690096319E /* PlayerSelectTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectTableViewController.swift; sourceTree = "<group>"; };
 		955C6303206A988C0096319E /* PlayerSelTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelTableView.swift; sourceTree = "<group>"; };
 		955C6305206A9B440096319E /* PlayerSelectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectCell.swift; sourceTree = "<group>"; };
@@ -155,6 +161,8 @@
 			children = (
 				9533B0812077D78B009D570A /* DeckBuilder.swift */,
 				95E02DB7207937C600F82A65 /* Simulator.swift */,
+				9557843A207E4E12007F45E8 /* FieldState.swift */,
+				9557843C207E68FA007F45E8 /* ManaPool.swift */,
 				95E02DB62079378500F82A65 /* ViewControllers */,
 			);
 			name = Controller;
@@ -243,6 +251,7 @@
 				95D281072069B90A008648D0 /* Player.swift */,
 				95D280FF2069B90A008648D0 /* DeckNew.swift */,
 				95D281092069B90A008648D0 /* MCard.swift */,
+				95578438207C2A27007F45E8 /* MCardLand.swift */,
 				95D2811D2069BABE008648D0 /* SuccessRule.swift */,
 				95D281032069B90A008648D0 /* MulliganRuleset.swift */,
 				95D2810B2069B90A008648D0 /* KeepRule.swift */,
@@ -444,6 +453,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9557843D207E68FA007F45E8 /* ManaPool.swift in Sources */,
 				95A22B3720686F2400331C4B /* CardNameList.swift in Sources */,
 				95F6721C206AF58800D0034D /* CardTableCell.swift in Sources */,
 				955C6304206A988C0096319E /* PlayerSelTableView.swift in Sources */,
@@ -453,6 +463,7 @@
 				956119D7206535B5008943A3 /* MTGDecker.xcdatamodeld in Sources */,
 				95F4EF312072E50D00F5465C /* MCardImage.swift in Sources */,
 				95D2810F2069B90A008648D0 /* DeckNew.swift in Sources */,
+				9557843B207E4E12007F45E8 /* FieldState.swift in Sources */,
 				95F6721A206AF4F900D0034D /* CardTableView.swift in Sources */,
 				95D281192069B90A008648D0 /* MCard.swift in Sources */,
 				95D281132069B90A008648D0 /* MulliganRuleset.swift in Sources */,
@@ -468,6 +479,7 @@
 				95D2811B2069B90A008648D0 /* KeepRule.swift in Sources */,
 				95A22B3B2068769400331C4B /* CentralNavController.swift in Sources */,
 				95D2811F2069BABE008648D0 /* SuccessRule.swift in Sources */,
+				95578439207C2A28007F45E8 /* MCardLand.swift in Sources */,
 				95F67221206B0AD400D0034D /* CardSearchCell.swift in Sources */,
 				9533B07F2073E684009D570A /* CardImageViewController.swift in Sources */,
 				955C6308206AA3A80096319E /* DeckSelectViewController.swift in Sources */,

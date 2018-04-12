@@ -123,6 +123,65 @@ internal class Simulator{
     //MARK: Simulator functions
     
     /**
+     Tests a hand of a given size against a given Keep Rule. Throws most of the heavy lifting to the testHandAgainstCondition function
+     
+     Notably, this differs from testing conditions in that subconditions are AND'ed together, while conditions are OR'd together, for the purposes of evaluating rules.
+     - parameter handSize: The size of the hand to test against the subcondition. Without shuffling, tests this many cards from the top of the deck against this.
+     - parameter keeprule: The Keep Rule against which we want to test the hand.
+     - returns: Whether or not the hand passes the given condition
+     */
+    internal func testHandAgainstKeepRule(handSize: Int, keeprule: KeepRule) -> Bool{
+        //if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
+        //if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
+        
+        if keeprule.conditionList != nil && keeprule.conditionList!.count != 0{
+            for condition in keeprule.conditionList!{
+                do{
+                    if try self.testHandAgainstCondition(handSize: handSize, condition: condition){
+                        return true
+                    }//if passes the condition
+                }
+                catch{
+                    NSLog("Error testing condition. Handsize: \(handSize), Error: \(error)")
+                }
+            }//for each condition
+            
+            return false //there were conditions tested, but none met
+            
+        }//if rule has
+        else{
+            return true //empty keep rule == "keep all hands"
+        }//else (no subconditions in list)
+
+    }//testHandAgainstKeepRule
+    
+    /**
+     Tests a hand of a given size against a given condition. Throws most of the heavy lifting to the testHandAgainstSubcondition function
+     - parameter handSize: The size of the hand to test against the subcondition. Without shuffling, tests this many cards from the top of the deck against this.
+     - parameter condition: The subcondition against which we want to test the hand.
+     - throws: Throws SimulatorError.cardIndexOOB if handSize is larger than the size of the deck, or less than 1
+     - returns: Whether or not the hand passes the given condition
+     */
+    internal func testHandAgainstCondition(handSize: Int, condition: Condition) throws -> Bool{
+        if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
+        if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
+        
+        if condition.subconditionList != nil && condition.subconditionList!.count != 0{
+            for subcondition in condition.subconditionList!{
+                if try self.testHandAgainstSubcondition(handSize: handSize, subcondition: subcondition) == false{
+                    return false
+                }//if any subconditions are not met, the condition is not met
+            }//for each subcondition
+            
+            return true //if all subconditions are met,
+        }//if we have subconditions
+        else{
+            throw SimulatorError.emptyTest(message: "Condition must have at least one valid subcondition to test")
+        }//else (no subconditions in list)
+        
+    }//testHandAgainstCondition
+    
+    /**
      Tests a hand of a given size against a given subcondition. Handles all relevant logic inside this class (as opposed to the Subcondition itself matching its conditions)
      - parameter handSize: The size of the hand to test against the subcondition. Without shuffling, tests this many cards from the top of the deck against this.
      - parameter subcondition: The subcondition against which we want to test the hand.
@@ -150,6 +209,24 @@ internal class Simulator{
             return testInstantTotalSubcondition(subcondition, myHand)
         case .sorceryTotal:
             return testSorceryTotalSubcondition(subcondition, myHand)
+        case .nameEqualTo:
+            if subcondition.stringParam1 == nil{ throw SimulatorError.stringNotValid(message: "For nameEqualTo conditions, must have string value in stringParam1") }
+            return testNameEqualToSubcondition(subcondition, myHand)
+        case .cmcEqualTo:
+            if subcondition.numParam1 == -1{ throw SimulatorError.stringNotValid(message: "For cmcEqualTo conditions, must have value greater than -1 in numParam1") }
+            return testCmcEqualToSubcondition(subcondition, myHand)
+        case .subtypeEqualTo:
+            if subcondition.stringParam1 == nil{ throw SimulatorError.stringNotValid(message: "For subtypeEqualTo conditions, must have string value in stringParam1") }
+            return testSubtypeEqualToSubcondition(subcondition, myHand)
+        case .supertypeEqualTo:
+            if subcondition.stringParam1 == nil{ throw SimulatorError.stringNotValid(message: "For supertypeEqualTo conditions, must have string value in stringParam1") }
+            return testSupertypeEqualToSubcondition(subcondition, myHand)
+        case .powerEqualTo:
+            if subcondition.numParam1 == -1{ throw SimulatorError.stringNotValid(message: "For powerEqualTo conditions, must have value greater than -1 in numParam1") }
+            return testPowerEqualToSubcondition(subcondition, myHand)
+        case .toughnessEqualTo:
+            if subcondition.numParam1 == -1{ throw SimulatorError.stringNotValid(message: "For toughnessEqualTo conditions, must have value greater than -1 in numParam1") }
+            return testToughnessEqualToSubcondition(subcondition, myHand)
         default:
             return false
         }//switch (by subcondition type)
@@ -254,10 +331,96 @@ internal class Simulator{
         
         return (lowEnd <= total) && (highEnd >= total)
     }//testInstantTotalSubcondition
-    
-    
+    ///Tests if there are between numparam2 and numparam3 cards within the hand whose name is equal to stringParam1
+    fileprivate func testNameEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
+        let lowEnd = subcondition.numParam2
+        let highEnd = subcondition.numParam3
+        let nameValue: String = subcondition.stringParam1!
+        
+        var total: Int = 0
+        for card in myHand{
+            if card.name == nameValue{
+                total += 1
+            }
+        }//for
+        return (lowEnd <= total) && (highEnd >= total)
+    }//testNameEqualToSubcondition
+    ///Tests if there are between numparam2 and numparam3 cards within the hand whose cmc is equal to numparam1
+    fileprivate func testCmcEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
+        let lowEnd = subcondition.numParam2
+        let highEnd = subcondition.numParam3
+        let matchValue = subcondition.numParam1
+        
+        var total: Int = 0
+        for card in myHand{
+            if card.cmc == matchValue{
+                total += 1
+            }
+        }//for
+        return (lowEnd <= total) && (highEnd >= total)
+    }//testCmcEqualToSubcondition
+    ///Tests if there are between numparam2 and numparam3 cards within the hand whose name is equal to stringParam1
+    fileprivate func testSubtypeEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
+        let lowEnd = subcondition.numParam2
+        let highEnd = subcondition.numParam3
+        let typeName: String = subcondition.stringParam1!
+        
+        var total: Int = 0
+        for card in myHand{
+            if card.subtypes != nil && card.subtypes!.contains(typeName){
+                total += 1
+            }
+        }//for
+        return (lowEnd <= total) && (highEnd >= total)
+    }//testSubtypeEqualToSubcondition
+    ///Tests if there are between numparam2 and numparam3 cards within the hand whose name is equal to stringParam1
+    fileprivate func testSupertypeEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
+        let lowEnd = subcondition.numParam2
+        let highEnd = subcondition.numParam3
+        let typeName: String = subcondition.stringParam1!
+        
+        var total: Int = 0
+        for card in myHand{
+            if card.supertypes != nil && card.supertypes!.contains(typeName){
+                total += 1
+            }
+        }//for
+        return (lowEnd <= total) && (highEnd >= total)
+    }//testSubtypeEqualToSubcondition
+    ///Tests if there are between numparam2 and numparam3 cards within the hand whose power is equal to numparam1
+    fileprivate func testPowerEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
+        let lowEnd = subcondition.numParam2
+        let highEnd = subcondition.numParam3
+        let matchValue = subcondition.numParam1
+        
+        var total: Int = 0
+        for card in myHand{
+            if card.power != nil && Int16(card.power!) != nil && Int16(card.power!) == matchValue{
+                total += 1
+            }
+        }//for
+        return (lowEnd <= total) && (highEnd >= total)
+    }//testPowerEqualToSubcondition
+    ///Tests if there are between numparam2 and numparam3 cards within the hand whose power is equal to numparam1
+    fileprivate func testToughnessEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
+        let lowEnd = subcondition.numParam2
+        let highEnd = subcondition.numParam3
+        let matchValue = subcondition.numParam1
+        
+        var total: Int = 0
+        for card in myHand{
+            if card.toughness != nil && Int16(card.toughness!) != nil && Int16(card.toughness!) == matchValue{
+                total += 1
+            }
+        }//for
+        return (lowEnd <= total) && (highEnd >= total)
+    }//testPowerEqualToSubcondition
+
 }//Simulator
+
 
 enum SimulatorError: Error{
     case cardIndexOOB(message: String)
+    case stringNotValid(message: String)
+    case emptyTest(message: String)
 }//SimulatorError
