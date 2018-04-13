@@ -35,8 +35,8 @@ public class Subcondition: NSManagedObject {
     @NSManaged public var stringParam1: String?
     ///reserved
     @NSManaged public var stringParam2: String?
-    ///reserved
-    @NSManaged public var stringParam3: String?
+    ///A "type" given value. See `typeParam`
+    @NSManaged private var stringParam3: String?
     @NSManaged public var inv_condition: Condition?
 
     ///Variable encapsulating the type of the subcondition.
@@ -48,6 +48,16 @@ public class Subcondition: NSManagedObject {
             condType = newValue.rawValue
         }
     }//type
+    
+    ///Variable encapsulating a "card type" parameter. Wraps the `@NSManaged` parameter `stringParam3`
+    public var typeParam: CardType{
+        get{
+            return CardType(rawValue: stringParam3 ?? "none")!
+        }
+        set{
+            stringParam3 = newValue.rawValue
+        }
+    }//typeParam
     
     /**
      An enumeration detaining the different type of available subcondition variants.
@@ -81,7 +91,7 @@ public class Subcondition: NSManagedObject {
         ///Checks for a card with a given toughness
         case toughnessEqualTo
         
-        ///Checks if there is a card playable with hand makeup
+        ///Checks if there is a card playable with hand makeup. Accepts specific-card namings, or "card is of category." Limited in execution to "at least one card in hand is playable"
         case playable
         ///Checks if there is a card playable by given turn
         case playableByTurn
@@ -92,16 +102,37 @@ public class Subcondition: NSManagedObject {
 
     }//conditionType
     
+    ///Used to dictate card types for broad categories, such as playability
+    public enum CardType: String{
+        ///No type
+        case none = "none"
+        ///Land type
+        case land = "l"
+        ///Creature type
+        case creature = "c"
+        ///Planeswalker type
+        case planeswalker = "pw"
+        ///Artifact type
+        case artifact = "a"
+        ///Enchantment type
+        case enchantment = "e"
+        ///Instant type
+        case instant = "i"
+        ///Sorcery type
+        case sorcery = "s"
+    }//CardType
+    
     /**
      Enum defining values for bitmasks for checking colors against a given "color inclusion" value
      */
-    private enum ColorMask: Int16{
-        case whiteMask = 0x0001
-        case blueMask = 0x0002
-        case blackMask = 0x0004
-        case redMask = 0x0008
-        case greenMask = 0x0010
-        case colorlessMask = 0x0020
+    public enum ColorMask: Int16{
+        case wMask = 0x0001
+        case uMask = 0x0002
+        case bMask = 0x0004
+        case rMask = 0x0008
+        case gMask = 0x0010
+        case cMask = 0x0020
+        case anyMask = 0x0040
     }
     
     

@@ -66,7 +66,7 @@ class MTGDeckerTests: XCTestCase {
         
         let ratNames: [String] = ["Swamp", "Relentless Rats"]
         let elfNames: [String] = ["Forest", "Llanowar Elves", "Elvish Mystic", "Arbor Elf", "Elvish Archdruid", "Bow of Nylea", "Traveler\'s Amulet", "Naturalize", "Harvest Season", "Alloy Myr", "Nissa Revane"]
-        let nayaNames: [String] = ["Naya Hushblade", "Forest", "Plains", "Mountain", "Jungle Shrine", "Wind-Scarred Crag", "Rugged Highlands", "Blossoming Sands", "Mayael\'s Aria", "Mutagenic Growth", "Naya Charm", "Mayael the Anima", "Ghalta, Primal Hunger"]
+        let nayaNames: [String] = ["Naya Hushblade", "Forest", "Plains", "Mountain", "Jungle Shrine", "Wind-Scarred Crag", "Rugged Highlands", "Blossoming Sands", "Mayael\'s Aria", "Mutagenic Growth", "Naya Charm", "Selesnya Guildmage", "Ghalta, Primal Hunger"]
         
         for name in ratNames{
             cardAddGroup.enter()//one for the card
@@ -364,12 +364,12 @@ class MTGDeckerTests: XCTestCase {
         goodPool.r = 1
         goodPool.w = 1
         goodPool.g = 1
-        print(goodPool.payCost(ofCard: nayaCard))
+        //print(goodPool.payCost(ofCard: nayaCard))
         
         
         
         //Create "sample hand" for nayaSimulator
-        //[Jungle Shrine, Wind-Scarred Crag, Mayael\'s Aria, Ghalta, Primal Hunger, Naya Hushblade, Mountain, Mutagenic Growth]
+        //[Jungle Shrine, Wind-Scarred Crag, Forest, Ghalta, Primal Hunger, Naya Hushblade, Mountain, Mutagenic Growth]
         
         nayaSimulator.cards.swapAt(0, nayaSimulator.cards.index { (card) -> Bool in
             card.name == "Jungle Shrine"
@@ -378,7 +378,7 @@ class MTGDeckerTests: XCTestCase {
             card.name == "Wind-Scarred Crag"
             }!)
         nayaSimulator.cards.swapAt(2, nayaSimulator.cards.index { (card) -> Bool in
-            card.name == "Mayael\'s Aria"
+            card.name == "Forest"
             }!)
         nayaSimulator.cards.swapAt(3, nayaSimulator.cards.index { (card) -> Bool in
             card.name == "Ghalta, Primal Hunger"
@@ -390,16 +390,56 @@ class MTGDeckerTests: XCTestCase {
             card.name == "Mountain"
             }!)
         nayaSimulator.cards.swapAt(6, nayaSimulator.cards.index { (card) -> Bool in
-            card.name == "Mutagenic Growth"
+            card.name == "Selesnya Guildmage"
             }!)
         
-        let nayaState: FieldState = FieldState(deck: nayaSimulator.cards, handSize: 7)
+        var nayaState: FieldState = FieldState(deck: nayaSimulator.cards, handSize: 7)
         
-        XCTAssertNoThrow(try nayaState.playCard(name: "Mountain"))
-        XCTAssertNoThrow(try nayaState.playCard(name: "Mutagenic Growth"))
-        //print(nayaState)
+        XCTAssertNoThrow(nayaState = try nayaState.playCard(name: "Jungle Shrine").first!)
+        XCTAssertThrowsError(nayaState = try nayaState.playCard(name: "Wind-Scarred Crag").first!)
+        nayaState.advanceTurn()
+        XCTAssertNoThrow(nayaState = try nayaState.playCard(name: "Wind-Scarred Crag").first!)
+        XCTAssert(nayaState.allLandTapCombinations().count == 4)
+        nayaState.advanceTurn()
+        XCTAssertNoThrow(nayaState = try nayaState.playCard(name: "Forest").first!)
+        XCTAssert(try nayaState.playCard(name: "Selesnya Guildmage").count == 3)//only three land-tap combos can be done to play Selesnya Guildmage
+
+        //Going back to the simulator (which is still set up with that sweet opening hand), test some subconditions
         
+        let specificPlayable1: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        specificPlayable1.type = .playable
+        specificPlayable1.stringParam1 = "Mountain"
+        XCTAssert(try nayaSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: specificPlayable1))
         
+        let specificPlayable2: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        specificPlayable2.type = .playable
+        specificPlayable2.stringParam1 = "Ghalta, Primal Hunger"
+        XCTAssertFalse(try nayaSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: specificPlayable2))
+        
+        let creaturePlayable: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        creaturePlayable.type = .playable
+        creaturePlayable.typeParam = .creature
+        XCTAssert(try nayaSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: creaturePlayable))
+        
+        let manaCoverage: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        manaCoverage.type = .manaCoverage
+        XCTAssert(try nayaSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: manaCoverage))
+        XCTAssert(try nayaSimulator.testHandAgainstSubcondition(handSize: 1, subcondition: manaCoverage))//should also work with JUST Jungle Shrine
+        
+        let multiCondition: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
+        multiCondition.subconditionList = Set<Subcondition>([specificPlayable1, creaturePlayable])
+        XCTAssert(try nayaSimulator.testHandAgainstCondition(handSize: 7, condition: multiCondition))//yes, you have a playable mountain, and also a playable creature
+        let multiCondition2: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
+        multiCondition2.subconditionList = Set<Subcondition>([specificPlayable2, creaturePlayable])
+        XCTAssertFalse(try nayaSimulator.testHandAgainstCondition(handSize: 7, condition: multiCondition2))//no; while you have a playable mountain, you do not have the mana to play Ghalta, Primal Hunger
+        
+        let nayaKeepRule1: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
+        nayaKeepRule1.conditionList = Set<Condition>([multiCondition, multiCondition2])
+        XCTAssert(try nayaSimulator.testHandAgainstKeepRule(handSize: 7, keeprule: nayaKeepRule1))
+
+        print(elfSimulator.costBlockDescription())
+        print(nayaSimulator.costBlockDescription())
+        print(ratSimulator.costBlockDescription())
         
         
     }//testDecks

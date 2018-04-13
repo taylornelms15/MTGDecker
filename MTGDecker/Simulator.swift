@@ -21,6 +21,9 @@ internal class Simulator{
     var cards: [MCard]
     ///Represents the size of the simulator's deck
     var deckSize: Int
+    ///Represents the minimum mana coverage to play all cards in the deck
+    private var costBlock: CostBlock
+    
     
     internal init(deck: Deck){
         self.deck = deck
@@ -36,6 +39,12 @@ internal class Simulator{
                 }//for each card
             }//for card tuple
         }//for type
+        
+        costBlock = CostBlock()
+        for card in cards{
+            costBlock.addCostForCard(card: card)
+        }//for each card, add it's costs to the costBlock
+        
     }//init
     
     //MARK: Inspectors
@@ -60,6 +69,14 @@ internal class Simulator{
         }
         return resultArray
     }//pullOutHand
+    
+    /**
+     Presents a String representation of the internal CostBlock object (a private class)
+     - returns: String representation of all mana costs represented in the deck
+    */
+    public func costBlockDescription()->String{
+        return "\(self.costBlock)"
+    }//costBlockDescription
     
     
     //MARK: Deck Manipulators
@@ -130,9 +147,9 @@ internal class Simulator{
      - parameter keeprule: The Keep Rule against which we want to test the hand.
      - returns: Whether or not the hand passes the given condition
      */
-    internal func testHandAgainstKeepRule(handSize: Int, keeprule: KeepRule) -> Bool{
-        //if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
-        //if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
+    internal func testHandAgainstKeepRule(handSize: Int, keeprule: KeepRule) throws -> Bool{
+        if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
+        if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
         
         if keeprule.conditionList != nil && keeprule.conditionList!.count != 0{
             for condition in keeprule.conditionList!{
@@ -227,6 +244,11 @@ internal class Simulator{
         case .toughnessEqualTo:
             if subcondition.numParam1 == -1{ throw SimulatorError.stringNotValid(message: "For toughnessEqualTo conditions, must have value greater than -1 in numParam1") }
             return testToughnessEqualToSubcondition(subcondition, myHand)
+        case .playable:
+            let state: FieldState = FieldState(deck: cards, handSize: handSize)//makes a virtual play field to test playabilty
+            return testPlayabilitySubcondition(subcondition, state)
+        case .manaCoverage:
+            return testManaCoverageSubcondition(subcondition, myHand)
         default:
             return false
         }//switch (by subcondition type)
@@ -415,7 +437,380 @@ internal class Simulator{
         }//for
         return (lowEnd <= total) && (highEnd >= total)
     }//testPowerEqualToSubcondition
-
+    ///Tests playability of a card specified
+    fileprivate func testPlayabilitySubcondition(_ subcondition: Subcondition, _ state: FieldState) -> Bool{
+        let hand: [MCard] = Array<MCard>(state.hand)
+        var targetCards: Set<MCard> = Set<MCard>()
+        if subcondition.stringParam1 != nil{
+            if let target: MCard = hand.first(where: { (card) -> Bool in
+                card.name == subcondition.stringParam1
+            }){
+                targetCards.insert(target)
+            }//if the hand has a card with a name match, put it in the list of targets
+        }//if we're looking for a card with a given name
+        else{
+            switch subcondition.typeParam{
+                case .none:
+                    NSLog("Somehow ended up seaching for playability of a non-extant card type")//TODO: error-handle this better
+                    return false
+                case .land:
+                    for card in hand{
+                        if card.isLand(){
+                            targetCards.insert(card)
+                        }
+                    }
+                case .creature:
+                    for card in hand{
+                        if card.isCreature(){
+                            targetCards.insert(card)
+                        }
+                    }
+                case .planeswalker:
+                    for card in hand{
+                        if card.isPlaneswalker(){
+                            targetCards.insert(card)
+                        }
+                    }
+                case .artifact:
+                    for card in hand{
+                        if card.isArtifact(){
+                            targetCards.insert(card)
+                        }
+                    }
+                case .enchantment:
+                    for card in hand{
+                        if card.isEnchantment(){
+                            targetCards.insert(card)
+                        }
+                    }
+                case .instant:
+                    for card in hand{
+                        if card.isInstant(){
+                            targetCards.insert(card)
+                        }
+                    }
+                case .sorcery:
+                    for card in hand{
+                        if card.isSorcery(){
+                            targetCards.insert(card)
+                        }
+                    }
+            }//if we're looking for cards with a given type
+        }//else
+        
+        //for all of our target cards, see if we could feasibly play them
+        for target in targetCards{
+            if state.manaPool.canCoverCost(ofCard: target){
+                return true//return true for lands or 0-cost cards
+            }
+            
+            let possiblePools: Set<ManaPool> = state.possibleManaPoolsFromHand()
+            for possibility in possiblePools{
+                if possibility.canCoverCost(ofCard: target){
+                    return true
+                }//if that possible mana yield could play the target card
+            }//for each possible mana yield from all lands in hand
+        }//for each "success if playable" target card
+            
+        
+        
+        return false
+    }//testPlayabilitySubcondition
+    ///Tests mana coverage of lands in hand
+    fileprivate func testManaCoverageSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool{
+        let testBlock: CostBlock = CostBlock(block: self.costBlock)//makes a copy of the deck's cost block to test against
+        
+        let lands: [MCardLand] = myHand.filter { (card) -> Bool in
+            return card is MCardLand
+        } as? [MCardLand] ?? [] //gives us either an array of [MCardLand], or []
+        
+        for landCard in lands{
+            testBlock.subCostForLand(land: landCard)
+        }//for each land in hand
+        
+        return testBlock.isEmpty()//if we've covered all the deck's mana cost colors within the current hand, we're set
+        
+    }//testManaCoverageSubcondition
+    
+    private class CostBlock: CustomStringConvertible{
+        
+        var w: Bool = false
+        var u: Bool = false
+        var b: Bool = false
+        var r: Bool = false
+        var g: Bool = false
+        var c: Bool = false
+        var any: Bool = false
+        var wu: Bool = false
+        var ub: Bool = false
+        var br: Bool = false
+        var rg: Bool = false
+        var gw: Bool = false
+        var wb: Bool = false
+        var ur: Bool = false
+        var bg: Bool = false
+        var rw: Bool = false
+        var gu: Bool = false
+        
+        init(){
+            
+        }//default initializer
+        
+        init(block: CostBlock){
+            self.w = block.w
+            self.u = block.u
+            self.b = block.b
+            self.r = block.r
+            self.g = block.g
+            self.c = block.c
+            self.any = block.any
+            self.wu = block.wu
+            self.ub = block.ub
+            self.br = block.br
+            self.rg = block.rg
+            self.gw = block.gw
+            self.wb = block.wb
+            self.ur = block.ur
+            self.bg = block.bg
+            self.rw = block.rw
+            self.gu = block.gu
+        }//init from another block
+        
+        var description: String{
+            var result: String = "["
+            if w {result += " w"}
+            if u {result += " u"}
+            if b {result += " b"}
+            if r {result += " r"}
+            if g {result += " g"}
+            if c {result += " c"}
+            if any {result += " any"}
+            if wu {result += " wu"}
+            if ub {result += " ub"}
+            if br {result += " br"}
+            if rg {result += " rg"}
+            if gw {result += " gw"}
+            if wb {result += " wb"}
+            if ur {result += " ur"}
+            if bg {result += " bg"}
+            if rw {result += " rw"}
+            if gu {result += " gu"}
+            result += " ]"
+            
+            return result
+        }//description
+        
+        func isEmpty()->Bool{
+            return !w && !u && !b && !r && !g && !c && !any && !wu && !ub && !br && !rg && !gw && !wb && !ur && !bg && !rw && !gu
+        }
+        
+        func addCostForCard(card: MCard){
+            if card.whiteCost       > 0 {self.w = true}
+            if card.blueCost        > 0 {self.u = true}
+            if card.blackCost       > 0 {self.b = true}
+            if card.redCost         > 0 {self.r = true}
+            if card.greenCost       > 0 {self.g = true}
+            if card.colorlessCost   > 0 {self.c = true}
+            if card.anymanaCost     > 0 {self.any = true}
+            if card.whiteblueCost   > 0 {self.wu = true}
+            if card.blueblackCost   > 0 {self.ub = true}
+            if card.blackredCost    > 0 {self.br = true}
+            if card.redgreenCost    > 0 {self.rg = true}
+            if card.greenwhiteCost  > 0 {self.gw = true}
+            if card.whiteblackCost  > 0 {self.wb = true}
+            if card.blueredCost     > 0 {self.ur = true}
+            if card.blackgreenCost  > 0 {self.bg = true}
+            if card.redwhiteCost    > 0 {self.rw = true}
+            if card.greenblueCost   > 0 {self.gu = true}
+        }//addCostForCard
+        
+        func subCostForLand(land: MCardLand){
+            if self.isEmpty(){return}//don't bother going through this noise if we're already covered
+            if land.wYield > 0{
+                self.subCostWhite()
+            }
+            if land.uYield > 0{
+                self.subCostBlue()
+            }
+            if land.bYield > 0{
+                self.subCostBlack()
+            }
+            if land.rYield > 0{
+                self.subCostRed()
+            }
+            if land.gYield > 0{
+                self.subCostGreen()
+            }
+            if land.cYield > 0{
+                self.subCostColorless()
+            }
+            if land.anyYield > 0{
+                self.subCostWhite()
+                self.subCostBlue()
+                self.subCostBlack()
+                self.subCostRed()
+                self.subCostGreen()
+                self.subCostColorless()
+            }
+            if land.wuYield != 0{
+                if land.wuYield > 0{
+                    self.subCostWhite()
+                    self.subCostBlue()
+                }
+                else{
+                    self.subCostBlack()
+                    self.subCostRed()
+                    self.subCostGreen()
+                }
+            }//if WUYield
+            if land.ubYield != 0{
+                if land.ubYield > 0{
+                    self.subCostBlack()
+                    self.subCostBlue()
+                }
+                else{
+                    self.subCostWhite()
+                    self.subCostRed()
+                    self.subCostGreen()
+                }
+            }//if UBYield
+            if land.brYield != 0{
+                if land.brYield > 0{
+                    self.subCostBlack()
+                    self.subCostRed()
+                }
+                else{
+                    self.subCostWhite()
+                    self.subCostBlue()
+                    self.subCostGreen()
+                }
+            }//if BRYield
+            if land.rgYield != 0{
+                if land.rgYield > 0{
+                    self.subCostGreen()
+                    self.subCostRed()
+                }
+                else{
+                    self.subCostWhite()
+                    self.subCostBlue()
+                    self.subCostBlack()
+                }
+            }//if RGYield
+            if land.gwYield != 0{
+                if land.gwYield > 0{
+                    self.subCostGreen()
+                    self.subCostWhite()
+                }
+                else{
+                    self.subCostRed()
+                    self.subCostBlue()
+                    self.subCostBlack()
+                }
+            }//if GWYield
+            if land.wbYield != 0{
+                if land.wbYield > 0{
+                    self.subCostBlack()
+                    self.subCostWhite()
+                }
+                else{
+                    self.subCostRed()
+                    self.subCostBlue()
+                    self.subCostGreen()
+                }
+            }//if WBYield
+            if land.urYield != 0{
+                if land.urYield > 0{
+                    self.subCostBlue()
+                    self.subCostRed()
+                }
+                else{
+                    self.subCostWhite()
+                    self.subCostBlack()
+                    self.subCostGreen()
+                }
+            }//if URYield
+            if land.bgYield != 0{
+                if land.bgYield > 0{
+                    self.subCostBlack()
+                    self.subCostGreen()
+                }
+                else{
+                    self.subCostRed()
+                    self.subCostBlue()
+                    self.subCostWhite()
+                }
+            }//if BGYield
+            if land.rwYield != 0{
+                if land.rwYield > 0{
+                    self.subCostWhite()
+                    self.subCostRed()
+                }
+                else{
+                    self.subCostBlue()
+                    self.subCostBlack()
+                    self.subCostGreen()
+                }
+            }//if RWYield
+            if land.guYield != 0{
+                if land.guYield > 0{
+                    self.subCostBlue()
+                    self.subCostGreen()
+                }
+                else{
+                    self.subCostRed()
+                    self.subCostBlack()
+                    self.subCostWhite()
+                }
+            }//if GUYield
+        }//subCostForLand
+        
+        func subCostWhite(){
+            self.w = false
+            self.wu = false
+            self.gw = false
+            self.wb = false
+            self.rw = false
+            self.any = false
+        }//subCostWhite
+        func subCostBlue(){
+            self.u = false
+            self.wu = false
+            self.ub = false
+            self.gu = false
+            self.ur = false
+            self.any = false
+        }//subCostBlue
+        func subCostBlack(){
+            self.b = false
+            self.wb = false
+            self.ub = false
+            self.br = false
+            self.bg = false
+            self.any = false
+        }//subCostBlack
+        func subCostRed(){
+            self.r = false
+            self.rw = false
+            self.ur = false
+            self.br = false
+            self.rg = false
+            self.any = false
+        }//subCostRed
+        func subCostGreen(){
+            self.g = false
+            self.gw = false
+            self.gu = false
+            self.bg = false
+            self.rg = false
+            self.any = false
+        }//subCostGreen
+        func subCostColorless(){
+            self.c = false
+            self.any = false
+        }//subCostColorless
+        
+    }//CostBlock
+    
 }//Simulator
 
 

@@ -135,11 +135,35 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         
         //First, get the set of our states with any/all lands tapped
         var poolTestStates: Set<FieldState> = self.allLandTapCombinations()
+        for state in poolTestStates{
+            if state.manaPool.canCoverCost(ofCard: card) == false{
+                poolTestStates.remove(state)
+            }//if that iteration of mana taps won't pay the cost, remove them from consideration
+        }//for
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        for state in poolTestStates{
+            for costResult in state.manaPool.payCost(ofCard: card){
+                let newState: FieldState = FieldState(state: state)
+                newState.hand.remove(at: cardIndex)
+                newState.manaPool = costResult
+                newState.battlefield.append( FieldCard(card: card, isTapped: false))
+                resultStates.insert(newState)
+            }
+        }
+        
+        //Only return the states that don't waste mana (no mana burn here!)
+        let mostEfficient: FieldState = resultStates.min { (state1, state2) -> Bool in
+            return state1.manaPool < state2.manaPool
+        }!
+        resultStates = resultStates.filter({ (state) -> Bool in
+            return state.manaPool == mostEfficient.manaPool
+        })
         
         
         
-        
-        return Set<FieldState>()
+        return resultStates
     }//playCard
     
     public func allLandTapCombinations() -> Set<FieldState>{
@@ -208,6 +232,31 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
       
         return resultStates
     }//tapLandAtIndex
+    
+    public func possibleManaPoolsFromHand()->Set<ManaPool>{
+        
+        //make a fake FieldState (we won't worry about removing lands from the hand; we'll just put them out)
+        let testState = FieldState(state: self)
+        
+        //Put all lands from hand onto battlefield
+        for card in testState.hand{
+            if card.isLand(){
+                let newFieldCard = FieldCard(card: card, isTapped: false)
+                testState.battlefield.append(newFieldCard)
+            }
+        }
+        
+        //untap anything on our battlefield
+        for i in 0 ..< testState.battlefield.count{
+            if testState.battlefield[i].isTapped{
+                let newCard: FieldCard = FieldCard(card: testState.battlefield[i].card, isTapped: false)
+                testState.battlefield[i] = newCard
+            }
+        }//for each card on the battlefield
+        
+        //see how all those untapped lands could possibly play out
+        return testState.possibleManaPools()
+    }//possibleManaPoolsFromHand
     
     public func possibleManaPools()->Set<ManaPool>{
         let currentManaPool = self.manaPool
