@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-internal class FieldState: CustomStringConvertible{
+internal class FieldState: CustomStringConvertible, Equatable, Hashable{
     
     ///The raw list of cards we're using as our deck. By default, initial hand, library, and graveyard are pulled from this
     var cardDeck: [MCard]
@@ -45,7 +45,49 @@ internal class FieldState: CustomStringConvertible{
         self.hasPlayedLand = state.hasPlayedLand
     }//init (copy)
     
-    public func playCard(name: String) throws -> [FieldState]{
+    static func == (lhs: FieldState, rhs: FieldState) -> Bool {
+        
+        if lhs.manaPool != rhs.manaPool {return false}
+        if lhs.turnNumber != rhs.turnNumber {return false}
+        //hand, graveyard, battlefield: not order-dependent
+        if !lhs.hand.containsSameElements(as: rhs.hand){
+            return false
+        }
+        if !lhs.graveyard.containsSameElements(as: rhs.graveyard){
+            return false
+        }
+        if !lhs.battlefield.containsSameElements(as: rhs.battlefield){
+            return false
+        }
+        if lhs.library.count != rhs.library.count {return false}
+        for i in 0 ..< lhs.library.count{
+            if lhs.library[i] != rhs.library[i] {return false}
+        }
+        
+        return true
+    }//operator ==
+    
+    //TODO: make not a terrible function
+    var hashValue: Int{
+        return manaPool.hashValue ^ turnNumber.hashValue ^ hasPlayedLand.hashValue
+    }//hashValue
+    
+    public func advanceTurn(){
+        //TODO: draw cards maybe? (later date)
+        turnNumber += 1//increase turn number
+        hasPlayedLand = false//allow us to play another land
+        manaPool = ManaPool()//clear the mana pool
+        
+        for i in 0 ..< battlefield.count{
+            if battlefield[i].isTapped{
+                let newCard: FieldCard = FieldCard(card: battlefield[i].card, isTapped: false)
+                battlefield[i] = newCard
+            }
+        }//for each card on the battlefield
+    }//advanceTurn
+    
+    
+    public func playCard(name: String) throws -> Set<FieldState>{
         if !self.hand.contains(where: { (card) -> Bool in
             card.name == name
         }){
@@ -65,7 +107,7 @@ internal class FieldState: CustomStringConvertible{
      Tries to play a card. Throws an error if it can't, for whatever reason.
      - returns: An array of possible states where the card has been played
      */
-    public func playCard(card: MCard) throws -> [FieldState]{
+    public func playCard(card: MCard) throws -> Set<FieldState>{
         if self.hand.contains(card) == false { throw FieldStateError.notInHand(message: "Specified card (\(card.name)) not in hand")}
         let cardIndex: Int = self.hand.index(of: card)!
         
@@ -83,26 +125,76 @@ internal class FieldState: CustomStringConvertible{
             newState.battlefield.append(playedCard)
             newState.hasPlayedLand = true
             
-            return [newState]
+            var result = Set<FieldState>()
+            result.insert(newState)
+            return result
         }//easy version for playing lands. TODO: OVERRIDE ONCE LANDS WITH COSTS HAPPEN
         
         //For non-land plays
-        if card.canPayCostFrom(pool: self.manaPool){
-            
-        }
+
+        
+        //First, get the set of our states with any/all lands tapped
+        var poolTestStates: Set<FieldState> = self.allLandTapCombinations()
         
         
-        return []
+        
+        
+        return Set<FieldState>()
     }//playCard
     
-    public func tapLandAtIndex(index: Int) throws -> [FieldState]{
+    public func allLandTapCombinations() -> Set<FieldState>{
+        //first, get indexes of our tappable lands
+        var tappableIndexes: [Int] = []
+        for i in 0 ..< self.battlefield.count{
+            if !self.battlefield[i].isTapped && self.battlefield[i].card is MCardLand{
+                tappableIndexes.append(i)
+            }
+        }
+        
+        let indexCombos: [[Int]] = tappableIndexes.allCombinations()
+        
+        var landTapCombos: Set<FieldState> = Set<FieldState>()
+        let noTap: FieldState = FieldState(state: self)
+        landTapCombos.insert(noTap)
+        
+        for combo in indexCombos{//each combination must have at least one value
+            var toTapSet: Set<FieldState> = Set<FieldState>([self])
+            var resultSet: Set<FieldState> = Set<FieldState>()
+            for landIndex in combo{
+                for state in toTapSet{
+                    do{resultSet = resultSet.union(try state.tapLandAtIndex(index: landIndex))}catch{NSLog("\(error)")}//add to resultSet the results of tapping the next land in the toTapSet states
+                }//for each variant
+                toTapSet = resultSet
+                resultSet = Set<FieldState>()
+            }//for each land in each combo
+            
+            landTapCombos = landTapCombos.union(toTapSet)
+        }//for each set of tappability combinations
+        
+        
+        
+        return landTapCombos
+    }//allLandTapCombinations
+    
+    private func containsTappableLand() -> Bool{
+        if battlefield.count == 0 {return false}
+        return battlefield.filter({ (fieldCard) -> Bool in
+            return !fieldCard.isTapped && fieldCard.card is MCardLand
+        }).count > 0
+    }//containsTappableLand
+    
+    /**
+     Taps the land at a given battlefield index.
+     - returns: A set of field states reflecting that land being tapped. Is a set containing all possible mana pools resulting from that tap
+     */
+    public func tapLandAtIndex(index: Int) throws -> Set<FieldState>{
         if self.battlefield.count == 0 || index < 0 || index >= battlefield.count{ throw FieldStateError.indexOOB(message: "Index \(index) out of bounds") }
         if (self.battlefield[index].card is MCardLand) == false{ throw FieldStateError.indexOOB(message: "Card at index \(index) is not a land card") }
         if (self.battlefield[index].isTapped){ throw FieldStateError.cannotPayCost(message: "Land at index \(index) is already tapped") }
         
         let landCard: MCardLand = self.battlefield[index].card as! MCardLand
         
-        var resultStates: [FieldState] = []
+        var resultStates: Set<FieldState> = Set<FieldState>()
         
         for possibleYield: ManaPool in landCard.possibleYields(){
             let newState: FieldState = FieldState(state: self)//make copy of current state
@@ -110,14 +202,14 @@ internal class FieldState: CustomStringConvertible{
             newState.battlefield[index].isTapped = true //tap the land
             newState.manaPool = newState.manaPool + possibleYield //add that particular yield to the mana pool
             
-            resultStates.append(newState)
+            resultStates.insert(newState)
             
         }//for each possible mana pool yield
       
         return resultStates
     }//tapLandAtIndex
     
-    public func possibleManaPools()->[ManaPool]{
+    public func possibleManaPools()->Set<ManaPool>{
         let currentManaPool = self.manaPool
         let untappedLands: [FieldCard] = battlefield.filter { (fieldCard) -> Bool in
             fieldCard.card.isLand() && !fieldCard.isTapped
@@ -127,45 +219,51 @@ internal class FieldState: CustomStringConvertible{
             landCards.append(land.card as! MCardLand)
         }
         
-        var result: [ManaPool] = []
-        result.append(currentManaPool)
+        var result: Set<ManaPool> = Set<ManaPool>()
+        result.insert(currentManaPool)
         
         for land in landCards{
             for pool in result{
                 for possibleYield in land.possibleYields(){
                     let altPool = pool + possibleYield
-                    result.append(altPool)
+                    result.insert(altPool)
                 }//for each possible yield per land card
             }//for each currently possible pool
         }//for each land card
-
-        result = Array<ManaPool>(Set<ManaPool>(result))//remove duplicates
         
         return result
     }//possibleManaPools
     
     public var description: String{
-        var handString = "Hand: {"
+        var handString = "\tHand: {"
         for card in self.hand{
             handString.append("[\(card.name)] ")
         }
         handString.append("}")
-        var battlefieldString = "Battlefield: {"
+        var battlefieldString = "\tBattlefield: {"
         for card in self.battlefield{
             battlefieldString.append("\(card)")
         }
         battlefieldString.append("}")
         
-        return "\(handString)\n\(battlefieldString)"
+        return "\t\(manaPool)\n\(handString)\n\(battlefieldString)\n"
     }//description
     
-    internal struct FieldCard: CustomStringConvertible{
+    internal struct FieldCard: CustomStringConvertible, Comparable, Hashable{
+ 
         var card: MCard
         var isTapped: Bool = false
         
         public var description: String{
             return "[\(card.name)\(isTapped ? ", tapped" : "" )]"
         }
+        
+        static func < (lhs: FieldState.FieldCard, rhs: FieldState.FieldCard) -> Bool {
+            if lhs.card < rhs.card{ return true }
+            if lhs.card >= rhs.card{ return false }
+            if !lhs.isTapped && rhs.isTapped{ return true }
+            return false
+        }//operator <
         
     }//FieldCard
     
@@ -177,3 +275,32 @@ enum FieldStateError: Error{
     case noTwoLands(message: String)
     case indexOOB(message: String)
 }//SimulatorError
+
+extension Array where Element: Comparable {
+    func containsSameElements(as other: [Element]) -> Bool {
+        return self.count == other.count && self.sorted() == other.sorted()
+    }
+}
+
+extension Array where Element: Equatable{
+    func allCombinations() -> [[Element]]{
+        if self.count == 0{
+            return [[]]
+        }
+        
+        var result: [[Element]] = [self]
+        
+        for i in 0 ..< self.count{
+            var iCopy: Array<Element> = Array<Element>(self)
+            iCopy.remove(at: i)
+            for subArray in iCopy.allCombinations(){
+                if subArray.count > 0 && !result.contains(subArray){
+                    result.append(subArray)
+                }
+            }
+            
+        }//for each index
+        
+        return result
+    }
+}//Array Extension (combinations)

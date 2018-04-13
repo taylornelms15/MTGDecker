@@ -108,7 +108,7 @@ public class MCard: NSManagedObject, Comparable {
     /**
      Tries a number of mana pools; returns one that works, or nil if none do
     */
-    public func canPayCostFrom(pools: [ManaPool]) -> ManaPool?{
+    public func canPayCostFrom(pools: Set<ManaPool>) -> ManaPool?{
         for pool in pools{
             if self.canPayCostFrom(pool: pool){
                 return pool

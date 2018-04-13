@@ -97,7 +97,7 @@ class CardSearchViewController: UIViewController, UITableViewDataSource, UITable
     
     func filterContentForSearchText(_ searchText: String, scope: String = "All") {
         
-        var searchingText: String = CardSearchViewController.sterilizeQuotes(searchText)
+        let searchingText: String = CardSearchViewController.sterilizeQuotes(searchText)
         
         currentlyVisibleNames = cardNameList!.cardNames!.filter({( name : String) -> Bool in
             return name.lowercased().contains(searchingText.lowercased())

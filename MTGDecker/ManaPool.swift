@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class ManaPool: Equatable, Hashable, CustomStringConvertible{
+public class ManaPool: Equatable, Hashable, CustomStringConvertible, Comparable{
     
     ///White mana in the pool
     var w: Int = 0
@@ -50,6 +50,11 @@ public class ManaPool: Equatable, Hashable, CustomStringConvertible{
         return resultPool
     }//Operator +
     
+    ///Compares CMC totals
+    public static func < (lhs: ManaPool, rhs: ManaPool) -> Bool{
+        return lhs.totalCMC < rhs.totalCMC
+    }//Operator <
+    
     static public func == (lhs: ManaPool, rhs: ManaPool) -> Bool{
         return (lhs.w == rhs.w) && (lhs.u == rhs.u) && (lhs.b == rhs.b) && (lhs.r == rhs.r) && (lhs.g == rhs.g) && (lhs.c == rhs.c)
     }//Operator ==
@@ -60,6 +65,10 @@ public class ManaPool: Equatable, Hashable, CustomStringConvertible{
     
     public var description: String{
         return "{*MP* w:\(w) u:\(u) b:\(b) r:\(r) g:\(g) c:\(c)}"
+    }
+    
+    public var totalCMC: Int{
+        return w + u + b + r + g + c
     }
     
     ///Important: DO NOT call this if the cost cannot be paid (todo: make this not be the case)
