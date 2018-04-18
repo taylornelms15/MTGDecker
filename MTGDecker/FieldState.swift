@@ -72,6 +72,9 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         return manaPool.hashValue ^ turnNumber.hashValue ^ hasPlayedLand.hashValue
     }//hashValue
     
+    /**
+     Sets up for next turn (functions as the Untap and Upkeep phases). One of the few deliberately mutating methods for this class
+     */
     public func advanceTurn(){
         //TODO: draw cards maybe? (later date)
         turnNumber += 1//increase turn number
@@ -165,6 +168,57 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         
         return resultStates
     }//playCard
+    
+    
+    /**
+     Simulates all possible ways a turn could shape up from a given state. Only returns itself in the resultant set if there is no other play to make, which allows for recursion
+     - returns: Set of all `FieldState` objects representing the possible outcomes of the current turn
+    */
+    public func allTurnResults() -> Set<FieldState>{
+        var resultSet: Set<FieldState> = Set<FieldState>()//This is the resultant "down-the-tree" set, where we've iterated through all possibilities
+        var progressSet: Set<FieldState> = Set<FieldState>()//This is the "after one play" set, where we don't yet iterate through
+
+        for card in self.hand{
+            if card.isLand() == false{
+                var playThatCard: Set<FieldState>?
+                do{
+                    playThatCard = try self.playCard(card: card)
+                }
+                catch FieldStateError.cannotPayCost{//the other function call handles the "but what if we don't have the mana for that?"
+                    playThatCard = nil
+                }
+                catch{
+                    NSLog("Unexpected Error: \(error)")
+                }
+                
+                progressSet = progressSet.union(playThatCard ?? Set<FieldState>())
+                
+            }//for any non-land cards
+            else{
+                if self.hasPlayedLand == false{
+                    var playThatCard: Set<FieldState>?
+                    do{
+                        playThatCard = try self.playCard(card: card)
+                    }
+                    catch{
+                        NSLog("Unexpected Error: \(error)")
+                    }
+                    
+                    progressSet = progressSet.union(playThatCard ?? Set<FieldState>())
+                }//if we haven't played the land yet
+            }//for land cards
+        }//for each card in hand
+        
+        if progressSet.count == 0{
+            return Set<FieldState>([self])
+        }//if we don't have any plays to make, return our own self
+        for state in progressSet{
+            resultSet = resultSet.union(state.allTurnResults())
+        }
+        
+        
+        return resultSet
+    }//allTurnResults
     
     public func allLandTapCombinations() -> Set<FieldState>{
         //first, get indexes of our tappable lands

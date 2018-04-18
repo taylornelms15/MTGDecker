@@ -22,7 +22,7 @@ internal class Simulator{
     ///Represents the size of the simulator's deck
     var deckSize: Int
     ///Represents the minimum mana coverage to play all cards in the deck
-    private var costBlock: CostBlock
+    internal var costBlock: CostBlock
     
     
     internal init(deck: Deck){
@@ -46,6 +46,19 @@ internal class Simulator{
         }//for each card, add it's costs to the costBlock
         
     }//init
+    internal init(simulator: Simulator){
+        self.cards = Array<MCard>()
+        self.costBlock = simulator.costBlock
+        self.deck = simulator.deck
+        
+        for card in simulator.cards{
+            self.cards.append(card)
+        }
+        
+        self.deckSize = self.cards.count
+        
+    }//init (quick-copy)
+    
     
     //MARK: Inspectors
     
@@ -140,6 +153,137 @@ internal class Simulator{
     //MARK: Simulator functions
     
     /**
+     Tests a deck against the given set of mulligan rules a given number of times. Defaults to a 7-card hand draw initially.
+    */
+    internal func testDeckAgainstMulliganMultiple(ruleset: MulliganRuleset, repetitions: Int) -> SimulationResult{
+        var result: SimulationResult = SimulationResult()
+        let simulatorGroup: DispatchGroup = DispatchGroup()
+        let resultQueue: DispatchQueue = DispatchQueue(label: "Simulation Result")
+        
+        for _ in 0 ..< repetitions{
+            let testSimulator: Simulator = Simulator(simulator: self)
+            testSimulator.shuffleDeck()
+            simulatorGroup.enter()
+            DispatchQueue.global(qos: .userInitiated).async {
+                do{
+                    let testResult: SimulationResult = try testSimulator.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: 7)
+                resultQueue.sync {
+                    result += testResult
+                    simulatorGroup.leave()
+                }//result update queue
+                } catch{
+                    NSLog("Error testing the deck a bunch: \(error)")
+                }
+            }//global queue
+
+        }//for
+        
+        simulatorGroup.wait()//wait for all the repetitions to finish
+        
+        return result
+        
+    }//testDeckAgainstMulliganMultiple
+    
+    /**
+     Tests the deck against a set of Mulligan Rules. Returns a SimulationResult obect that contains, essentially, what size the hand was when it was accepted, given the set of rules. Note: operates recursively, reducing handSize until it lands on a 3-card hand (woof), which it automatically accepts. This behavior cannot be changed.
+     - parameter ruleset: The `MulliganRuleset` against which to run the draw.
+     - parameter handSize: the size of the hand to draw off the current deck.
+     - returns: A `SimulationResult` object encapsulating the relevant metadata of how that particular hand draw operated
+     */
+    internal func testDeckAgainstMulliganRuleset(ruleset: MulliganRuleset, handSize: Int) throws -> SimulationResult{
+        if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
+        if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
+        if handSize > 7{ throw SimulatorError.cardIndexOOB(message: "Mulligan rules not supported for hand sizes larger than 7") }
+        if handSize < 3{ throw SimulatorError.cardIndexOOB(message: "Mulligan rules not supported for hand sizes smaller than 3") }
+        
+        switch handSize{
+        case 7:
+            if ruleset.keepRule7 != nil{
+                if try self.testHandAgainstKeepRule(handSize: handSize, keeprule: ruleset.keepRule7!){
+                    let result: SimulationResult = SimulationResult()
+                    result.numTrials = 1
+                    result.card7Successes = 1
+                    return result
+                }//if we pass the test
+                else{
+                    self.shuffleDeck()
+                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1) //recurse down to the smaller size
+                }
+            }
+            else{
+                let result: SimulationResult = SimulationResult()
+                result.numTrials = 1
+                result.card7Successes = 1
+                return result
+            }//if there isn't a rule for 7-card hands, keep all 7-card hands
+        case 6:
+            if ruleset.keepRule6 != nil{
+                if try self.testHandAgainstKeepRule(handSize: handSize, keeprule: ruleset.keepRule6!){
+                    let result: SimulationResult = SimulationResult()
+                    result.numTrials = 1
+                    result.card6Successes = 1
+                    return result
+                }//if we pass the test
+                else{
+                    self.shuffleDeck()
+                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1) //recurse down to the smaller size
+                }
+            }
+            else{
+                let result: SimulationResult = SimulationResult()
+                result.numTrials = 1
+                result.card6Successes = 1
+                return result
+        }//if there isn't a rule for 6-card hands, keep all 6-card hands
+        case 5:
+            if ruleset.keepRule5 != nil{
+                if try self.testHandAgainstKeepRule(handSize: handSize, keeprule: ruleset.keepRule5!){
+                    let result: SimulationResult = SimulationResult()
+                    result.numTrials = 1
+                    result.card5Successes = 1
+                    return result
+                }//if we pass the test
+                else{
+                    self.shuffleDeck()
+                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1) //recurse down to the smaller size
+                }
+            }
+            else{
+                let result: SimulationResult = SimulationResult()
+                result.numTrials = 1
+                result.card5Successes = 1
+                return result
+        }//if there isn't a rule for 6-card hands, keep all 6-card hands
+        case 4:
+            if ruleset.keepRule4 != nil{
+                if try self.testHandAgainstKeepRule(handSize: handSize, keeprule: ruleset.keepRule4!){
+                    let result: SimulationResult = SimulationResult()
+                    result.numTrials = 1
+                    result.card4Successes = 1
+                    return result
+                }//if we pass the test
+                else{
+                    self.shuffleDeck()
+                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1) //recurse down to the smaller size
+                }
+            }
+            else{
+                let result: SimulationResult = SimulationResult()
+                result.numTrials = 1
+                result.card4Successes = 1
+                return result
+        }//if there isn't a rule for 6-card hands, keep all 6-card hands
+        case 3://hard default to "accept all 3-card hands"
+            let result: SimulationResult = SimulationResult()
+            result.numTrials = 1
+            result.card3Successes = 1
+            return result
+        default: throw SimulatorError.cardIndexOOB(message: "Mulligan rules not supported for hand sizes larger than 7 or smaller than 4")
+            
+        }//which hand size
+    }//testDeckAgainstMulliganRuleset
+    
+    /**
      Tests a hand of a given size against a given Keep Rule. Throws most of the heavy lifting to the testHandAgainstCondition function
      
      Notably, this differs from testing conditions in that subconditions are AND'ed together, while conditions are OR'd together, for the purposes of evaluating rules.
@@ -198,618 +342,8 @@ internal class Simulator{
         
     }//testHandAgainstCondition
     
-    /**
-     Tests a hand of a given size against a given subcondition. Handles all relevant logic inside this class (as opposed to the Subcondition itself matching its conditions)
-     - parameter handSize: The size of the hand to test against the subcondition. Without shuffling, tests this many cards from the top of the deck against this.
-     - parameter subcondition: The subcondition against which we want to test the hand.
-     - throws: Throws SimulatorError.cardIndexOOB if handSize is larger than the size of the deck, or less than 1
-     - returns: Whether or not the hand passes the given subcondition
-     */
-    internal func testHandAgainstSubcondition(handSize: Int, subcondition: Subcondition) throws -> Bool{
-        if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
-        if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
-        
-        let myHand: [MCard] = try self.pullOutHand(fromIndex: 0, toIndex: handSize - 1)
-        
-        switch subcondition.type{
-        case .landTotal:
-            return testLandTotalSubcondition(subcondition, myHand)
-        case .creatureTotal:
-            return testCreatureTotalSubcondition(subcondition, myHand)
-        case .planeswalkerTotal:
-            return testPlaneswalkerTotalSubcondition(subcondition, myHand)
-        case .artifactTotal:
-            return testArtifactTotalSubcondition(subcondition, myHand)
-        case .enchantmentTotal:
-            return testEnchantmentTotalSubcondition(subcondition, myHand)
-        case .instantTotal:
-            return testInstantTotalSubcondition(subcondition, myHand)
-        case .sorceryTotal:
-            return testSorceryTotalSubcondition(subcondition, myHand)
-        case .nameEqualTo:
-            if subcondition.stringParam1 == nil{ throw SimulatorError.stringNotValid(message: "For nameEqualTo conditions, must have string value in stringParam1") }
-            return testNameEqualToSubcondition(subcondition, myHand)
-        case .cmcEqualTo:
-            if subcondition.numParam1 == -1{ throw SimulatorError.stringNotValid(message: "For cmcEqualTo conditions, must have value greater than -1 in numParam1") }
-            return testCmcEqualToSubcondition(subcondition, myHand)
-        case .subtypeEqualTo:
-            if subcondition.stringParam1 == nil{ throw SimulatorError.stringNotValid(message: "For subtypeEqualTo conditions, must have string value in stringParam1") }
-            return testSubtypeEqualToSubcondition(subcondition, myHand)
-        case .supertypeEqualTo:
-            if subcondition.stringParam1 == nil{ throw SimulatorError.stringNotValid(message: "For supertypeEqualTo conditions, must have string value in stringParam1") }
-            return testSupertypeEqualToSubcondition(subcondition, myHand)
-        case .powerEqualTo:
-            if subcondition.numParam1 == -1{ throw SimulatorError.stringNotValid(message: "For powerEqualTo conditions, must have value greater than -1 in numParam1") }
-            return testPowerEqualToSubcondition(subcondition, myHand)
-        case .toughnessEqualTo:
-            if subcondition.numParam1 == -1{ throw SimulatorError.stringNotValid(message: "For toughnessEqualTo conditions, must have value greater than -1 in numParam1") }
-            return testToughnessEqualToSubcondition(subcondition, myHand)
-        case .playable:
-            let state: FieldState = FieldState(deck: cards, handSize: handSize)//makes a virtual play field to test playabilty
-            return testPlayabilitySubcondition(subcondition, state)
-        case .manaCoverage:
-            return testManaCoverageSubcondition(subcondition, myHand)
-        default:
-            return false
-        }//switch (by subcondition type)
-
-    }//testHandAgainstSubcondition
-    
-    ///Tests if there are between numparam2 and numparam3 Land cards within the hand
-    fileprivate func testLandTotalSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.isLand(){
-                total += 1
-            }
-        }//for
-        
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testLandTotalSubcondition
-    ///Tests if there are between numparam2 and numparam3 Creature cards within the hand
-    fileprivate func testCreatureTotalSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.isCreature(){
-                total += 1
-            }
-        }//for
-        
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testCreatureTotalSubcondition
-    ///Tests if there are between numparam2 and numparam3 Planeswalker cards within the hand
-    fileprivate func testPlaneswalkerTotalSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.isPlaneswalker(){
-                total += 1
-            }
-        }//for
-        
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testPlaneswalkerTotalSubcondition
-    ///Tests if there are between numparam2 and numparam3 Artifact cards within the hand
-    fileprivate func testArtifactTotalSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.isArtifact(){
-                total += 1
-            }
-        }//for
-        
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testArtifactTotalSubcondition
-    ///Tests if there are between numparam2 and numparam3 Enchantment cards within the hand
-    fileprivate func testEnchantmentTotalSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.isEnchantment(){
-                total += 1
-            }
-        }//for
-        
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testEnchantmentTotalSubcondition
-    ///Tests if there are between numparam2 and numparam3 Instant cards within the hand
-    fileprivate func testInstantTotalSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.isInstant(){
-                total += 1
-            }
-        }//for
-        
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testInstantTotalSubcondition
-    ///Tests if there are between numparam2 and numparam3 Sorcery cards within the hand
-    fileprivate func testSorceryTotalSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.isSorcery(){
-                total += 1
-            }
-        }//for
-        
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testInstantTotalSubcondition
-    ///Tests if there are between numparam2 and numparam3 cards within the hand whose name is equal to stringParam1
-    fileprivate func testNameEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        let nameValue: String = subcondition.stringParam1!
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.name == nameValue{
-                total += 1
-            }
-        }//for
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testNameEqualToSubcondition
-    ///Tests if there are between numparam2 and numparam3 cards within the hand whose cmc is equal to numparam1
-    fileprivate func testCmcEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        let matchValue = subcondition.numParam1
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.cmc == matchValue{
-                total += 1
-            }
-        }//for
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testCmcEqualToSubcondition
-    ///Tests if there are between numparam2 and numparam3 cards within the hand whose name is equal to stringParam1
-    fileprivate func testSubtypeEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        let typeName: String = subcondition.stringParam1!
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.subtypes != nil && card.subtypes!.contains(typeName){
-                total += 1
-            }
-        }//for
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testSubtypeEqualToSubcondition
-    ///Tests if there are between numparam2 and numparam3 cards within the hand whose name is equal to stringParam1
-    fileprivate func testSupertypeEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        let typeName: String = subcondition.stringParam1!
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.supertypes != nil && card.supertypes!.contains(typeName){
-                total += 1
-            }
-        }//for
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testSubtypeEqualToSubcondition
-    ///Tests if there are between numparam2 and numparam3 cards within the hand whose power is equal to numparam1
-    fileprivate func testPowerEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        let matchValue = subcondition.numParam1
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.power != nil && Int16(card.power!) != nil && Int16(card.power!) == matchValue{
-                total += 1
-            }
-        }//for
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testPowerEqualToSubcondition
-    ///Tests if there are between numparam2 and numparam3 cards within the hand whose power is equal to numparam1
-    fileprivate func testToughnessEqualToSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool {
-        let lowEnd = subcondition.numParam2
-        let highEnd = subcondition.numParam3
-        let matchValue = subcondition.numParam1
-        
-        var total: Int = 0
-        for card in myHand{
-            if card.toughness != nil && Int16(card.toughness!) != nil && Int16(card.toughness!) == matchValue{
-                total += 1
-            }
-        }//for
-        return (lowEnd <= total) && (highEnd >= total)
-    }//testPowerEqualToSubcondition
-    ///Tests playability of a card specified
-    fileprivate func testPlayabilitySubcondition(_ subcondition: Subcondition, _ state: FieldState) -> Bool{
-        let hand: [MCard] = Array<MCard>(state.hand)
-        var targetCards: Set<MCard> = Set<MCard>()
-        if subcondition.stringParam1 != nil{
-            if let target: MCard = hand.first(where: { (card) -> Bool in
-                card.name == subcondition.stringParam1
-            }){
-                targetCards.insert(target)
-            }//if the hand has a card with a name match, put it in the list of targets
-        }//if we're looking for a card with a given name
-        else{
-            switch subcondition.typeParam{
-                case .none:
-                    NSLog("Somehow ended up seaching for playability of a non-extant card type")//TODO: error-handle this better
-                    return false
-                case .land:
-                    for card in hand{
-                        if card.isLand(){
-                            targetCards.insert(card)
-                        }
-                    }
-                case .creature:
-                    for card in hand{
-                        if card.isCreature(){
-                            targetCards.insert(card)
-                        }
-                    }
-                case .planeswalker:
-                    for card in hand{
-                        if card.isPlaneswalker(){
-                            targetCards.insert(card)
-                        }
-                    }
-                case .artifact:
-                    for card in hand{
-                        if card.isArtifact(){
-                            targetCards.insert(card)
-                        }
-                    }
-                case .enchantment:
-                    for card in hand{
-                        if card.isEnchantment(){
-                            targetCards.insert(card)
-                        }
-                    }
-                case .instant:
-                    for card in hand{
-                        if card.isInstant(){
-                            targetCards.insert(card)
-                        }
-                    }
-                case .sorcery:
-                    for card in hand{
-                        if card.isSorcery(){
-                            targetCards.insert(card)
-                        }
-                    }
-            }//if we're looking for cards with a given type
-        }//else
-        
-        //for all of our target cards, see if we could feasibly play them
-        for target in targetCards{
-            if state.manaPool.canCoverCost(ofCard: target){
-                return true//return true for lands or 0-cost cards
-            }
-            
-            let possiblePools: Set<ManaPool> = state.possibleManaPoolsFromHand()
-            for possibility in possiblePools{
-                if possibility.canCoverCost(ofCard: target){
-                    return true
-                }//if that possible mana yield could play the target card
-            }//for each possible mana yield from all lands in hand
-        }//for each "success if playable" target card
-            
-        
-        
-        return false
-    }//testPlayabilitySubcondition
-    ///Tests mana coverage of lands in hand
-    fileprivate func testManaCoverageSubcondition(_ subcondition: Subcondition, _ myHand: [MCard]) -> Bool{
-        let testBlock: CostBlock = CostBlock(block: self.costBlock)//makes a copy of the deck's cost block to test against
-        
-        let lands: [MCardLand] = myHand.filter { (card) -> Bool in
-            return card is MCardLand
-        } as? [MCardLand] ?? [] //gives us either an array of [MCardLand], or []
-        
-        for landCard in lands{
-            testBlock.subCostForLand(land: landCard)
-        }//for each land in hand
-        
-        return testBlock.isEmpty()//if we've covered all the deck's mana cost colors within the current hand, we're set
-        
-    }//testManaCoverageSubcondition
-    
-    private class CostBlock: CustomStringConvertible{
-        
-        var w: Bool = false
-        var u: Bool = false
-        var b: Bool = false
-        var r: Bool = false
-        var g: Bool = false
-        var c: Bool = false
-        var any: Bool = false
-        var wu: Bool = false
-        var ub: Bool = false
-        var br: Bool = false
-        var rg: Bool = false
-        var gw: Bool = false
-        var wb: Bool = false
-        var ur: Bool = false
-        var bg: Bool = false
-        var rw: Bool = false
-        var gu: Bool = false
-        
-        init(){
-            
-        }//default initializer
-        
-        init(block: CostBlock){
-            self.w = block.w
-            self.u = block.u
-            self.b = block.b
-            self.r = block.r
-            self.g = block.g
-            self.c = block.c
-            self.any = block.any
-            self.wu = block.wu
-            self.ub = block.ub
-            self.br = block.br
-            self.rg = block.rg
-            self.gw = block.gw
-            self.wb = block.wb
-            self.ur = block.ur
-            self.bg = block.bg
-            self.rw = block.rw
-            self.gu = block.gu
-        }//init from another block
-        
-        var description: String{
-            var result: String = "["
-            if w {result += " w"}
-            if u {result += " u"}
-            if b {result += " b"}
-            if r {result += " r"}
-            if g {result += " g"}
-            if c {result += " c"}
-            if any {result += " any"}
-            if wu {result += " wu"}
-            if ub {result += " ub"}
-            if br {result += " br"}
-            if rg {result += " rg"}
-            if gw {result += " gw"}
-            if wb {result += " wb"}
-            if ur {result += " ur"}
-            if bg {result += " bg"}
-            if rw {result += " rw"}
-            if gu {result += " gu"}
-            result += " ]"
-            
-            return result
-        }//description
-        
-        func isEmpty()->Bool{
-            return !w && !u && !b && !r && !g && !c && !any && !wu && !ub && !br && !rg && !gw && !wb && !ur && !bg && !rw && !gu
-        }
-        
-        func addCostForCard(card: MCard){
-            if card.whiteCost       > 0 {self.w = true}
-            if card.blueCost        > 0 {self.u = true}
-            if card.blackCost       > 0 {self.b = true}
-            if card.redCost         > 0 {self.r = true}
-            if card.greenCost       > 0 {self.g = true}
-            if card.colorlessCost   > 0 {self.c = true}
-            if card.anymanaCost     > 0 {self.any = true}
-            if card.whiteblueCost   > 0 {self.wu = true}
-            if card.blueblackCost   > 0 {self.ub = true}
-            if card.blackredCost    > 0 {self.br = true}
-            if card.redgreenCost    > 0 {self.rg = true}
-            if card.greenwhiteCost  > 0 {self.gw = true}
-            if card.whiteblackCost  > 0 {self.wb = true}
-            if card.blueredCost     > 0 {self.ur = true}
-            if card.blackgreenCost  > 0 {self.bg = true}
-            if card.redwhiteCost    > 0 {self.rw = true}
-            if card.greenblueCost   > 0 {self.gu = true}
-        }//addCostForCard
-        
-        func subCostForLand(land: MCardLand){
-            if self.isEmpty(){return}//don't bother going through this noise if we're already covered
-            if land.wYield > 0{
-                self.subCostWhite()
-            }
-            if land.uYield > 0{
-                self.subCostBlue()
-            }
-            if land.bYield > 0{
-                self.subCostBlack()
-            }
-            if land.rYield > 0{
-                self.subCostRed()
-            }
-            if land.gYield > 0{
-                self.subCostGreen()
-            }
-            if land.cYield > 0{
-                self.subCostColorless()
-            }
-            if land.anyYield > 0{
-                self.subCostWhite()
-                self.subCostBlue()
-                self.subCostBlack()
-                self.subCostRed()
-                self.subCostGreen()
-                self.subCostColorless()
-            }
-            if land.wuYield != 0{
-                if land.wuYield > 0{
-                    self.subCostWhite()
-                    self.subCostBlue()
-                }
-                else{
-                    self.subCostBlack()
-                    self.subCostRed()
-                    self.subCostGreen()
-                }
-            }//if WUYield
-            if land.ubYield != 0{
-                if land.ubYield > 0{
-                    self.subCostBlack()
-                    self.subCostBlue()
-                }
-                else{
-                    self.subCostWhite()
-                    self.subCostRed()
-                    self.subCostGreen()
-                }
-            }//if UBYield
-            if land.brYield != 0{
-                if land.brYield > 0{
-                    self.subCostBlack()
-                    self.subCostRed()
-                }
-                else{
-                    self.subCostWhite()
-                    self.subCostBlue()
-                    self.subCostGreen()
-                }
-            }//if BRYield
-            if land.rgYield != 0{
-                if land.rgYield > 0{
-                    self.subCostGreen()
-                    self.subCostRed()
-                }
-                else{
-                    self.subCostWhite()
-                    self.subCostBlue()
-                    self.subCostBlack()
-                }
-            }//if RGYield
-            if land.gwYield != 0{
-                if land.gwYield > 0{
-                    self.subCostGreen()
-                    self.subCostWhite()
-                }
-                else{
-                    self.subCostRed()
-                    self.subCostBlue()
-                    self.subCostBlack()
-                }
-            }//if GWYield
-            if land.wbYield != 0{
-                if land.wbYield > 0{
-                    self.subCostBlack()
-                    self.subCostWhite()
-                }
-                else{
-                    self.subCostRed()
-                    self.subCostBlue()
-                    self.subCostGreen()
-                }
-            }//if WBYield
-            if land.urYield != 0{
-                if land.urYield > 0{
-                    self.subCostBlue()
-                    self.subCostRed()
-                }
-                else{
-                    self.subCostWhite()
-                    self.subCostBlack()
-                    self.subCostGreen()
-                }
-            }//if URYield
-            if land.bgYield != 0{
-                if land.bgYield > 0{
-                    self.subCostBlack()
-                    self.subCostGreen()
-                }
-                else{
-                    self.subCostRed()
-                    self.subCostBlue()
-                    self.subCostWhite()
-                }
-            }//if BGYield
-            if land.rwYield != 0{
-                if land.rwYield > 0{
-                    self.subCostWhite()
-                    self.subCostRed()
-                }
-                else{
-                    self.subCostBlue()
-                    self.subCostBlack()
-                    self.subCostGreen()
-                }
-            }//if RWYield
-            if land.guYield != 0{
-                if land.guYield > 0{
-                    self.subCostBlue()
-                    self.subCostGreen()
-                }
-                else{
-                    self.subCostRed()
-                    self.subCostBlack()
-                    self.subCostWhite()
-                }
-            }//if GUYield
-        }//subCostForLand
-        
-        func subCostWhite(){
-            self.w = false
-            self.wu = false
-            self.gw = false
-            self.wb = false
-            self.rw = false
-            self.any = false
-        }//subCostWhite
-        func subCostBlue(){
-            self.u = false
-            self.wu = false
-            self.ub = false
-            self.gu = false
-            self.ur = false
-            self.any = false
-        }//subCostBlue
-        func subCostBlack(){
-            self.b = false
-            self.wb = false
-            self.ub = false
-            self.br = false
-            self.bg = false
-            self.any = false
-        }//subCostBlack
-        func subCostRed(){
-            self.r = false
-            self.rw = false
-            self.ur = false
-            self.br = false
-            self.rg = false
-            self.any = false
-        }//subCostRed
-        func subCostGreen(){
-            self.g = false
-            self.gw = false
-            self.gu = false
-            self.bg = false
-            self.rg = false
-            self.any = false
-        }//subCostGreen
-        func subCostColorless(){
-            self.c = false
-            self.any = false
-        }//subCostColorless
-        
-    }//CostBlock
+   
+   
     
 }//Simulator
 

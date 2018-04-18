@@ -395,14 +395,25 @@ class MTGDeckerTests: XCTestCase {
         
         var nayaState: FieldState = FieldState(deck: nayaSimulator.cards, handSize: 7)
         
+        XCTAssert(nayaState.allTurnResults().count == 4)//4 possible land plays
+        
         XCTAssertNoThrow(nayaState = try nayaState.playCard(name: "Jungle Shrine").first!)
         XCTAssertThrowsError(nayaState = try nayaState.playCard(name: "Wind-Scarred Crag").first!)
         nayaState.advanceTurn()
+        XCTAssert(nayaState.allTurnResults().count == 4)//4 possible plays; 2 that land on Naya Hushblade, 1 on Selesnya Guildmage, and 1 with Wind-Scarred Crag out
+        
         XCTAssertNoThrow(nayaState = try nayaState.playCard(name: "Wind-Scarred Crag").first!)
         XCTAssert(nayaState.allLandTapCombinations().count == 4)
         nayaState.advanceTurn()
+        XCTAssert(nayaState.allTurnResults().count == 9)//9 total plays available
+        
+        
         XCTAssertNoThrow(nayaState = try nayaState.playCard(name: "Forest").first!)
         XCTAssert(try nayaState.playCard(name: "Selesnya Guildmage").count == 3)//only three land-tap combos can be done to play Selesnya Guildmage
+        
+
+        
+        
 
         //Going back to the simulator (which is still set up with that sweet opening hand), test some subconditions
         
@@ -421,6 +432,16 @@ class MTGDeckerTests: XCTestCase {
         creaturePlayable.typeParam = .creature
         XCTAssert(try nayaSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: creaturePlayable))
         
+        let creaturePlayable2: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        creaturePlayable2.type = .playableByTurn
+        creaturePlayable2.typeParam = .creature
+        creaturePlayable2.numParam1 = 2
+        
+        XCTAssert(try nayaSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: creaturePlayable2))
+        creaturePlayable2.numParam1 = 1
+        XCTAssertFalse(try nayaSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: creaturePlayable2))//can't play either creature on first turn
+ 
+        
         let manaCoverage: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
         manaCoverage.type = .manaCoverage
         XCTAssert(try nayaSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: manaCoverage))
@@ -436,12 +457,50 @@ class MTGDeckerTests: XCTestCase {
         let nayaKeepRule1: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
         nayaKeepRule1.conditionList = Set<Condition>([multiCondition, multiCondition2])
         XCTAssert(try nayaSimulator.testHandAgainstKeepRule(handSize: 7, keeprule: nayaKeepRule1))
+        
+        
+        //MARK: MulliganRuleset shenanigans
+        var result1: SimulationResult = SimulationResult()
+        let result2: SimulationResult = SimulationResult()
+        
+        result1.numTrials = 4
+        result1.card7Successes = 4
+        result2.numTrials = 6
+        result2.card6Successes = 3
+        result2.card5Successes = 3
+        
+        result1 += result2
+        XCTAssertEqual(result1.numTrials, 10)
+        XCTAssertNotEqual(result1.card7Successes, result2.card7Successes)
+        XCTAssertEqual(result1.card6Successes, result2.card6Successes)
+        
+        //Testing the whole shebang
+        creaturePlayable2.numParam1 = 2
+        
+        let condition7: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
+        condition7.subconditionList = Set<Subcondition>([landCondition, creaturePlayable2])
+        let keepRule7: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
+        keepRule7.conditionList = Set<Condition>([condition7])
+        
+        let condition61: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
+        let condition62: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
+        
+        condition61.subconditionList = Set<Subcondition>([manaCoverage])
+        condition61.subconditionList = Set<Subcondition>([creaturePlayable])
+        let keepRule6: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
+        keepRule6.conditionList = Set<Condition>([condition61, condition62])
+        
+        let ruleset1: MulliganRuleset = MulliganRuleset(entity: MulliganRuleset.entityDescription(context: context), insertInto: context)
+        ruleset1.keepRule7 = keepRule7
+        ruleset1.keepRule6 = keepRule6
+        
+        
+        nayaSimulator.shuffleDeck()
+        self.measure{
+            let mulliganTestResult: SimulationResult = nayaSimulator.testDeckAgainstMulliganMultiple(ruleset: ruleset1, repetitions: 1000)
+            print("\(mulliganTestResult)")
+        }
 
-        print(elfSimulator.costBlockDescription())
-        print(nayaSimulator.costBlockDescription())
-        print(ratSimulator.costBlockDescription())
-        
-        
     }//testDecks
     
     fileprivate func testTotalsCondition(_ elfSimulator: Simulator, _ myHand: inout [MCard], _ successNames: [String], _ testSubcondition: Subcondition) throws {

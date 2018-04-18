@@ -120,6 +120,8 @@ public class Subcondition: NSManagedObject {
         case instant = "i"
         ///Sorcery type
         case sorcery = "s"
+        ///Non-land type
+        case nonland = "nl"
     }//CardType
     
     /**

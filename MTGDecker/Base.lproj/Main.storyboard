@@ -242,7 +242,11 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="kfz-7r-Ljy"/>
-                        <barButtonItem title="Simulator" id="kRG-AZ-77i"/>
+                        <barButtonItem title="Simulator" id="kRG-AZ-77i">
+                            <connections>
+                                <segue destination="0mY-xT-Kvg" kind="show" identifier="SimulatorSegue" id="PfE-C4-OMR"/>
+                            </connections>
+                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Deck" id="Z63-8A-lNa">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="Muk-3O-esd">
@@ -265,6 +269,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Pm-5G-KpF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-18" y="1527"/>
+        </scene>
+        <!--Simulator-->
+        <scene sceneID="DJs-Ci-tdb">
+            <objects>
+                <viewController storyboardIdentifier="SimulatorViewController" title="Simulator" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0mY-xT-Kvg" customClass="SimulatorViewController" customModule="MTGDecker" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wxg-IU-EFz"/>
+                        <viewControllerLayoutGuide type="bottom" id="NoR-9b-hrP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RIG-BO-AeV">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Esj-lR-fUy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1207" y="1527"/>
         </scene>
         <!--Card Search-->
         <scene sceneID="YVB-v5-jqT">

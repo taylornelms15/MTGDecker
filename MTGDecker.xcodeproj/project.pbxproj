@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		9500686C206AC09C0047B1B6 /* DeckDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */; };
+		951940CE208223540033F0F5 /* Simulator-Subcondition-Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951940CD208223540033F0F5 /* Simulator-Subcondition-Tests.swift */; };
+		951940D02082AC740033F0F5 /* SimulationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951940CF2082AC740033F0F5 /* SimulationResult.swift */; };
+		951940D2208388530033F0F5 /* SimulatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951940D1208388530033F0F5 /* SimulatorViewController.swift */; };
 		9533B07F2073E684009D570A /* CardImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9533B07E2073E684009D570A /* CardImageViewController.swift */; };
 		9533B0802073E727009D570A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119D2206535B5008943A3 /* Main.storyboard */; };
 		9533B0822077D78B009D570A /* DeckBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9533B0812077D78B009D570A /* DeckBuilder.swift */; };
@@ -83,6 +86,9 @@
 
 /* Begin PBXFileReference section */
 		9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailViewController.swift; sourceTree = "<group>"; };
+		951940CD208223540033F0F5 /* Simulator-Subcondition-Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Simulator-Subcondition-Tests.swift"; sourceTree = "<group>"; };
+		951940CF2082AC740033F0F5 /* SimulationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationResult.swift; sourceTree = "<group>"; };
+		951940D1208388530033F0F5 /* SimulatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorViewController.swift; sourceTree = "<group>"; };
 		9533B07E2073E684009D570A /* CardImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageViewController.swift; sourceTree = "<group>"; };
 		9533B0812077D78B009D570A /* DeckBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBuilder.swift; sourceTree = "<group>"; };
 		95578438207C2A27007F45E8 /* MCardLand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCardLand.swift; sourceTree = "<group>"; };
@@ -161,6 +167,8 @@
 			children = (
 				9533B0812077D78B009D570A /* DeckBuilder.swift */,
 				95E02DB7207937C600F82A65 /* Simulator.swift */,
+				951940CD208223540033F0F5 /* Simulator-Subcondition-Tests.swift */,
+				951940CF2082AC740033F0F5 /* SimulationResult.swift */,
 				9557843A207E4E12007F45E8 /* FieldState.swift */,
 				9557843C207E68FA007F45E8 /* ManaPool.swift */,
 				95E02DB62079378500F82A65 /* ViewControllers */,
@@ -289,6 +297,7 @@
 				9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */,
 				95F6721D206AFFC700D0034D /* CardSearchViewController.swift */,
 				9533B07E2073E684009D570A /* CardImageViewController.swift */,
+				951940D1208388530033F0F5 /* SimulatorViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -461,7 +470,9 @@
 				955C630D206AA4940096319E /* DeckSelectCell.swift in Sources */,
 				95D281172069B90A008648D0 /* Player.swift in Sources */,
 				956119D7206535B5008943A3 /* MTGDecker.xcdatamodeld in Sources */,
+				951940CE208223540033F0F5 /* Simulator-Subcondition-Tests.swift in Sources */,
 				95F4EF312072E50D00F5465C /* MCardImage.swift in Sources */,
+				951940D2208388530033F0F5 /* SimulatorViewController.swift in Sources */,
 				95D2810F2069B90A008648D0 /* DeckNew.swift in Sources */,
 				9557843B207E4E12007F45E8 /* FieldState.swift in Sources */,
 				95F6721A206AF4F900D0034D /* CardTableView.swift in Sources */,
@@ -473,6 +484,7 @@
 				95F4EF3520732BD000F5465C /* AppDelegate.swift in Sources */,
 				955C630A206AA4110096319E /* DeckSelectTableView.swift in Sources */,
 				95D2810D2069B90A008648D0 /* Subcondition.swift in Sources */,
+				951940D02082AC740033F0F5 /* SimulationResult.swift in Sources */,
 				955C6306206A9B440096319E /* PlayerSelectCell.swift in Sources */,
 				95D281152069B90A008648D0 /* Condition.swift in Sources */,
 				955C6301206A93690096319E /* PlayerSelectTableViewController.swift in Sources */,
