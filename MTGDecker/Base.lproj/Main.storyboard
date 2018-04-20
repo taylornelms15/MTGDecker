@@ -67,11 +67,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="DeckSelectCell" textLabel="tOq-li-1Np" detailTextLabel="RI1-Xf-Wd5" style="IBUITableViewCellStyleSubtitle" id="7xI-cp-RTV" customClass="DeckSelectCell" customModule="MTGDecker" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="DeckSelectCell" textLabel="tOq-li-1Np" detailTextLabel="RI1-Xf-Wd5" style="IBUITableViewCellStyleSubtitle" id="7xI-cp-RTV" customClass="DeckSelectCell" customModule="MTGDecker" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7xI-cp-RTV" id="Awf-a6-bwl">
-                                    <rect key="frame" x="0.0" y="0.0" width="307" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tOq-li-1Np">
@@ -281,12 +281,88 @@
                     <view key="view" contentMode="scaleToFill" id="RIG-BO-AeV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="igi-aR-s31" customClass="RuleEditTableView" customModule="MTGDecker" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="328" width="375" height="295"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ruleCell" textLabel="48B-2O-pSd" detailTextLabel="2Bh-lP-Gqk" style="IBUITableViewCellStyleSubtitle" id="WMs-hE-q7r" customClass="RuleSummaryCell" customModule="MTGDecker" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="WMs-hE-q7r" id="Fi8-q0-tfd">
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="48B-2O-pSd">
+                                                    <rect key="frame" x="15" y="5" width="33.5" height="20.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2Bh-lP-Gqk">
+                                                    <rect key="frame" x="15" y="25.5" width="44" height="14.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                                <sections/>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qmi-u0-N12">
+                                <rect key="frame" x="97" y="72" width="180" height="50"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simulate Draw" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tym-go-g5l">
+                                        <rect key="frame" x="9" y="8.5" width="162" height="32"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" secondItem="Tym-go-g5l" secondAttribute="height" constant="18" id="3yO-5A-bhg"/>
+                                    <constraint firstItem="Tym-go-g5l" firstAttribute="centerX" secondItem="Qmi-u0-N12" secondAttribute="centerX" id="VRY-9c-FQe"/>
+                                    <constraint firstAttribute="width" secondItem="Tym-go-g5l" secondAttribute="width" constant="18" id="hDR-xo-udn"/>
+                                    <constraint firstItem="Tym-go-g5l" firstAttribute="centerY" secondItem="Qmi-u0-N12" secondAttribute="centerY" id="lsP-Ky-kez"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="u74-HW-4PY" appends="YES" id="Izs-hs-eap"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Qmi-u0-N12" firstAttribute="top" secondItem="wxg-IU-EFz" secondAttribute="bottom" constant="8" symbolic="YES" id="5na-E7-J7m"/>
+                            <constraint firstAttribute="trailing" secondItem="igi-aR-s31" secondAttribute="trailing" id="7uR-eP-rQV"/>
+                            <constraint firstItem="NoR-9b-hrP" firstAttribute="top" secondItem="igi-aR-s31" secondAttribute="bottom" id="9C8-jK-O3r"/>
+                            <constraint firstItem="Qmi-u0-N12" firstAttribute="centerX" secondItem="RIG-BO-AeV" secondAttribute="centerX" id="C4b-4E-42w"/>
+                            <constraint firstItem="igi-aR-s31" firstAttribute="centerX" secondItem="RIG-BO-AeV" secondAttribute="centerX" id="LgR-PQ-0Z2"/>
+                            <constraint firstItem="igi-aR-s31" firstAttribute="leading" secondItem="RIG-BO-AeV" secondAttribute="leading" id="VdB-c8-ViH"/>
+                            <constraint firstItem="igi-aR-s31" firstAttribute="top" secondItem="Qmi-u0-N12" secondAttribute="bottom" constant="206" id="vJz-nH-huD"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="ruleEditTable" destination="igi-aR-s31" id="9fR-by-1l6"/>
+                        <outlet property="simulateButtonContainer" destination="Qmi-u0-N12" id="l3V-Nl-p46"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Esj-lR-fUy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="u74-HW-4PY">
+                    <connections>
+                        <action selector="simulateButtonPress:" destination="0mY-xT-Kvg" id="C6u-nA-NMY"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1207" y="1527"/>
+            <point key="canvasLocation" x="1205.5999999999999" y="1526.9865067466269"/>
         </scene>
         <!--Card Search-->
         <scene sceneID="YVB-v5-jqT">
