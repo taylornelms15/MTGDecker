@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let context: NSManagedObjectContext = self.persistentContainer.viewContext
         initPlayerList(context)
         initCardNameList(context)
+        _ = mulliganDefaults(context)
         
         
         return true
@@ -111,6 +112,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             myCardNameList.updateCardNames(context: context)
         }
     }
+    
+    func mulliganDefaults(_ context: NSManagedObjectContext) -> Set<MulliganRuleset>{
+        let mulFR: NSFetchRequest<MulliganRuleset> = MulliganRuleset.fetchRequest()
+        mulFR.predicate = NSPredicate(format: "isDefault = true")
+        
+        var results: [MulliganRuleset] = []
+        
+        do {
+            results = try context.fetch(mulFR)
+        } catch {
+            NSLog("Problem finding default mulligan rulesets: \(error)")
+        }
+        
+        var myMulliganDefaults: Set<MulliganRuleset> = Set<MulliganRuleset>()
+        
+        if results.count == 0{
+            myMulliganDefaults.insert(MulliganRuleset.makeLandDefault(context))
+            
+            do{
+                try context.save()
+            }//do
+            catch{
+                NSLog("Error saving fetchrequest to core data: \(error)")
+            }//catch
+
+        }//if making fresh defaults
+        else{
+            for result in results{
+                myMulliganDefaults.insert(result)
+            }//for
+        }//if just finding the defaults
+        
+
+        
+        return myMulliganDefaults
+        
+    }//initMulliganDefaults
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

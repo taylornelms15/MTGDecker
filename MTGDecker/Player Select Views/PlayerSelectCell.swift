@@ -33,7 +33,7 @@ class PlayerSelectCell: UITableViewCell{
         }//is selected
         else{
             self.backgroundColor = UIColor.darkGray
-            playerNameLabel.textColor = UIColor.lightText
+            playerNameLabel.textColor = UIColor.white
         }
     }
     

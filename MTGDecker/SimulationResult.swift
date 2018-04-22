@@ -13,6 +13,9 @@ import CoreData
  This class mostly functions to hold the results of a run of simulations, in terms of hand size percentages and success rule evaluations.
  */
 public class SimulationResult: CustomStringConvertible{
+    
+    private static var PRECISION = 1.0
+    
     public var numTrials: Int = 0
     public var startingHandSize: Int = 7
     public var card7Successes: Int = 0
@@ -24,11 +27,11 @@ public class SimulationResult: CustomStringConvertible{
     public var description: String{
         var resultString = ""
         resultString.append("\(numTrials) total trials\n")
-        resultString.append("% 7 Card Hands: \(round(100.0 * card7Percent) /  100.0)\n")
-        resultString.append("% 6 Card Hands: \(round(100.0 * card6Percent) /  100.0)\n")
-        resultString.append("% 5 Card Hands: \(round(100.0 * card5Percent) /  100.0)\n")
-        resultString.append("% 4 Card Hands: \(round(100.0 * card4Percent) /  100.0)\n")
-        resultString.append("% 3 Card Hands: \(round(100.0 * card3Percent) /  100.0)\n")
+        resultString.append("% 7 Card Hands: \(self.card7String())\n")
+        resultString.append("% 6 Card Hands: \(self.card6String())\n")
+        resultString.append("% 5 Card Hands: \(self.card5String())\n")
+        resultString.append("% 4 Card Hands: \(self.card4String())\n")
+        resultString.append("% 3 Card Hands: \(self.card3String())\n")
         
         return resultString
     }//description
@@ -38,11 +41,13 @@ public class SimulationResult: CustomStringConvertible{
             return Double(card7Successes) / Double(numTrials) * 100.0
         }
     }//card7Percent
+
     public var card6Percent: Double{
         get{
             return Double(card6Successes) / Double(numTrials) * 100.0
         }
     }//card6Percent
+    
     public var card5Percent: Double{
         get{
             return Double(card5Successes) / Double(numTrials) * 100.0
@@ -58,6 +63,34 @@ public class SimulationResult: CustomStringConvertible{
             return Double(card3Successes) / Double(numTrials) * 100.0
         }
     }//card3Percent
+    
+    public func card7String() -> String{
+        let percent = self.card7Percent
+        let roundedPercent = round(pow(10.0, SimulationResult.PRECISION) * percent) /  pow(10.0, SimulationResult.PRECISION)
+        return "\(roundedPercent)"
+    }//card7String
+    public func card6String() -> String{
+        let percent = self.card6Percent
+        let roundedPercent = round(pow(10.0, SimulationResult.PRECISION) * percent) /  pow(10.0, SimulationResult.PRECISION)
+        return "\(roundedPercent)"
+    }//card6String
+    public func card5String() -> String{
+        let percent = self.card5Percent
+        let roundedPercent = round(pow(10.0, SimulationResult.PRECISION) * percent) /  pow(10.0, SimulationResult.PRECISION)
+        return "\(roundedPercent)"
+    }//card5String
+    public func card4String() -> String{
+        let percent = self.card4Percent
+        let roundedPercent = round(pow(10.0, SimulationResult.PRECISION) * percent) /  pow(10.0, SimulationResult.PRECISION)
+        return "\(roundedPercent)"
+    }//card4String
+    public func card3String() -> String{
+        let percent = self.card3Percent
+        let roundedPercent = round(pow(10.0, SimulationResult.PRECISION) * percent) /  pow(10.0, SimulationResult.PRECISION)
+        return "\(roundedPercent)"
+    }//card3String
+    
+    
     
     static func + (lhs: SimulationResult, rhs: SimulationResult) -> SimulationResult{
         let newResult: SimulationResult = SimulationResult()

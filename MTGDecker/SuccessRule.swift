@@ -34,4 +34,38 @@ public class SuccessRule: NSManagedObject {
         }
     }//conditionList
     
+    /**
+     Produces a human-readable summary of the rule. Ends up displayed as detail text in a table.
+     */
+    public func summary()->String{
+        if conditionList == nil || conditionList!.count == 0{
+            return "Always Succeeds"
+        }//if no subconditions
+        
+        if conditionList!.count == 1{
+            if conditionList!.first!.summary() == "Accepts all cards"{
+                return "Always Succeeds"
+            }//if accepting all cards
+            else{
+                return "Succeeds if: \(conditionList!.first!.summary())"
+            }
+        }//if only one subcondition
+        else{
+            let orderedMembers: [Condition] = Array<Condition>(conditionList!)
+            var resultString = "Succeeds if: "
+            
+            for i in 0 ..< orderedMembers.count - 1{
+                resultString.append("(")
+                resultString.append(orderedMembers[i].summary())
+                resultString.append(") OR")
+            }//for all but the last string
+            resultString.append("(")
+            resultString.append(orderedMembers.last!.summary())
+            resultString.append(")")
+            
+            return resultString
+            
+        }//if more than one subcondition
+    }//summary
+    
 }//SuccessRule

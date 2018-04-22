@@ -20,6 +20,7 @@ public class KeepRule: NSManagedObject {
     }//entityDescription
     
     @NSManaged public var id: Int64
+    @NSManaged public var handSize: Int16
     @NSManaged public var name: String?
     @NSManaged private var conditions: NSSet?
     @NSManaged public var inv_mulliganruleset4: MulliganRuleset?
@@ -35,4 +36,40 @@ public class KeepRule: NSManagedObject {
             conditions = newValue as NSSet?
         }
     }//conditionList
+
+    /**
+     Produces a human-readable summary of the rule. Ends up displayed as detail text in a table.
+     */
+    public func summary()->String{
+        if conditionList == nil || conditionList!.count == 0{
+            return "Accepts all cards"
+        }//if no subconditions
+        
+        if conditionList!.count == 1{
+            if conditionList!.first!.summary() == "Accepts all cards"{
+                return "Accepts all cards"
+            }//if accepting all cards
+            else{
+                return "Keep if: \(conditionList!.first!.summary())"
+            }
+        }//if only one subcondition
+        else{
+            let orderedMembers: [Condition] = Array<Condition>(conditionList!)
+            var resultString = "Keep if: "
+            
+            for i in 0 ..< orderedMembers.count - 1{
+                resultString.append("(")
+                resultString.append(orderedMembers[i].summary())
+                resultString.append(") OR")
+            }//for all but the last string
+            resultString.append("(")
+            resultString.append(orderedMembers.last!.summary())
+            resultString.append(")")
+            
+            return resultString
+            
+        }//if more than one subcondition
+    }//summary
+    
+    
 }//KeepRule

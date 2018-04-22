@@ -63,41 +63,41 @@ public class Subcondition: NSManagedObject {
      An enumeration detaining the different type of available subcondition variants.
      */
     public enum ConditionType: Int16{
-        ///Checks for number of lands matching a given total
+        ///Checks for number of lands matching a given total (`numParam2 ≤ x ≤ numParam3`)
         case landTotal
-        ///Checks for number of creature cards matching a given total
+        ///Checks for number of creature cards matching a given total (`numParam2 ≤ x ≤ numParam3`)
         case creatureTotal
-        ///Checks for number of planeswalker cards matching a given range
+        ///Checks for number of planeswalker cards matching a given total (`numParam2 ≤ x ≤ numParam3`)
         case planeswalkerTotal
-        ///Checks for number of artifact cards matching a given total
+        ///Checks for number of artifact cards matching a given total (`numParam2 ≤ x ≤ numParam3`)
         case artifactTotal
-        ///Checks for number of enchantment cards matching a given total
+        ///Checks for number of enchantment cards matching a given total (`numParam2 ≤ x ≤ numParam3`)
         case enchantmentTotal
-        ///Checks for number of instant cards matching a given total
+        ///Checks for number of instant cards matching a given total (`numParam2 ≤ x ≤ numParam3`)
         case instantTotal
-        ///Checks for number of sorcery cards matching a given total
+        ///Checks for number of sorcery cards matching a given total (`numParam2 ≤ x ≤ numParam3`)
         case sorceryTotal
         
-        ///Checks for a card with a given name
+        ///Checks for a card with a given name (`stringParam1`)
         case nameEqualTo
-        ///Checks for a card whose CMC is equal to a given value
+        ///Checks for a card whose CMC is equal to a given value (`numParam1`)
         case cmcEqualTo
-        ///Checks for a card with a given subtype
+        ///Checks for a card with a given subtype (`stringParam1`)
         case subtypeEqualTo
-        ///Checks for a card with a given supertype
+        ///Checks for a card with a given supertype (`stringParam1`)
         case supertypeEqualTo
-        ///Checks for a card with a given power
+        ///Checks for a card with a given power (`numParam1`)
         case powerEqualTo
-        ///Checks for a card with a given toughness
+        ///Checks for a card with a given toughness (`numParam1`)
         case toughnessEqualTo
         
-        ///Checks if there is a card playable with hand makeup. Accepts specific-card namings, or "card is of category." Limited in execution to "at least one card in hand is playable"
+        ///Checks if there is a card playable with the current hand makeup. Requires `typeParam` to be set to a given category. Limited in execution to "at least one card in hand is playable"
         case playable
-        ///Checks if there is a card playable by given turn
+        ///Checks if there is a card playable by given turn (`numParam1`) with the current hand makeup. Requires `typeParam` to be set to a given category. Limited in execution to "at least one card in hand is playable"
         case playableByTurn
         ///Checks if lands cover mana spread
         case manaCoverage
-        ///Checks for number of reactive cards matching a given total
+        ///Checks for number of reactive cards matching a given total (`numParam1`)
         case reactiveTotal
 
     }//conditionType
@@ -123,6 +123,106 @@ public class Subcondition: NSManagedObject {
         ///Non-land type
         case nonland = "nl"
     }//CardType
+    
+    public func summary()-> String{
+        switch(self.type){
+        case .landTotal:
+            if numParam2 == numParam3{
+                if (numParam2 == 0 ){return "no lands"}
+                return "\(numParam2) land\((numParam2 == 1) ? "" : "s")" }
+            else{ return "between \(numParam2) and \(numParam3) lands" }
+        case .creatureTotal:
+            if numParam2 == numParam3{
+                if (numParam2 == 0 ){return "no creatures"}
+                return "\(numParam2) creature\((numParam2 == 1) ? "" : "s")" }
+            else{ return "between \(numParam2) and \(numParam3) creatures" }
+        case .planeswalkerTotal:
+            if numParam2 == numParam3{
+                if (numParam2 == 0 ){return "no planeswalkers"}
+                return "\(numParam2) planeswalker\((numParam2 == 1) ? "" : "s")" }
+            else{ return "between \(numParam2) and \(numParam3) planeswalkers" }
+        case .artifactTotal:
+            if numParam2 == numParam3{
+                if (numParam2 == 0 ){return "no artifacts"}
+                return "\(numParam2) artifact\((numParam2 == 1) ? "" : "s")" }
+            else{ return "between \(numParam2) and \(numParam3) artifacts" }
+        case .enchantmentTotal:
+            if numParam2 == numParam3{
+                if (numParam2 == 0 ){return "no enchantments"}
+                return "\(numParam2) enchantment\((numParam2 == 1) ? "" : "s")" }
+            else{ return "between \(numParam2) and \(numParam3) enchantments" }
+        case .instantTotal:
+            if numParam2 == numParam3{
+                if (numParam2 == 0 ){return "no instants"}
+                return "\(numParam2) instant\((numParam2 == 1) ? "" : "s")" }
+            else{ return "between \(numParam2) and \(numParam3) instants" }
+        case .sorceryTotal:
+            if numParam2 == numParam3{
+                if (numParam2 == 0 ){return "no sorceries"}
+                return "\(numParam2) sorcer\((numParam2 == 1) ? "y" : "ies")" }
+            else{ return "between \(numParam2) and \(numParam3) sorceries" }
+            
+        case .nameEqualTo:
+            return "contains \(stringParam1 ?? "card of given name")"
+        case .cmcEqualTo:
+            return "card with CMC \(numParam1)"
+        case .subtypeEqualTo:
+            return "contains a \(stringParam1 ?? "card of given subtype")"
+        case .supertypeEqualTo:
+            return "contains a \(stringParam1 ?? "card of given supertype")"
+        case .powerEqualTo:
+            return "card with power \(numParam1)"
+        case .toughnessEqualTo:
+            return "card with toughness \(numParam1)"
+            
+        case .playable:
+            switch typeParam{
+            case .land:
+                return "playable land"
+            case .creature:
+                return "playable creature"
+            case .planeswalker:
+                return "playable planeswalker"
+            case .artifact:
+                return "playable artifact"
+            case .enchantment:
+                return "playable enchantment"
+            case .instant:
+                return "playable instant"
+            case .sorcery:
+                return "playable sorcery"
+            case .nonland:
+                return "playable non-land"
+            default:
+                return ""
+            }
+        case .playableByTurn:
+            switch typeParam{
+            case .land:
+                return "land playable by turn \(numParam1)"
+            case .creature:
+                return "creature playable by turn \(numParam1)"
+            case .planeswalker:
+                return "planeswalker playable by turn \(numParam1)"
+            case .artifact:
+                return "artifact playable by turn \(numParam1)"
+            case .enchantment:
+                return "enchantment playable by turn \(numParam1)"
+            case .instant:
+                return "instant playable by turn \(numParam1)"
+            case .sorcery:
+                return "sorcery playable by turn \(numParam1)"
+            case .nonland:
+                return "non-land playable by turn \(numParam1)"
+            default:
+                return ""
+            }
+        case .manaCoverage:
+            return "land covers mana base"
+        case .reactiveTotal:
+            return "has \(numParam1) reactive play\(numParam1 == 1 ? "" : "s")"
+        }//switch
+    }//summary
     
     /**
      Enum defining values for bitmasks for checking colors against a given "color inclusion" value

@@ -24,16 +24,35 @@ public class Condition: NSManagedObject {
     @NSManaged public var name: String?
     @NSManaged public var inv_keeprule: NSSet?
     @NSManaged public var inv_successrule: NSSet?
-    @NSManaged private var subconditions: NSSet?
+    @NSManaged public var subconditionList: Set<Subcondition>?
+
+    public func summary()->String{
+        
+        if subconditionList == nil || subconditionList!.count == 0{
+            return "Accepts all cards"
+        }//if no subconditions
+        
+        if subconditionList!.count == 1{
+            return subconditionList!.first!.summary()
+        }//if only one subcondition
+        else{
+            let orderedMembers: [Subcondition] = Array<Subcondition>(subconditionList!)
+            var resultString = ""
+            
+            for i in 0 ..< orderedMembers.count - 1{
+                resultString.append("(")
+                resultString.append(orderedMembers[i].summary())
+                resultString.append(") AND")
+            }//for all but the last string
+            resultString.append("(")
+            resultString.append(orderedMembers.last!.summary())
+            resultString.append(")")
+            
+            return resultString
+            
+        }//if more than one subcondition
+        
+    }//summary
     
-    ///Wraps up the private NSManaged NSSet object; thereby handles generics and casting
-    public var subconditionList: Set<Subcondition>?{
-        get{
-            return subconditions as? Set<Subcondition>
-        }
-        set{
-            subconditions = newValue as NSSet?
-        }
-    }//subconditionList
 }//Condition
 

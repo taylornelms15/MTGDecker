@@ -25,6 +25,7 @@
 		955C630D206AA4940096319E /* DeckSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955C630C206AA4940096319E /* DeckSelectCell.swift */; };
 		955F0CB82087DD6D003A713E /* RuleEditTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955F0CB72087DD6D003A713E /* RuleEditTableView.swift */; };
 		955F0CBA2087E218003A713E /* RuleSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955F0CB92087E218003A713E /* RuleSummaryCell.swift */; };
+		955F0CBC208A7A91003A713E /* SimulatorProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955F0CBB208A7A91003A713E /* SimulatorProgressViewController.swift */; };
 		956119D7206535B5008943A3 /* MTGDecker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 956119D5206535B5008943A3 /* MTGDecker.xcdatamodeld */; };
 		956119D9206535B5008943A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 956119D8206535B5008943A3 /* Assets.xcassets */; };
 		956119DC206535B5008943A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119DA206535B5008943A3 /* LaunchScreen.storyboard */; };
@@ -104,6 +105,7 @@
 		955C630C206AA4940096319E /* DeckSelectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckSelectCell.swift; sourceTree = "<group>"; };
 		955F0CB72087DD6D003A713E /* RuleEditTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleEditTableView.swift; sourceTree = "<group>"; };
 		955F0CB92087E218003A713E /* RuleSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleSummaryCell.swift; sourceTree = "<group>"; };
+		955F0CBB208A7A91003A713E /* SimulatorProgressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorProgressViewController.swift; sourceTree = "<group>"; };
 		956119CB206535B5008943A3 /* MTGDecker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MTGDecker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		956119CE206535B5008943A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		956119D3206535B5008943A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				95F6721D206AFFC700D0034D /* CardSearchViewController.swift */,
 				9533B07E2073E684009D570A /* CardImageViewController.swift */,
 				951940D1208388530033F0F5 /* SimulatorViewController.swift */,
+				955F0CBB208A7A91003A713E /* SimulatorProgressViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -476,6 +479,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				955F0CBC208A7A91003A713E /* SimulatorProgressViewController.swift in Sources */,
 				9557843D207E68FA007F45E8 /* ManaPool.swift in Sources */,
 				95A22B3720686F2400331C4B /* CardNameList.swift in Sources */,
 				95F6721C206AF58800D0034D /* CardTableCell.swift in Sources */,

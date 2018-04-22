@@ -44,6 +44,9 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
         if segue.identifier == "CardSearchSegue"{
             (segue.destination as! CardSearchViewController).parentDeckDetailVC = self
         }//if Card Search destination
+        if segue.identifier == "SimulatorSegue"{
+            (segue.destination as! SimulatorViewController).deck = self.deck!
+        }//if Simulator destination
         
     }//prepare for segue
     

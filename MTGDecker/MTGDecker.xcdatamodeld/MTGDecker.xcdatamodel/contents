@@ -10,7 +10,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="inv_keeprule" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="KeepRule" inverseName="conditions" inverseEntity="KeepRule" syncable="YES"/>
         <relationship name="inv_successrule" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SuccessRule" inverseName="conditions" inverseEntity="SuccessRule" syncable="YES"/>
-        <relationship name="subconditions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Subcondition" inverseName="inv_condition" inverseEntity="Subcondition" syncable="YES"/>
+        <relationship name="subconditionList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Subcondition" inverseName="inv_condition" inverseEntity="Subcondition" syncable="YES"/>
     </entity>
     <entity name="Deck" representedClassName=".Deck" syncable="YES">
         <attribute name="cardRecord" optional="YES" attributeType="Transformable" customClassName="[String: Int]" syncable="YES"/>
@@ -23,6 +23,7 @@
         <relationship name="successRules" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SuccessRule" inverseName="inv_deck" inverseEntity="SuccessRule" syncable="YES"/>
     </entity>
     <entity name="KeepRule" representedClassName=".KeepRule" syncable="YES">
+        <attribute name="handSize" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="conditions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Condition" inverseName="inv_keeprule" inverseEntity="Condition" syncable="YES"/>
@@ -107,6 +108,7 @@
     </entity>
     <entity name="MulliganRuleset" representedClassName=".MulliganRuleset" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isDefault" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="inv_player" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Player" inverseName="mulliganRulesets" inverseEntity="Player" syncable="YES"/>
         <relationship name="inv_player_active" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Player" inverseName="activeMulliganRuleset" inverseEntity="Player" syncable="YES"/>
@@ -133,7 +135,7 @@
         <attribute name="stringParam1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stringParam2" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stringParam3" optional="YES" attributeType="String" defaultValueString="none" syncable="YES"/>
-        <relationship name="inv_condition" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Condition" inverseName="subconditions" inverseEntity="Condition" syncable="YES"/>
+        <relationship name="inv_condition" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Condition" inverseName="subconditionList" inverseEntity="Condition" syncable="YES"/>
     </entity>
     <entity name="SuccessRule" representedClassName=".SuccessRule" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -144,13 +146,13 @@
     </entity>
     <elements>
         <element name="CardNameList" positionX="-594" positionY="-243" width="128" height="90"/>
-        <element name="Condition" positionX="286" positionY="-180" width="128" height="120"/>
+        <element name="Condition" positionX="286" positionY="-180" width="128" height="118"/>
         <element name="Deck" positionX="-443" positionY="-27" width="128" height="165"/>
-        <element name="KeepRule" positionX="108" positionY="-351" width="128" height="150"/>
+        <element name="KeepRule" positionX="108" positionY="-351" width="128" height="163"/>
         <element name="MCard" positionX="-407" positionY="219" width="128" height="735"/>
         <element name="MCardImage" positionX="-218" positionY="861" width="128" height="75"/>
         <element name="MCardLand" positionX="-594" positionY="549" width="128" height="345"/>
-        <element name="MulliganRuleset" positionX="-90" positionY="-288" width="128" height="165"/>
+        <element name="MulliganRuleset" positionX="-90" positionY="-288" width="128" height="178"/>
         <element name="Player" positionX="-414" positionY="-243" width="128" height="135"/>
         <element name="Subcondition" positionX="313" positionY="72" width="128" height="195"/>
         <element name="SuccessRule" positionX="88" positionY="-162" width="128" height="120"/>

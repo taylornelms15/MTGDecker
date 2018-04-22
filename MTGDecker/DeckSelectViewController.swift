@@ -140,13 +140,11 @@ class DeckSelectViewController: UITableViewController{
         
     }//cellForRowAtIndexPath
     
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sourceCell = self.tableView(tableView, cellForRowAt: indexPath)
         
         performSegue(withIdentifier: "DeckDetailSegue", sender: sourceCell)
-        
-    }//accessoryButtonTapped
+    }//didSelectRowAt
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true

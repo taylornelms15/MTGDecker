@@ -139,6 +139,7 @@ class MTGDeckerTests: XCTestCase {
         
         context.delete(ratDeck!)
         context.delete(elfDeck!)
+        context.delete(nayaDeck!)
         
         context.performAndWait {
             do{
@@ -156,9 +157,9 @@ class MTGDeckerTests: XCTestCase {
     
     func testDecks() {
         
-        let ratSimulator: Simulator = Simulator(deck: ratDeck!)
-        let elfSimulator: Simulator = Simulator(deck: elfDeck!)
-        let nayaSimulator: Simulator = Simulator(deck: nayaDeck!)
+        let ratSimulator: Simulator = Simulator(deck: ratDeck!, intoContext: context)
+        let elfSimulator: Simulator = Simulator(deck: elfDeck!, intoContext: context)
+        let nayaSimulator: Simulator = Simulator(deck: nayaDeck!, intoContext: context)
         
         XCTAssert(ratSimulator.deckSize == 60)
         XCTAssert(elfSimulator.deckSize == 62)
@@ -271,7 +272,7 @@ class MTGDeckerTests: XCTestCase {
         let toughnessNames: [String] = ["Arbor Elf", "Elvish Mystic", "Llanowar Elves"]
         
         let landAndElfCondition: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
-        landAndElfCondition.subconditionList = Set<Subcondition>(arrayLiteral: landCondition, subtypeCondition)
+        landAndElfCondition.subconditionList = Set<Subcondition>([landCondition, subtypeCondition])
         
         XCTAssertNoThrow(try testTotalsCondition(elfSimulator, &myHand, landNames, landCondition))
         XCTAssertNoThrow(try testTotalsCondition(elfSimulator, &myHand, creatureNames, creatureCondition))

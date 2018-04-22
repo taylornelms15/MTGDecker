@@ -15,6 +15,8 @@ import CoreData
  */
 internal class Simulator{
     
+    static var NUM_THREADS: Int = 16
+    
     ///The Deck object used to initialize the Simulator's deck; goal is to not mutate it during Simulator operations
     var deck: Deck
     ///The simulator's deck; preserves card position, represents discrete number of cards in case of copies (just like a physical deck does)
@@ -23,10 +25,12 @@ internal class Simulator{
     var deckSize: Int
     ///Represents the minimum mana coverage to play all cards in the deck
     internal var costBlock: CostBlock
+    ///A record of the NSManagedObjectContext that this particular simulator is pulling from
+    internal var context: NSManagedObjectContext
     
     
-    internal init(deck: Deck){
-        self.deck = deck
+    internal init(deck: Deck, intoContext: NSManagedObjectContext){
+        self.deck = intoContext.object(with: deck.objectID) as! Deck
         let sortedDeck: [[(MCard, Int)]] = deck.getCardsSorted()
         self.deckSize = deck.getCardTotal()
         
@@ -35,7 +39,7 @@ internal class Simulator{
         for typeBlock in sortedDeck{//typeBlock: [(MCard, Int)]
             for cardTuple in typeBlock{//cardTuple: (MCard, Int)
                 for _ in 0 ..< cardTuple.1{//_: one instance of MCard
-                    cards.append(cardTuple.0)
+                    cards.append(intoContext.object(with: cardTuple.0.objectID) as! MCard)
                 }//for each card
             }//for card tuple
         }//for type
@@ -45,18 +49,22 @@ internal class Simulator{
             costBlock.addCostForCard(card: card)
         }//for each card, add it's costs to the costBlock
         
+        self.context = intoContext
+        
     }//init
-    internal init(simulator: Simulator){
+    internal init(simulator: Simulator, intoContext: NSManagedObjectContext){
         self.cards = Array<MCard>()
         self.costBlock = simulator.costBlock
-        self.deck = simulator.deck
+        //self.deck = simulator.deck
+        self.deck = intoContext.object(with: simulator.deck.objectID) as! Deck
         
         for card in simulator.cards{
-            self.cards.append(card)
+            //self.cards.append(card)
+            self.cards.append(intoContext.object(with: card.objectID) as! MCard)
         }
         
         self.deckSize = self.cards.count
-        
+        self.context = intoContext
     }//init (quick-copy)
     
     
@@ -156,19 +164,65 @@ internal class Simulator{
      Tests a deck against the given set of mulligan rules a given number of times. Defaults to a 7-card hand draw initially.
     */
     internal func testDeckAgainstMulliganMultiple(ruleset: MulliganRuleset, repetitions: Int) -> SimulationResult{
+        NotificationCenter.default.post(name: .simulatorStartedNotification , object: nil)
+        
         var result: SimulationResult = SimulationResult()
         let simulatorGroup: DispatchGroup = DispatchGroup()
-        let resultQueue: DispatchQueue = DispatchQueue(label: "Simulation Result")
+        let resultQueue: DispatchQueue = DispatchQueue(label: "Simulation Result")//protects the result variable
         
-        for _ in 0 ..< repetitions{
-            let testSimulator: Simulator = Simulator(simulator: self)
-            testSimulator.shuffleDeck()
+        let threadSplit: [Int] = Simulator.repetitionSplit(repetitions: repetitions, numThreads: Simulator.NUM_THREADS)
+        
+        for i in threadSplit{ //i == number of sub-repetitions
             simulatorGroup.enter()
+
             DispatchQueue.global(qos: .userInitiated).async {
+                let testContext: NSManagedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                testContext.parent = self.context
+                let testRuleset: MulliganRuleset = testContext.object(with: ruleset.objectID) as! MulliganRuleset
+                let testSimulator: Simulator = Simulator(simulator: self, intoContext: testContext)
+                
+                var subResult: SimulationResult = SimulationResult()
+                
+                for _ in 0 ..< i{
+                    testSimulator.shuffleDeck()
+                    do{
+                        let testResult: SimulationResult = try testSimulator.testDeckAgainstMulliganRuleset(ruleset: testRuleset, handSize: 7)
+                        subResult += testResult
+                    } catch{
+                        NSLog("Error testing the deck a bunch: \(error)")
+                    }
+                    
+                }//for each of the i sub-repetitions
+                
+                resultQueue.sync {
+                    result += subResult
+                    NotificationCenter.default.post(name: .simulatorProgressNotification , object: Float(result.numTrials) / Float(repetitions))
+                }//result update queue
+                
+                simulatorGroup.leave()
+               
+            }//asynchronous simulation thread
+            
+        }//for each thread
+        
+        
+        
+        
+        /*
+        for _ in 0 ..< repetitions{
+            simulatorGroup.enter()
+            let testContext: NSManagedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            testContext.parent = self.context
+            DispatchQueue.global(qos: .userInitiated).async {
+
+                let testRuleset: MulliganRuleset = testContext.object(with: ruleset.objectID) as! MulliganRuleset
+                let testSimulator: Simulator = Simulator(simulator: self, intoContext: testContext)
+                testSimulator.shuffleDeck()
                 do{
-                    let testResult: SimulationResult = try testSimulator.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: 7)
+                    let testResult: SimulationResult = try testSimulator.testDeckAgainstMulliganRuleset(ruleset: testRuleset, handSize: 7)
                 resultQueue.sync {
                     result += testResult
+                    //NotificationCenter.default.post(name: .simulatorProgressNotification , object: Float(result.numTrials) / Float(repetitions))
                     simulatorGroup.leave()
                 }//result update queue
                 } catch{
@@ -177,8 +231,11 @@ internal class Simulator{
             }//global queue
 
         }//for
+         */
         
         simulatorGroup.wait()//wait for all the repetitions to finish
+        
+        NotificationCenter.default.post(name: .simulatorEndedNotification , object: nil)
         
         return result
         
@@ -327,23 +384,45 @@ internal class Simulator{
         if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
         if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
         
-        if condition.subconditionList != nil && condition.subconditionList!.count != 0{
-            for subcondition in condition.subconditionList!{
-                if try self.testHandAgainstSubcondition(handSize: handSize, subcondition: subcondition) == false{
-                    return false
-                }//if any subconditions are not met, the condition is not met
-            }//for each subcondition
+        if condition.subconditionList != nil{
+            if condition.subconditionList!.count != 0{
+                for subcondition in condition.subconditionList!{
+                    if try self.testHandAgainstSubcondition(handSize: handSize, subcondition: subcondition) == false{
+                        return false
+                    }//if any subconditions are not met, the condition is not met
+                }//for each subcondition
             
-            return true //if all subconditions are met,
+                return true //if all subconditions are met,
+            }//if
+            else{
+                return true
+            }
         }//if we have subconditions
         else{
-            throw SimulatorError.emptyTest(message: "Condition must have at least one valid subcondition to test")
+            return true //automatically accept all empty conditions
+            //throw SimulatorError.emptyTest(message: "Condition must have at least one valid subcondition to test")
         }//else (no subconditions in list)
         
     }//testHandAgainstCondition
     
-   
-   
+   /**
+    Splits a given number of repetitions (such as simulations to run) across a given number of threads, so that work may be divided evenly
+     - parameter repetitions: The number of work-item repetitions to split up
+     - parameter numThreads: The number of threads on which to split the repetitions
+     - returns: An array of size `numThreads` such that the sum of each of the elements is equal to `repetitions`
+     */
+    private static func repetitionSplit(repetitions: Int, numThreads: Int) -> [Int]{
+        let baseRep: Int = repetitions / numThreads//base number of repetitions per thread
+        let numCarryTheOne: Int = repetitions % numThreads//the number of threads that get one extra run
+        var arrayFirsthalf: [Int] = Array<Int>(repeating: baseRep + 1, count: numCarryTheOne)
+        let arraySecondhalf: [Int] = Array<Int>(repeating: baseRep, count: numThreads - numCarryTheOne)
+        
+        for value in arraySecondhalf{
+            arrayFirsthalf.append(value)
+        }
+        
+        return arrayFirsthalf
+    }//repetitionSplit
     
 }//Simulator
 
