@@ -27,7 +27,7 @@
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="conditions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Condition" inverseName="inv_keeprule" inverseEntity="Condition" syncable="YES"/>
-        <relationship name="inv_mulliganruleset4" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MulliganRuleset" inverseName="keepRule4" inverseEntity="MulliganRuleset" syncable="YES"/>
+        <relationship name="inv_mulliganruleset4" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MulliganRuleset" inverseName="keepRule4" inverseEntity="MulliganRuleset" syncable="YES"/>
         <relationship name="inv_mulliganruleset5" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MulliganRuleset" inverseName="keepRule5" inverseEntity="MulliganRuleset" syncable="YES"/>
         <relationship name="inv_mulliganruleset6" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MulliganRuleset" inverseName="keepRule6" inverseEntity="MulliganRuleset" syncable="YES"/>
         <relationship name="inv_mulliganruleset7" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MulliganRuleset" inverseName="keepRule7" inverseEntity="MulliganRuleset" syncable="YES"/>
@@ -148,7 +148,7 @@
         <element name="CardNameList" positionX="-594" positionY="-243" width="128" height="90"/>
         <element name="Condition" positionX="286" positionY="-180" width="128" height="118"/>
         <element name="Deck" positionX="-443" positionY="-27" width="128" height="165"/>
-        <element name="KeepRule" positionX="108" positionY="-351" width="128" height="163"/>
+        <element name="KeepRule" positionX="108" positionY="-351" width="128" height="165"/>
         <element name="MCard" positionX="-407" positionY="219" width="128" height="735"/>
         <element name="MCardImage" positionX="-218" positionY="861" width="128" height="75"/>
         <element name="MCardLand" positionX="-594" positionY="549" width="128" height="345"/>

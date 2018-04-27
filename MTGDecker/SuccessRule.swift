@@ -34,6 +34,10 @@ public class SuccessRule: NSManagedObject {
         }
     }//conditionList
     
+    public static func == (lhs: SuccessRule, rhs: SuccessRule) -> Bool{
+        return lhs.conditionList == rhs.conditionList
+    }//isEqual
+    
     /**
      Produces a human-readable summary of the rule. Ends up displayed as detail text in a table.
      */
@@ -67,5 +71,29 @@ public class SuccessRule: NSManagedObject {
             
         }//if more than one subcondition
     }//summary
+    
+    /**
+     Variable used to evaluate the resource-intensity of testing the given rule. A value of 1.0 will not modify the number of trials done while simulating a deck. Lower values decrease the number of trials done to test hands against a rule.
+     */
+    public var performanceRatio: Double{
+        
+        if conditionList == nil || conditionList!.count == 0{
+            return 1.0
+        }
+        
+        var result: Double = 0.0
+        var i: Int = 0
+        
+        for cond in conditionList ?? Set<Condition>(){
+            i += 1
+            result += cond.performanceRatio
+        }
+        
+        result /= Double(i)
+        
+        //Average together the performance effects of the separate conditions, because they are OR'd together. This may take some tweaking.
+        
+        return result
+    }//performanceRatio
     
 }//SuccessRule

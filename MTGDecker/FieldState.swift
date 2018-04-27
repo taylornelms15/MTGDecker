@@ -59,9 +59,9 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         if !lhs.battlefield.containsSameElements(as: rhs.battlefield){
             return false
         }
-        if lhs.library.count != rhs.library.count {return false}
-        for i in 0 ..< lhs.library.count{
-            if lhs.library[i] != rhs.library[i] {return false}
+
+        if lhs.library != rhs.library{
+            return false
         }
         
         return true

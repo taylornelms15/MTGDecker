@@ -23,10 +23,10 @@ public class KeepRule: NSManagedObject {
     @NSManaged public var handSize: Int16
     @NSManaged public var name: String?
     @NSManaged private var conditions: NSSet?
-    @NSManaged public var inv_mulliganruleset4: MulliganRuleset?
-    @NSManaged public var inv_mulliganruleset5: NSSet?
-    @NSManaged public var inv_mulliganruleset6: NSSet?
-    @NSManaged public var inv_mulliganruleset7: NSSet?
+    @NSManaged public var inv_mulliganruleset4: Set<MulliganRuleset>?
+    @NSManaged public var inv_mulliganruleset5: Set<MulliganRuleset>?
+    @NSManaged public var inv_mulliganruleset6: Set<MulliganRuleset>?
+    @NSManaged public var inv_mulliganruleset7: Set<MulliganRuleset>?
     
     public var conditionList: Set<Condition>?{
         get{
@@ -37,6 +37,10 @@ public class KeepRule: NSManagedObject {
         }
     }//conditionList
 
+    static public func == (lhs: KeepRule, rhs: KeepRule) -> Bool{
+        return lhs.handSize == rhs.handSize && lhs.conditionList == rhs.conditionList
+    }
+    
     /**
      Produces a human-readable summary of the rule. Ends up displayed as detail text in a table.
      */
@@ -70,6 +74,30 @@ public class KeepRule: NSManagedObject {
             
         }//if more than one subcondition
     }//summary
+    
+    /**
+     Variable used to evaluate the resource-intensity of testing the given rule. A value of 1.0 will not modify the number of trials done while simulating a deck. Lower values decrease the number of trials done to test hands against a rule.
+     */
+    public var performanceRatio: Double{
+        
+        if conditionList == nil || conditionList!.count == 0{
+            return 1.0
+        }
+        
+        var result: Double = 0.0
+        var i: Int = 0
+        
+        for cond in conditionList ?? Set<Condition>(){
+            i += 1
+            result += cond.performanceRatio
+        }
+        
+        result /= Double(i)
+        
+        //Average together the performance effects of the separate conditions, because they are OR'd together. This may take some tweaking.
+
+        return result
+    }//performanceRatio
     
     
 }//KeepRule

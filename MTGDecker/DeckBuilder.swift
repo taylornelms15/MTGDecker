@@ -11,6 +11,8 @@ import CoreData
 import MTGSDKSwift
 
 class DeckBuilder{
+    ///Allow a 10-second interval before internet request times out
+    private static var TIMEOUT_INTERVAL : DispatchTimeInterval = DispatchTimeInterval.milliseconds(5000)
     
     var context: NSManagedObjectContext
     var deck: Deck
@@ -73,9 +75,16 @@ class DeckBuilder{
             magic.fetchCards([nameParam]) {
                 cards, error in
                 
-                if let error = error {
-                    NSLog("\(error)")
+                if error != nil {
+                    NSLog("\(String(describing: error))")
                 }
+                
+                if cards == nil || cards!.count == 0{
+                    //TODO: handle error better
+                    NSLog("Got an error fetching card data from the internet: \(String(describing: error))")
+                    fetchCardDispatchGroup.leave()
+                    return
+                }//An error finding the card
                 
                 let filteredCards: [Card] = cards!.filter({ (card) -> Bool in
                     if (card.name == nil || card.name! != cardName){
@@ -94,9 +103,16 @@ class DeckBuilder{
                 //Pulls card info from the internet again, this time with the specification that it is from the most recent printing of the card.
                 let setParam: CardSearchParameter = CardSearchParameter(parameterType: .set, value: setCode)
                 magic.fetchCards([nameParam, setParam], completion: { (recentCards, error) in
-                    if let error = error{
-                        NSLog("\(error)")
+                    if error != nil{
+                        NSLog("\(String(describing: error))")
                     }
+                    
+                    if recentCards == nil || recentCards!.count == 0{
+                        //TODO: handle error better
+                        NSLog("Got an error fetching card data from the internet: \(String(describing: error))")
+                        fetchCardDispatchGroup.leave()
+                        return
+                    }//An error finding the card
                     
                     let cards: [Card] = recentCards!.filter({ (card) -> Bool in
                         if (card.name == nil || card.name! != cardName){
@@ -116,7 +132,9 @@ class DeckBuilder{
             }//fetch the card for that name
         }
         
-        fetchCardDispatchGroup.wait()
+        if fetchCardDispatchGroup.wait(timeout: .now() + DeckBuilder.TIMEOUT_INTERVAL ) == DispatchTimeoutResult.timedOut{
+            //TODO: handle timeout error better
+        }
         
         if (cardResults.count == 0){
             NSLog("Error retrieving card \(cardName); please try again another time")
@@ -206,5 +224,6 @@ class DeckBuilder{
 extension Notification.Name{
     static let cardAddNotification = Notification.Name(rawValue: "cardAdd")
     static let cardCellRemoveNotification = Notification.Name(rawValue: "cardCellRemove")
+    static let cardNumberChangeNotification = Notification.Name(rawValue: "cardNumberChange")
     static let cardImageAddNotification = Notification.Name(rawValue: "cardImageAdd")
 }

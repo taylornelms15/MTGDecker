@@ -407,55 +407,44 @@ public class ManaPool: Equatable, Hashable, CustomStringConvertible, Comparable{
         
     }//canCoverCost
     
-    ///Recursively tries replacing "choice" costs with various hard-mana to test the cost covering capabilities
+    /**
+     Recursively tries replacing "choice" costs with various hard-mana to test the cost covering capabilities
+     
+     - parameter block: The block of costs we're testing against this iteration of the mana pool.
+     - returns: `Bool` representing if the mana pool can cover the costs of the given block
+ 
+     */
     private func canCoverCost(block: CostBlock) -> Bool{
         if block.isEmpty(){
             return true
         }
         
+        if block.totalCMC > self.totalCMC{
+            return false
+        }//if we don't in any way have the mana to cover this shit
+        
+        if block.w > self.w{
+            return false//cannot meet this requirement
+        }
+        if block.u > self.u{
+            return false//cannot meet this requirement
+        }
+        if block.b > self.b{
+            return false//cannot meet this requirement
+        }
+        if block.r > self.r{
+            return false//cannot meet this requirement
+        }
+        if block.g > self.g{
+            return false//cannot meet this requirement
+        }
+        if block.c > self.c{
+            return false//cannot meet this requirement
+        }
+        
         
         //Choice-mana handlers
-        //Any
-        if block.any > 0{
-            var tryBlock: CostBlock = block
-            tryBlock.any -= 1
-            
-            if (self.w > block.w){
-                var tryWhite: CostBlock = tryBlock
-                tryWhite.w += 1
-                if (canCoverCost(block: tryWhite)){ return true }
-            }
-            
-            if (self.u > block.u){
-                var tryBlue: CostBlock = tryBlock
-                tryBlue.u += 1
-                if (canCoverCost(block: tryBlue)){ return true }
-            }
-            
-            if (self.b > block.b){
-                var tryBlack: CostBlock = tryBlock
-                tryBlack.b += 1
-                if (canCoverCost(block: tryBlack)){ return true }
-            }
-            
-            if (self.r > block.r){
-                var tryRed: CostBlock = tryBlock
-                tryRed.r += 1
-                if (canCoverCost(block: tryRed)){ return true }
-            }
-            
-            if (self.g > block.g){
-                var tryGreen: CostBlock = tryBlock
-                tryGreen.g += 1
-                if (canCoverCost(block: tryGreen)){ return true }
-            }
-            
-            var tryColorless: CostBlock = tryBlock
-            tryColorless.c += 1
-            if (canCoverCost(block: tryColorless)){ return true }
-            
-            return false //cannot meet this requirement
-        }//if an any-mana cost still exists
+
         
         //Dual
         if block.wu > 0{
@@ -648,24 +637,49 @@ public class ManaPool: Equatable, Hashable, CustomStringConvertible, Comparable{
             return false //cannot meet this requirement
         }//GU
         
-        if block.w > self.w{
-            return false//cannot meet this requirement
-        }
-        if block.u > self.u{
-            return false//cannot meet this requirement
-        }
-        if block.b > self.b{
-            return false//cannot meet this requirement
-        }
-        if block.r > self.r{
-            return false//cannot meet this requirement
-        }
-        if block.g > self.g{
-            return false//cannot meet this requirement
-        }
-        if block.c > self.c{
-            return false//cannot meet this requirement
-        }
+        //Any
+        if block.any > 0{
+            var tryBlock: CostBlock = block
+            tryBlock.any -= 1
+            
+            if (self.w > block.w){
+                var tryWhite: CostBlock = tryBlock
+                tryWhite.w += 1
+                if (canCoverCost(block: tryWhite)){ return true }
+            }
+            
+            if (self.u > block.u){
+                var tryBlue: CostBlock = tryBlock
+                tryBlue.u += 1
+                if (canCoverCost(block: tryBlue)){ return true }
+            }
+            
+            if (self.b > block.b){
+                var tryBlack: CostBlock = tryBlock
+                tryBlack.b += 1
+                if (canCoverCost(block: tryBlack)){ return true }
+            }
+            
+            if (self.r > block.r){
+                var tryRed: CostBlock = tryBlock
+                tryRed.r += 1
+                if (canCoverCost(block: tryRed)){ return true }
+            }
+            
+            if (self.g > block.g){
+                var tryGreen: CostBlock = tryBlock
+                tryGreen.g += 1
+                if (canCoverCost(block: tryGreen)){ return true }
+            }
+            
+            var tryColorless: CostBlock = tryBlock
+            tryColorless.c += 1
+            if (canCoverCost(block: tryColorless)){ return true }
+            
+            return false //cannot meet this requirement
+        }//if an any-mana cost still exists
+        
+
 
         return true
     }//canCoverCost
@@ -688,6 +702,10 @@ public class ManaPool: Equatable, Hashable, CustomStringConvertible, Comparable{
         var bg: Int = 0
         var rw: Int = 0
         var gu: Int = 0
+        
+        public var totalCMC: Int{
+            return w+u+b+r+g+c+any+wu+ub+br+rg+gw+wb+ur+bg+rw+gu
+        }
         
         internal func isEmpty()->Bool{
             return (self.any == 0) && (w == 0) && (u == 0) && (b == 0) && (r == 0) && (g == 0) && (c == 0) && (wu == 0) && (ub == 0) && (br == 0) && (rg == 0) && (gw == 0) && (wb == 0) && (ur == 0) && (bg == 0) && (rw == 0) && (gu == 0)

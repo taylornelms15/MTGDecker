@@ -127,8 +127,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         var myMulliganDefaults: Set<MulliganRuleset> = Set<MulliganRuleset>()
         
-        if results.count == 0{
+        if results.count < 2{
             myMulliganDefaults.insert(MulliganRuleset.makeLandDefault(context))
+            myMulliganDefaults.insert(MulliganRuleset.makePlayableDefault(context))
             
             do{
                 try context.save()

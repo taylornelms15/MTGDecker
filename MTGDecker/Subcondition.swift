@@ -163,17 +163,35 @@ public class Subcondition: NSManagedObject {
             else{ return "between \(numParam2) and \(numParam3) sorceries" }
             
         case .nameEqualTo:
+            if (numParam2 == numParam3){
+                return "\(numParam2) \(numParam2 == 1 ? "copy" : "copies") of \(stringParam1 == nil ? "given card" : stringParam1!)"
+            }
             return "contains \(stringParam1 ?? "card of given name")"
         case .cmcEqualTo:
-            return "card with CMC \(numParam1)"
+            if (numParam2 == numParam3){
+                return "\(numParam2) card\(numParam2 == 1 ? "" : "s") with \(numParam1 == -1 ? "given CMC" : "CMC \(numParam1)")"
+            }
+            return "between \(numParam2) and \(numParam3) \(numParam1 == -1 ? "cards with given CMC" : "CMC-\(numParam1) cards")"
         case .subtypeEqualTo:
-            return "contains a \(stringParam1 ?? "card of given subtype")"
+            if (numParam2 == numParam3){
+                return "\(numParam2) \(stringParam1 ?? "given-subtype") card\(numParam2 == 1 ? "" : "s")"
+            }
+            return "between \(numParam2) and \(numParam3) \(stringParam1 == nil ? "cards of given subtype" : stringParam1! + " cards")"
         case .supertypeEqualTo:
-            return "contains a \(stringParam1 ?? "card of given supertype")"
+            if (numParam2 == numParam3){
+                return "\(numParam2) \(stringParam1 ?? "given-supertype") card\(numParam2 == 1 ? "" : "s")"
+            }
+            return "between \(numParam2) and \(numParam3) \(stringParam1 == nil ? "cards of given supertype" : stringParam1! + " cards")"
         case .powerEqualTo:
-            return "card with power \(numParam1)"
+            if (numParam2 == numParam3){
+                return "\(numParam2) card\(numParam2 == 1 ? "" : "s") with \(numParam1 == -1 ? "given power" : "power \(numParam1)")"
+            }
+            return "between \(numParam2) and \(numParam3) \(numParam1 == -1 ? "cards of given power" : "\(numParam1)-power cards")"
         case .toughnessEqualTo:
-            return "card with toughness \(numParam1)"
+            if (numParam2 == numParam3){
+                return "\(numParam2) card\(numParam2 == 1 ? "" : "s") with \(numParam1 == -1 ? "given toughness" : "toughness \(numParam1)")"
+            }
+            return "between \(numParam2) and \(numParam3) \(numParam1 == -1 ? "cards of given toughness" : "\(numParam1)-toughness cards")"
             
         case .playable:
             switch typeParam{
@@ -224,8 +242,32 @@ public class Subcondition: NSManagedObject {
         }//switch
     }//summary
     
+    ///Defines equality between two subconditions
+    static public func == (lhs: Subcondition, rhs: Subcondition) -> Bool{
+        return lhs.type == rhs.type && lhs.typeParam == rhs.typeParam && lhs.numParam1 == rhs.numParam1 && lhs.numParam2 == rhs.numParam2 && lhs.numParam3 == rhs.numParam3 && lhs.numParam4 == rhs.numParam4 && lhs.numParam5 == rhs.numParam5 && lhs.stringParam1 == rhs.stringParam1 && lhs.stringParam2 == rhs.stringParam2 && lhs.stringParam3 == rhs.stringParam3
+        
+        
+    }//isEqual
+    
     /**
-     Enum defining values for bitmasks for checking colors against a given "color inclusion" value
+     Variable used to evaluate the resource-intensity of testing the given subcondition. A value of 1.0 will not modify the number of trials done while simulating a deck. Lower values decrease the number of trials done to test hands against a subcondition.
+     */
+    public var performanceRatio: Double{
+        switch self.type{
+        case .playableByTurn:
+            if numParam1 <= 2{ return 0.3 }//less performance effect for a smaller number of tested turns
+            return 0.2
+        case .playable:
+            return 0.5
+        case .manaCoverage:
+            return 0.9
+        default:
+            return 1.0
+        }
+    }//performanceRatio
+    
+    /**
+     Enum defining values for bitmasks for checking colors against a given "color inclusion" value. Likely not needed.
      */
     public enum ColorMask: Int16{
         case wMask = 0x0001

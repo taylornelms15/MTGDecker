@@ -7,6 +7,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -603,6 +604,7 @@
                         <outlet property="card7SuccessLabel" destination="ebx-8e-HqQ" id="4nk-0e-qzY"/>
                         <outlet property="ruleEditTable" destination="igi-aR-s31" id="9fR-by-1l6"/>
                         <outlet property="simulateButtonContainer" destination="Qmi-u0-N12" id="l3V-Nl-p46"/>
+                        <segue destination="dHj-bT-Yj9" kind="show" identifier="ruleEditSegue" id="aEn-tb-rFL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Esj-lR-fUy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -612,7 +614,183 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1205.5999999999999" y="1526.9865067466269"/>
+            <point key="canvasLocation" x="1345" y="1533"/>
+        </scene>
+        <!--Edit Rule-->
+        <scene sceneID="Ynx-Oq-979">
+            <objects>
+                <viewController storyboardIdentifier="ruleEditViewController" title="Edit Rule" id="dHj-bT-Yj9" customClass="RuleEditViewController" customModule="MTGDecker" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hMu-Iz-UFn"/>
+                        <viewControllerLayoutGuide type="bottom" id="QcL-27-E2k"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="jE6-64-kBd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7-Card Keep Rule" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sl9-RA-NvF">
+                                <rect key="frame" x="16" y="72" width="199" height="32"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Dtc-3h-RTL" customClass="RuleTable" customModule="MTGDecker" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="150" width="375" height="517"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="addConditionCell" id="EJ0-IQ-BQg" customClass="AddConditionCell" customModule="MTGDecker" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EJ0-IQ-BQg" id="Q7N-CY-EY1">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vPu-TJ-UMo">
+                                                    <rect key="frame" x="312" y="0.0" width="48" height="44"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="48" id="kvT-Vn-Dtv"/>
+                                                    </constraints>
+                                                    <items>
+                                                        <barButtonItem style="plain" systemItem="flexibleSpace" id="SIO-KT-3dy"/>
+                                                        <barButtonItem systemItem="add" id="sSb-IT-BJR">
+                                                            <connections>
+                                                                <action selector="conditionAddPress:" destination="EJ0-IQ-BQg" id="x9h-Og-mJZ"/>
+                                                            </connections>
+                                                        </barButtonItem>
+                                                    </items>
+                                                    <color key="barTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </toolbar>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AND" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ERV-kX-DNJ">
+                                                    <rect key="frame" x="15" y="11" width="35.5" height="20.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add Condition" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="pDf-Ti-Kmk">
+                                                    <rect key="frame" x="75" y="7" width="225" height="30"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="vPu-TJ-UMo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="pDf-Ti-Kmk" secondAttribute="trailing" constant="8" id="2DB-LZ-noA"/>
+                                                <constraint firstItem="vPu-TJ-UMo" firstAttribute="centerY" secondItem="Q7N-CY-EY1" secondAttribute="centerY" id="5Uq-A6-AMa"/>
+                                                <constraint firstItem="pDf-Ti-Kmk" firstAttribute="centerX" secondItem="Q7N-CY-EY1" secondAttribute="centerX" id="9Kt-HG-zN9"/>
+                                                <constraint firstItem="pDf-Ti-Kmk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ERV-kX-DNJ" secondAttribute="trailing" constant="8" id="Eez-p8-fSy"/>
+                                                <constraint firstItem="pDf-Ti-Kmk" firstAttribute="centerY" secondItem="Q7N-CY-EY1" secondAttribute="centerY" id="S8s-5R-TDK"/>
+                                                <constraint firstItem="ERV-kX-DNJ" firstAttribute="centerY" secondItem="Q7N-CY-EY1" secondAttribute="centerY" id="ThO-yg-aYh"/>
+                                                <constraint firstItem="ERV-kX-DNJ" firstAttribute="leading" secondItem="Q7N-CY-EY1" secondAttribute="leading" constant="15" id="XGd-Pj-wzy"/>
+                                                <constraint firstItem="vPu-TJ-UMo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ERV-kX-DNJ" secondAttribute="trailing" constant="12" id="jTJ-7R-i5e"/>
+                                                <constraint firstAttribute="trailing" secondItem="vPu-TJ-UMo" secondAttribute="trailing" constant="15" id="rO7-2i-bH5"/>
+                                                <constraint firstItem="pDf-Ti-Kmk" firstAttribute="width" secondItem="Q7N-CY-EY1" secondAttribute="width" multiplier="0.6" id="vhX-nd-J7n"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="conditionAddButton" destination="sSb-IT-BJR" id="sPI-yV-jXK"/>
+                                            <outlet property="conditionTypeField" destination="pDf-Ti-Kmk" id="hao-Xr-g3H"/>
+                                            <outlet property="conditionalLabel" destination="ERV-kX-DNJ" id="TGl-xc-QGn"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="landTotalCell" id="Qgb-D9-iQT" customClass="LandConditionCell" customModule="MTGDecker" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Qgb-D9-iQT" id="6CG-Kb-kOj">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Nm2-fA-Ihw">
+                                                    <rect key="frame" x="15" y="6" width="233" height="30"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Between" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IjB-TX-gCl">
+                                                            <rect key="frame" x="0.0" y="0.0" width="67" height="30"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="0" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bor-VZ-4vS">
+                                                            <rect key="frame" x="73" y="0.0" width="36" height="30"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="36" id="kFw-ik-YDZ"/>
+                                                            </constraints>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <textInputTraits key="textInputTraits"/>
+                                                        </textField>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="and" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UZm-Xf-rJ4">
+                                                            <rect key="frame" x="115" y="0.0" width="29" height="30"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="7" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="K0p-en-AR4">
+                                                            <rect key="frame" x="150" y="0.0" width="36" height="30"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="36" id="ZaF-rz-ePC"/>
+                                                            </constraints>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <textInputTraits key="textInputTraits"/>
+                                                        </textField>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="lands" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pl0-Mg-dwm">
+                                                            <rect key="frame" x="192" y="0.0" width="41" height="30"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Nm2-fA-Ihw" firstAttribute="leading" secondItem="6CG-Kb-kOj" secondAttribute="leading" constant="15" id="ULi-K7-F7b"/>
+                                                <constraint firstItem="Nm2-fA-Ihw" firstAttribute="centerY" secondItem="6CG-Kb-kOj" secondAttribute="centerY" id="Z7Q-oq-CAe"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="hiField" destination="K0p-en-AR4" id="RR5-2v-pOT"/>
+                                            <outlet property="loField" destination="Bor-VZ-4vS" id="KlO-Bc-xJd"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Default Land Rule" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aD6-f9-VRr">
+                                <rect key="frame" x="187.5" y="112" width="171.5" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="aD6-f9-VRr" firstAttribute="width" secondItem="jE6-64-kBd" secondAttribute="width" multiplier="0.5" constant="-16" id="Bn9-IM-rtk"/>
+                            <constraint firstAttribute="trailing" secondItem="Dtc-3h-RTL" secondAttribute="trailing" id="LRQ-N9-x3Q"/>
+                            <constraint firstItem="QcL-27-E2k" firstAttribute="top" secondItem="Dtc-3h-RTL" secondAttribute="bottom" id="MLP-qr-v9w"/>
+                            <constraint firstItem="aD6-f9-VRr" firstAttribute="trailing" secondItem="jE6-64-kBd" secondAttribute="trailingMargin" id="OjG-Yl-rLm"/>
+                            <constraint firstItem="sl9-RA-NvF" firstAttribute="top" secondItem="hMu-Iz-UFn" secondAttribute="bottom" constant="8" id="YlU-F5-VXE"/>
+                            <constraint firstItem="aD6-f9-VRr" firstAttribute="top" secondItem="sl9-RA-NvF" secondAttribute="bottom" constant="8" id="c5V-hF-dd2"/>
+                            <constraint firstItem="Dtc-3h-RTL" firstAttribute="top" secondItem="aD6-f9-VRr" secondAttribute="bottom" constant="8" id="cHy-Zb-nrg"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="sl9-RA-NvF" secondAttribute="trailingMargin" id="hwU-V7-7kh"/>
+                            <constraint firstItem="sl9-RA-NvF" firstAttribute="leading" secondItem="jE6-64-kBd" secondAttribute="leadingMargin" id="lcl-29-17c"/>
+                            <constraint firstItem="Dtc-3h-RTL" firstAttribute="leading" secondItem="jE6-64-kBd" secondAttribute="leading" id="xaG-KY-zr6"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="defaultsTextField" destination="aD6-f9-VRr" id="FHk-gt-Co1"/>
+                        <outlet property="ruleNameLabel" destination="sl9-RA-NvF" id="pyM-5G-Ub6"/>
+                        <outlet property="ruleTableView" destination="Dtc-3h-RTL" id="g2B-cQ-gst"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WXo-Ge-Alf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2220" y="1531.4842578710645"/>
         </scene>
         <!--Card Search-->
         <scene sceneID="YVB-v5-jqT">

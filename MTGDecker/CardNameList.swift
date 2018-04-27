@@ -209,6 +209,10 @@ public class CardNameList: NSManagedObject {
                     NSLog("Set fetch error: \(error!)\n")
                 }//if
                 
+                if sets == nil || sets!.count == 0{
+                    NSLog("Error picking up set things: \(error). Not sure why.")
+                }
+                
                 
                 for set in sets!{
                     

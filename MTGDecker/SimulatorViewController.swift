@@ -13,7 +13,7 @@ import CoreData
 class SimulatorViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
     private var EPSILON: Double = 0.01
-    private static var NUM_REPETITIONS: Int = 30000
+    private static var NUM_REPETITIONS_BASE: Int = 30000
     
     var deck: Deck?
     var context: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -100,15 +100,35 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         
     }//viewDidLoad
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "ruleEditSegue"{
+            if sender is KeepRule{
+                let rule: KeepRule = sender as! KeepRule
+                
+                let newVC: RuleEditViewController = segue.destination as! RuleEditViewController
+                
+                newVC.keep = rule
+                
+                newVC.deck = self.deck!
+                
+            }//if editing a keep rule
+            
+        }//if about to edit a rule
+        
+    }//prepareForSegue
+    
+    
+    
     func loadDefaultSet() -> MulliganRuleset{
         let myDelegate: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
         let defaultRules: Set<MulliganRuleset> = myDelegate.mulliganDefaults(context)
-        let landDefault: MulliganRuleset = defaultRules.first { (ruleSet) -> Bool in
+        let myDefault: MulliganRuleset = defaultRules.first { (ruleSet) -> Bool in
             return ruleSet.name == MulliganRuleset.LAND_DEFAULT_NAME
         }!//find the default
         
-        deck!.inv_player!.mulliganRulesetList?.insert(landDefault)
-        deck!.inv_player!.activeMulliganRuleset = landDefault
+        deck!.inv_player!.mulliganRulesetList?.insert(myDefault)
+        deck!.inv_player!.activeMulliganRuleset = myDefault
         
         do{
             try context.save()
@@ -116,7 +136,7 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
             NSLog("Error setting some default mulligan rule sets! \(error)")
         }//catch
         
-        return landDefault
+        return myDefault
     }//loadDefaultSet
     
     func updateResults(fromResult: SimulationResult){
@@ -197,7 +217,9 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
     
     @IBAction func simulateButtonPress(_ sender: UITapGestureRecognizer) {
         DispatchQueue.global(qos: .userInitiated).async {
-            let result: SimulationResult = self.simulator!.testDeckAgainstMulliganMultiple(ruleset: self.currentMulliganRuleset!, repetitions: SimulatorViewController.NUM_REPETITIONS)
+            //TODO: put the success rule calculations into the ratio equation
+            let repetitions: Int = Int(Double(SimulatorViewController.NUM_REPETITIONS_BASE) * self.currentMulliganRuleset!.performanceRatio)
+            let result: SimulationResult = self.simulator!.testDeckAgainstMulliganMultiple(ruleset: self.currentMulliganRuleset!, repetitions: repetitions)
             
             DispatchQueue.main.async {
                 self.updateResults(fromResult: result)
@@ -307,7 +329,7 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         if tableView == ruleEditTable{
             let ruleCell: RuleSummaryCell = tableView.dequeueReusableCell(withIdentifier: "ruleCell") as! RuleSummaryCell
             
-            if indexPath.section == 0{//TODO: screw around with real rules
+            if indexPath.section == 0{
                 var myKeepRule: KeepRule?
                 switch indexPath.row{
                 case 0:
@@ -332,6 +354,34 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         
         return UITableViewCell()//garbage init
     }//cellForRowAtIndexPath
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if indexPath.section == 0{
+            var myKeepRule: KeepRule?
+            switch indexPath.row{
+            case 0:
+                myKeepRule = currentMulliganRuleset!.keepRule7
+            case 1:
+                myKeepRule = currentMulliganRuleset!.keepRule6
+            case 2:
+                myKeepRule = currentMulliganRuleset!.keepRule5
+            default:
+                myKeepRule = currentMulliganRuleset!.keepRule4
+            }
+            
+            self.performSegue(withIdentifier: "ruleEditSegue", sender: (myKeepRule))
+            
+        }//if a keepRule
+        else{
+            //TODO: handle success rules
+            return
+            
+        }//if a successRule
+        
+    }//didSelectRowAt
     
     
     
