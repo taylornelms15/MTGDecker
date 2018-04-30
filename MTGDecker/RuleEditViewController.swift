@@ -289,6 +289,7 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
                 
                 ruleTableView.beginUpdates()
                 ruleTableView.deleteRows(at: [indexPath], with: .automatic)
+                ruleTableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
                 ruleTableView.endUpdates()
                 
             }
