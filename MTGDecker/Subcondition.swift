@@ -99,6 +99,8 @@ public class Subcondition: NSManagedObject {
         case manaCoverage
         ///Checks for number of reactive cards matching a given total (`numParam1`)
         case reactiveTotal
+        ///Not-yet-defined
+        case undefinedTotal
 
     }//conditionType
     
@@ -239,6 +241,11 @@ public class Subcondition: NSManagedObject {
             return "land covers mana base"
         case .reactiveTotal:
             return "has \(numParam1) reactive play\(numParam1 == 1 ? "" : "s")"
+        case .undefinedTotal:
+            if (numParam2 == numParam3){
+                return "\(numParam2) \(stringParam1 ?? "given-property") card\(numParam2 == 1 ? "" : "s")"
+            }
+            return "between \(numParam2) and \(numParam3) \(stringParam1 == nil ? "cards of given property" : stringParam1! + " cards")"
         }//switch
     }//summary
     

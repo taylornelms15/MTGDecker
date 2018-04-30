@@ -75,16 +75,7 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         }
         
         //Model
-        
-        self.simulator = Simulator(deck: deck!, intoContext: context)
-        self.currentSuccessRule = self.deck!.activeSuccessRule
-        let rules: MulliganRuleset? = self.deck!.inv_player!.activeMulliganRuleset
-        if rules == nil{
-            self.currentMulliganRuleset = loadDefaultSet()
-        }
-        else{
-            self.currentMulliganRuleset = rules
-        }
+        loadModelRules()
         
         //Simulator Notification things
         
@@ -99,6 +90,27 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         }
         
     }//viewDidLoad
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        (UIApplication.shared.delegate as! AppDelegate).restrictRotation = .portrait
+        
+        self.loadModelRules()
+        
+        ruleEditTable.reloadData()
+        
+    }//viewWillAppear
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        (UIApplication.shared.delegate as! AppDelegate).restrictRotation = .all
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation{
+        return UIInterfaceOrientation.portrait
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -118,7 +130,20 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         
     }//prepareForSegue
     
-    
+    fileprivate func loadModelRules() {
+        //Model
+        
+        self.simulator = Simulator(deck: deck!, intoContext: context)
+        self.currentSuccessRule = self.deck!.activeSuccessRule
+        let rules: MulliganRuleset? = self.deck!.inv_player!.activeMulliganRuleset
+        
+        if rules == nil{
+            self.currentMulliganRuleset = loadDefaultSet()
+        }
+        else{
+            self.currentMulliganRuleset = rules
+        }
+    }
     
     func loadDefaultSet() -> MulliganRuleset{
         let myDelegate: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
@@ -226,9 +251,7 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
             }
             
             print("\(result)")
-        }
-
-        
+        }//async
     }//simulateButtonPress
     
     ///Handles UI ramifications of starting simulator up

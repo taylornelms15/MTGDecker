@@ -11,6 +11,9 @@ import UIKit
 
 class RuleSummaryCell: UITableViewCell{
     
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var detailLabel: UILabel!
+    
     var keep: KeepRule?
     var success: SuccessRule?
     var handSize: Int = -1
@@ -22,20 +25,18 @@ class RuleSummaryCell: UITableViewCell{
         self.keep = keep
         self.success = success
         
-        self.textLabel!.text = RuleEditTableView.tableTitles[path]!
+        self.titleLabel!.text = RuleEditTableView.tableTitles[path]!
         
         if keep != nil{
             self.handSize = Int(keep!.handSize)
-            self.detailTextLabel!.text = keep!.summary()
+            self.detailLabel!.text = keep!.summary()
             
         }//if a keep-rule
         else{
             self.handSize = -1
-            self.detailTextLabel!.text = success!.summary()
+            self.detailLabel!.text = success!.summary()
         }//if a success rule
 
-        self.detailTextLabel!.adjustsFontSizeToFitWidth = true
-        self.detailTextLabel!.minimumScaleFactor = 0.2
     }//softInit
     
     

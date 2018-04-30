@@ -96,4 +96,18 @@ public class SuccessRule: NSManagedObject {
         return result
     }//performanceRatio
     
+    static func makeSoftSuccess(_ success: SuccessRule) -> [[Softcondition]]{
+        var newSoftrule: [[Softcondition]] = []
+        for cond in success.conditionList ?? []{
+            var condArray: [Softcondition] = []
+            for subcond in cond.subconditionList ?? []{
+                let newSoftcon = Softcondition(from: subcond)
+                condArray.append(newSoftcon)
+            }//for each subcondition
+            newSoftrule.append(condArray)
+        }//for
+        
+        return newSoftrule
+    }//makeSoftSuccess
+    
 }//SuccessRule

@@ -16,6 +16,7 @@ var DEFAULT_PLAYER_ID: Int64 = Int64(1)
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var restrictRotation:TypeInterfaceOrientationMask = .all
  
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -27,6 +28,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         return true
+    }
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask
+    {
+        switch self.restrictRotation {
+        case .all:
+            return UIInterfaceOrientationMask.all
+        case .portrait:
+            return UIInterfaceOrientationMask.portrait
+        case .landscape:
+            return UIInterfaceOrientationMask.landscape
+        }
     }
     
     fileprivate func initPlayerList(_ context: NSManagedObjectContext){
@@ -220,5 +233,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+}
+enum TypeInterfaceOrientationMask {
+    case all
+    case portrait
+    case landscape
 }
 

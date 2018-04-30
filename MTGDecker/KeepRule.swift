@@ -64,7 +64,7 @@ public class KeepRule: NSManagedObject {
             for i in 0 ..< orderedMembers.count - 1{
                 resultString.append("(")
                 resultString.append(orderedMembers[i].summary())
-                resultString.append(") OR")
+                resultString.append(") OR ")
             }//for all but the last string
             resultString.append("(")
             resultString.append(orderedMembers.last!.summary())
@@ -99,5 +99,49 @@ public class KeepRule: NSManagedObject {
         return result
     }//performanceRatio
     
+    func copyFromSoft(softArrays: [[Softcondition]], into context: NSManagedObjectContext){
+        
+        self.conditionList = Set<Condition>()
+        
+        for softConGroup in softArrays{
+            if !softConGroup.contains(where: { (soft) -> Bool in
+                return soft.isValid
+            }){
+                break;//if no valid softconditions in the condition, skip
+            }//if
+            
+            let newCondition: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
+            newCondition.subconditionList = Set<Subcondition>()
+            
+            for softcon in softConGroup{
+                if softcon.isValid == true{
+                    let newSubcon: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+                    
+                    newSubcon.copyFrom(softcon)
+                    
+                    newCondition.subconditionList!.insert(newSubcon)
+                    
+                }//if the softcondition has enough info
+            }//for each subcondition inside the condition
+            
+            self.conditionList!.insert(newCondition)
+            
+        }//for each Condition
+
+    }//copyFromSoft
+    
+    static func makeSoftKeep(_ keep: KeepRule) -> [[Softcondition]] {
+        var newSoftrule: [[Softcondition]] = []
+        for cond in keep.conditionList ?? []{
+            var condArray: [Softcondition] = []
+            for subcond in cond.subconditionList ?? []{
+                let newSoftcon = Softcondition(from: subcond)
+                condArray.append(newSoftcon)
+            }//for each subcondition
+            newSoftrule.append(condArray)
+        }//for
+        
+        return newSoftrule
+    }//makeSoftKeep
     
 }//KeepRule

@@ -34,6 +34,33 @@ public class MulliganRuleset: NSManagedObject {
     public static var LAND_DEFAULT_NAME = "Default - Land Total"
     public static var PLAYABLE_DEFAULT_NAME = "Default - Playable"
     
+    /**
+     Produces a human-readable summary of the rule. Mostly used for debugging
+     */
+    public func summary()->String{
+        var result: String = ""
+        if keepRule7 != nil{
+            result += keepRule7!.summary()
+            result += "\n"
+        }
+        if keepRule6 != nil{
+            result += keepRule6!.summary()
+            result += "\n"
+        }
+        if keepRule5 != nil{
+            result += keepRule5!.summary()
+            result += "\n"
+        }
+        if keepRule4 != nil{
+            result += keepRule4!.summary()
+            result += "\n"
+        }
+        
+        
+        
+        
+        return result
+    }
     
     /**
      Variable used to evaluate the resource-intensity of testing the given rule. A value of 1.0 will not modify the number of trials done while simulating a deck. Lower values decrease the number of trials done to test hands against a rule.
@@ -50,6 +77,42 @@ public class MulliganRuleset: NSManagedObject {
         
         return result
     }//performanceRatio
+    
+    public func copyFromOther(_ ruleset: MulliganRuleset, into context: NSManagedObjectContext){
+        
+        self.isDefault = false//will never copy to make a default set
+        let my7: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
+        let my6: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
+        let my5: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
+        let my4: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
+        my7.handSize = 7
+        my6.handSize = 6
+        my5.handSize = 5
+        my4.handSize = 4
+        
+        if ruleset.keepRule7 != nil{
+            let buffer7: [[Softcondition]] = KeepRule.makeSoftKeep(ruleset.keepRule7!)
+            my7.copyFromSoft(softArrays: buffer7, into: context)
+        }
+        if ruleset.keepRule6 != nil{
+            let buffer6: [[Softcondition]] = KeepRule.makeSoftKeep(ruleset.keepRule6!)
+            my6.copyFromSoft(softArrays: buffer6, into: context)
+        }
+        if ruleset.keepRule5 != nil{
+            let buffer5: [[Softcondition]] = KeepRule.makeSoftKeep(ruleset.keepRule5!)
+            my5.copyFromSoft(softArrays: buffer5, into: context)
+        }
+        if ruleset.keepRule4 != nil{
+            let buffer4: [[Softcondition]] = KeepRule.makeSoftKeep(ruleset.keepRule4!)
+            my4.copyFromSoft(softArrays: buffer4, into: context)
+        }
+        
+        self.keepRule7 = my7
+        self.keepRule6 = my6
+        self.keepRule5 = my5
+        self.keepRule4 = my4
+        
+    }//copyFromOther
     
     
     static func makeLandDefault(_ context: NSManagedObjectContext) -> MulliganRuleset{

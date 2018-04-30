@@ -12,10 +12,10 @@ import UIKit
 class AddConditionCell: ConditionCell, UIPickerViewDelegate, UIPickerViewDataSource{
 
     static var conditionTypeOptions: [String] = ["",
-                                                 "Contains Number of Lands...",//.landTotal
-                                                 "Contains Specific Card...",//.nameEqualTo
-                                                 "Contains Card With Property...",//.creatureTotal
-                                                 "Contains Playable Card...",//.playable
+                                                 "Contains Number of Lands:",//.landTotal
+                                                 "Contains Specific Card:",//.nameEqualTo
+                                                 "Contains Card With Property:",//.planeswalkerTotal, .creatureTotal, .artifactTotal, .enchantmentTotal, .instantTotal, .sorceryTotal
+                                                 "Contains Playable Card:",//.playable
                                                  "Covers Mana Needs"]//.manaCoverage
     
     
@@ -52,7 +52,20 @@ class AddConditionCell: ConditionCell, UIPickerViewDelegate, UIPickerViewDataSou
             newSoftcon.type = Subcondition.ConditionType.landTotal
             newSoftcon.numParam2 = 0
             newSoftcon.numParam3 = Int(handSize)
-            
+        case AddConditionCell.conditionTypeOptions[2]://.nameEqualTo
+            newSoftcon.type = Subcondition.ConditionType.nameEqualTo
+            newSoftcon.stringParam1 = ""
+            newSoftcon.numParam2 = 1
+            newSoftcon.numParam3 = Int(handSize)
+        case AddConditionCell.conditionTypeOptions[3]://card with property
+            newSoftcon.type = Subcondition.ConditionType.undefinedTotal
+            newSoftcon.numParam2 = 1
+            newSoftcon.numParam3 = Int(handSize)
+        case AddConditionCell.conditionTypeOptions[4]://.playable, .playableByTurn
+            newSoftcon.type = Subcondition.ConditionType.playable
+            newSoftcon.typeParam = Subcondition.CardType.none
+        case AddConditionCell.conditionTypeOptions[5]://.manaCoverage
+            newSoftcon.type = Subcondition.ConditionType.manaCoverage
         default:
             NSLog("Tried to add condition with less-than-savory add-condition text")
             return//should never get to this
@@ -61,9 +74,17 @@ class AddConditionCell: ConditionCell, UIPickerViewDelegate, UIPickerViewDataSou
         //Add the softcondition to the table
         let ruleTable = self.parentRuleEditVC!.ruleTableView!
         
-        if self.path!.section >= self.parentRuleEditVC!.softRule.count{
-            self.parentRuleEditVC!.softRule.append([newSoftcon])
-            
+        let mySection: Int = self.path!.section
+        
+        if mySection >= self.parentRuleEditVC!.softRule.count || ( self.parentRuleEditVC!.softRule[mySection] ).isEmpty {
+
+            if mySection >= self.parentRuleEditVC!.softRule.count{
+                self.parentRuleEditVC!.softRule.append([newSoftcon])
+            }//if
+            else{
+                self.parentRuleEditVC!.softRule[mySection] = [newSoftcon]
+            }//else
+                
             ruleTable.beginUpdates()
             
             ruleTable.insertSections(IndexSet(integer: self.path!.section + 1), with: .automatic)
@@ -82,9 +103,6 @@ class AddConditionCell: ConditionCell, UIPickerViewDelegate, UIPickerViewDataSou
             ruleTable.endUpdates()
         }//if we're making an AND condition
 
-        
-        
-        
         //self.parentRuleEditVC!.ruleTableView.reloadData()
         
     }//conditionAddPress

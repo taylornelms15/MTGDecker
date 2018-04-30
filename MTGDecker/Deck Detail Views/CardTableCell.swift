@@ -61,6 +61,8 @@ class CardTableCell: UITableViewCell{
         
         let diff: Int = newQuantity - oldQuantity
         
+        NotificationCenter.default.post(name: .cardNumberChangeNotification, object: self)
+        
         if (newQuantity == 0){
             self.removeCardCell()
             return
@@ -84,6 +86,7 @@ class CardTableCell: UITableViewCell{
             quantityLabel.text = "\(self.quantity)"
         }//if removing cards
 
+        
         
     }//quantityChanged
     

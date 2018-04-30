@@ -55,33 +55,94 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
         
     }//viewDidLoad
     
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        super.viewWillDisappear(animated)
+        
+        self.storeRule()
+        
+    }//viewWillDisappear
+
     func initSoftrule(with keep: KeepRule){
-        var newSoftrule: [[Softcondition]] = []
-        for cond in keep.conditionList ?? []{
-            var condArray: [Softcondition] = []
-            for subcond in cond.subconditionList ?? []{
-                let newSoftcon = Softcondition(from: subcond)
-                condArray.append(newSoftcon)
-            }//for each subcondition
-            newSoftrule.append(condArray)
-        }//for each condition
-        
+        let newSoftrule: [[Softcondition]] = KeepRule.makeSoftKeep(keep)
         self.softRule = newSoftrule
-        
     }//initSoftrule with keeprule
     
     func initSoftrule(using success: SuccessRule){
-        var newSoftrule: [[Softcondition]] = []
-        for cond in success.conditionList ?? []{
-            var condArray: [Softcondition] = []
-            for subcond in cond.subconditionList ?? []{
-                condArray.append(Softcondition(from: subcond))
-            }//for each subcondition
-            newSoftrule.append(condArray)
-        }//for each condition
-        
+        let newSoftrule: [[Softcondition]] = SuccessRule.makeSoftSuccess(success)
         self.softRule = newSoftrule
     }//initSoftrule with successrule
+    
+    func storeRule(){
+        
+        if keep != nil{
+            
+            let newKeep: KeepRule = KeepRule(entity: KeepRule.entityDescription(context: context), insertInto: context)
+            newKeep.handSize = self.handSize
+            
+            newKeep.copyFromSoft(softArrays: softRule, into: context)
+            
+            if newKeep == self.keep{
+                
+                context.performAndWait {
+                    context.delete(newKeep)
+                    
+                    do{
+                        try context.save()
+                    }catch{
+                        NSLog("Found an error after deleting superfluous rule: \(error)")
+                    }
+                }//performandwait
+                
+                return
+                
+            }//if we didn't change anything
+            
+            let myPlayer: Player = self.deck!.inv_player!
+            
+            var activeMullSet = myPlayer.activeMulliganRuleset!
+            
+            if activeMullSet.isDefault{
+                
+                let newMullSet: MulliganRuleset = MulliganRuleset(entity: MulliganRuleset.entityDescription(context: context), insertInto: context)
+                
+                newMullSet.copyFromOther(activeMullSet, into: context)
+                
+                myPlayer.mulliganRulesetList!.insert(newMullSet)
+                myPlayer.activeMulliganRuleset = newMullSet
+                
+                activeMullSet = newMullSet
+                
+            }//if it's a default, make a new one, then modify that
+            
+            switch handSize{
+            case 7:
+                activeMullSet.keepRule7 = newKeep
+            case 6:
+                activeMullSet.keepRule6 = newKeep
+            case 5:
+                activeMullSet.keepRule5 = newKeep
+            default:
+                activeMullSet.keepRule4 = newKeep
+            }//switch
+            
+            
+        }//if a keep rule
+        else{
+            
+        }//if a success rule
+        
+        context.performAndWait {
+            do{
+                try context.save()
+            }//do
+            catch{
+                NSLog("Error storing new rule: \(error)")
+            }//catch
+        }//performAndWait
+        
+        
+    }//storeRule
     
     //MARK: UITableView
     
@@ -150,7 +211,20 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
                     
                     myCell = ruleTableView.dequeueReusableCell(withIdentifier: "landTotalCell") as! LandConditionCell
                     myCell!.softInit(path: indexPath, handSize: self.handSize, softcon: softcon)
-                default:
+                case .nameEqualTo:
+                    myCell = ruleTableView.dequeueReusableCell(withIdentifier: "specificCardCell") as! SpecificCardCell
+                    (myCell as! SpecificCardCell).setCardNameChoices(deck: self.deck!)
+                    myCell!.softInit(path: indexPath, handSize: self.handSize, softcon: softcon)
+                case .creatureTotal, .planeswalkerTotal, .artifactTotal, .enchantmentTotal, .instantTotal, .sorceryTotal, .supertypeEqualTo, .undefinedTotal:
+                    myCell = ruleTableView.dequeueReusableCell(withIdentifier: "cardPropertyCell") as! CardPropertyCell
+                    myCell!.softInit(path: indexPath, handSize: self.handSize, softcon: softcon)
+                case .playable, .playableByTurn:
+                    myCell = ruleTableView.dequeueReusableCell(withIdentifier: "playableCell") as! PlayableCell
+                    myCell!.softInit(path: indexPath, handSize: self.handSize, softcon: softcon)
+                case .manaCoverage:
+                    myCell = ruleTableView.dequeueReusableCell(withIdentifier: "manaCoverageCell") as! ManaCoverageCell
+                    myCell?.softInit(path: indexPath, handSize: self.handSize, softcon: softcon)
+                default://shouldn't get here
                     myCell = ruleTableView.dequeueReusableCell(withIdentifier: "addConditionCell") as! AddConditionCell
                     myCell!.softInit(path: indexPath, handSize: self.handSize)
                     
@@ -158,13 +232,9 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
                     
                 }//switch (softcondition type)
                 
-                
             }//if we're pulling from a softcondition
             
-            
         }//if we're in a section with at least one softCondition
-        
-        
         
         myCell!.parentRuleEditVC = self
         
@@ -172,7 +242,61 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
         return myCell!
     }//cellForRowAt
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section >= softRule.count{
+            return false
+        }//if we're on the last or after-last section (an "add new condition" cell)
+        else{
+            if indexPath.row >= softRule[indexPath.section].count{
+                return false
+            }//if we're on the last or after-last row (an "add new condition" cell)
+        }//else
+        
+        return true//allow deletion of all other cells
+    }//canEditRowAt
     
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete{
+            
+            if softRule[indexPath.section].count == 1{
+                
+                softRule.remove(at: indexPath.section)//delete the whole section
+                
+                if softRule.count == 0{
+                    softRule = [[]]
+                }
+                
+                ruleTableView.beginUpdates()
+                ruleTableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+                ruleTableView.reloadData()
+                /*
+                if self.numberOfSections(in: ruleTableView) > indexPath.section + 1{
+                    ruleTableView.reloadSections(IndexSet(integer: indexPath.section + 1), with: .none)
+                }//if there's a section after the one we're deleting
+                if indexPath.section != 0{
+                    ruleTableView.reloadSections(IndexSet(integer: indexPath.section - 1), with: .none)
+                }*/
+                ruleTableView.endUpdates()
+                
+            }//if deleting last row in a section
+            else{
+                softRule[indexPath.section].remove(at: indexPath.row)//delete the softcondition from the softRule
+                
+                ruleTableView.beginUpdates()
+                ruleTableView.deleteRows(at: [indexPath], with: .automatic)
+                ruleTableView.endUpdates()
+                
+            }
+            
+            
+        }//deleting
+        
+    }//commitEditingStyle (delete that row)
     
     
     

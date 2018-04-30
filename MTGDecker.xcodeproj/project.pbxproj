@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9500686C206AC09C0047B1B6 /* DeckDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */; };
+		950495DF209637D4007DED29 /* ManaCoverageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950495DE209637D4007DED29 /* ManaCoverageCell.swift */; };
+		950495E120964314007DED29 /* SpecificCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950495E020964314007DED29 /* SpecificCardCell.swift */; };
+		950495E320964E32007DED29 /* CardPropertyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950495E220964E32007DED29 /* CardPropertyCell.swift */; };
+		950495E520966085007DED29 /* PlayableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950495E420966085007DED29 /* PlayableCell.swift */; };
 		950959DA208D005F007A2812 /* RuleEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950959D9208D005F007A2812 /* RuleEditViewController.swift */; };
 		950959DD208D01D0007A2812 /* RuleTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950959DC208D01D0007A2812 /* RuleTable.swift */; };
 		950959DF208F5261007A2812 /* ConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950959DE208F5261007A2812 /* ConditionCell.swift */; };
@@ -95,6 +99,10 @@
 
 /* Begin PBXFileReference section */
 		9500686B206AC09C0047B1B6 /* DeckDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailViewController.swift; sourceTree = "<group>"; };
+		950495DE209637D4007DED29 /* ManaCoverageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManaCoverageCell.swift; sourceTree = "<group>"; };
+		950495E020964314007DED29 /* SpecificCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecificCardCell.swift; sourceTree = "<group>"; };
+		950495E220964E32007DED29 /* CardPropertyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPropertyCell.swift; sourceTree = "<group>"; };
+		950495E420966085007DED29 /* PlayableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayableCell.swift; sourceTree = "<group>"; };
 		950959D9208D005F007A2812 /* RuleEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleEditViewController.swift; sourceTree = "<group>"; };
 		950959DC208D01D0007A2812 /* RuleTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleTable.swift; sourceTree = "<group>"; };
 		950959DE208F5261007A2812 /* ConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionCell.swift; sourceTree = "<group>"; };
@@ -187,6 +195,10 @@
 				950959DE208F5261007A2812 /* ConditionCell.swift */,
 				950959E0208F531E007A2812 /* AddConditionCell.swift */,
 				954D8B9E2091FB9D000A7070 /* LandConditionCell.swift */,
+				950495E020964314007DED29 /* SpecificCardCell.swift */,
+				950495E220964E32007DED29 /* CardPropertyCell.swift */,
+				950495E420966085007DED29 /* PlayableCell.swift */,
+				950495DE209637D4007DED29 /* ManaCoverageCell.swift */,
 			);
 			path = "Rule Edit Views";
 			sourceTree = "<group>";
@@ -514,6 +526,7 @@
 				955C6304206A988C0096319E /* PlayerSelTableView.swift in Sources */,
 				950959DA208D005F007A2812 /* RuleEditViewController.swift in Sources */,
 				9500686C206AC09C0047B1B6 /* DeckDetailViewController.swift in Sources */,
+				950495E120964314007DED29 /* SpecificCardCell.swift in Sources */,
 				955C630D206AA4940096319E /* DeckSelectCell.swift in Sources */,
 				95D281172069B90A008648D0 /* Player.swift in Sources */,
 				955F0CB82087DD6D003A713E /* RuleEditTableView.swift in Sources */,
@@ -529,10 +542,12 @@
 				95D281192069B90A008648D0 /* MCard.swift in Sources */,
 				950959DD208D01D0007A2812 /* RuleTable.swift in Sources */,
 				95D281132069B90A008648D0 /* MulliganRuleset.swift in Sources */,
+				950495E520966085007DED29 /* PlayableCell.swift in Sources */,
 				9533B0822077D78B009D570A /* DeckBuilder.swift in Sources */,
 				955F0CBA2087E218003A713E /* RuleSummaryCell.swift in Sources */,
 				95F6721E206AFFC700D0034D /* CardSearchViewController.swift in Sources */,
 				95E02DB8207937C600F82A65 /* Simulator.swift in Sources */,
+				950495DF209637D4007DED29 /* ManaCoverageCell.swift in Sources */,
 				95F4EF3520732BD000F5465C /* AppDelegate.swift in Sources */,
 				955C630A206AA4110096319E /* DeckSelectTableView.swift in Sources */,
 				95D2810D2069B90A008648D0 /* Subcondition.swift in Sources */,
@@ -545,6 +560,7 @@
 				95D2811F2069BABE008648D0 /* SuccessRule.swift in Sources */,
 				95578439207C2A28007F45E8 /* MCardLand.swift in Sources */,
 				95F67221206B0AD400D0034D /* CardSearchCell.swift in Sources */,
+				950495E320964E32007DED29 /* CardPropertyCell.swift in Sources */,
 				9533B07F2073E684009D570A /* CardImageViewController.swift in Sources */,
 				955C6308206AA3A80096319E /* DeckSelectViewController.swift in Sources */,
 			);

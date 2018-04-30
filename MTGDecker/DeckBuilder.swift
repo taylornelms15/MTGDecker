@@ -12,7 +12,7 @@ import MTGSDKSwift
 
 class DeckBuilder{
     ///Allow a 10-second interval before internet request times out
-    private static var TIMEOUT_INTERVAL : DispatchTimeInterval = DispatchTimeInterval.milliseconds(5000)
+    public static var TIMEOUT_INTERVAL : DispatchTimeInterval = DispatchTimeInterval.milliseconds(10000)
     
     var context: NSManagedObjectContext
     var deck: Deck
@@ -81,7 +81,7 @@ class DeckBuilder{
                 
                 if cards == nil || cards!.count == 0{
                     //TODO: handle error better
-                    NSLog("Got an error fetching card data from the internet: \(String(describing: error))")
+                    NSLog("Got an error fetching card data from the internet: \(String(describing: error)). Was looking for \(cardName)")
                     fetchCardDispatchGroup.leave()
                     return
                 }//An error finding the card
@@ -132,12 +132,17 @@ class DeckBuilder{
             }//fetch the card for that name
         }
         
+        //fetchCardDispatchGroup.wait()
+        
         if fetchCardDispatchGroup.wait(timeout: .now() + DeckBuilder.TIMEOUT_INTERVAL ) == DispatchTimeoutResult.timedOut{
-            //TODO: handle timeout error better
+            print("Timed out on internet pull for card \(cardName). Please try again.")
+            fetchCardDispatchGroup.leave()
+            return
         }
         
         if (cardResults.count == 0){
             NSLog("Error retrieving card \(cardName); please try again another time")
+            fetchCardDispatchGroup.leave()
         }
         else{
             self.addCardByCard(cardResults[0])

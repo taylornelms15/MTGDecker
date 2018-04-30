@@ -131,13 +131,14 @@ public class CardNameList: NSManagedObject {
             setCardGroup.enter()
             
             setCardNameDispatch.async{
+                let myPage = pagenum
                 magic.fetchCards([setCodeParam], completion: { (cards, error) in
                     
-                    print("\(setCode)-\(pagenum) starting")
+                    print("\(setCode)-\(myPage) starting")
                     
                     if (error != nil){
-                        NSLog("\n***Error with \(setCode) page \(pagenum)***")
-                        NSLog("\(error.debugDescription)")
+                        print("\n***Error with \(setCode) page \(myPage)***")
+                        print("\(error.debugDescription)")
                         wasKosherSetPull = false;
                     }//if error
                     
@@ -157,7 +158,10 @@ public class CardNameList: NSManagedObject {
             }//async
             
             //wait for the cards to come back
-            setCardGroup.wait()
+            if setCardGroup.wait(timeout: DispatchTime.now() + DeckBuilder.TIMEOUT_INTERVAL) == DispatchTimeoutResult.timedOut{
+                print("Timed out waiting for \(setCode) page \(pagenum). Skipping for now")
+                wasKosherSetPull = false
+            }//if we timed out
             
             pagenum += 1;
             magic.fetchPageTotal = "\(pagenum)"
@@ -210,19 +214,22 @@ public class CardNameList: NSManagedObject {
                 }//if
                 
                 if sets == nil || sets!.count == 0{
-                    NSLog("Error picking up set things: \(error). Not sure why.")
+                    //print("Error picking up set things: \(String(describing: error)). Not sure why.")
+                    //print("\(sets)")
+                    NSLog("Error picking up set things: \(String(describing: error)). Not sure why.")
                 }
                 
-                
-                for set in sets!{
-                    
-                    if (set.code != nil){
-                        if (UNSUPPORTED_SETS.contains(set.type!) == false){
-                            self.addSetName(name: set.code!)
-                        }//if the set is of a type we want to deal with
-                    }//if the set has a code
-                    
-                }
+                if sets != nil{
+                    for set in sets!{
+                        
+                        if (set.code != nil){
+                            if (UNSUPPORTED_SETS.contains(set.type!) == false){
+                                self.addSetName(name: set.code!)
+                            }//if the set is of a type we want to deal with
+                        }//if the set has a code
+                        
+                    }//for each set name
+                }//if we have any sets
                 setDownloadGroup.leave()
             })//completion block: fetchsets
             

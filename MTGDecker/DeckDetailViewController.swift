@@ -30,15 +30,45 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
         //Important: must set the deck for the DeckDetailViewController as part of preparing for the segue into it
         self.builder = DeckBuilder(inContext: context, deck: deck!)
         
+        self.setUIElements()
+        
         cardTable.delegate = self;
         NotificationCenter.default.addObserver(forName: .cardAddNotification, object: nil, queue: nil) { (notification) in
             self.cardWasAdded()
+            self.updateUIElements()
         }
         NotificationCenter.default.addObserver(forName: .cardCellRemoveNotification, object: nil, queue: nil) { (notification) in
             self.removeCardCell(notification.object as! CardTableCell)
+            self.updateUIElements()
+        }
+        NotificationCenter.default.addObserver(forName: .cardNumberChangeNotification, object: nil, queue: nil) { (notification) in
+            self.updateUIElements()
         }
         
     }//viewDidLoad
+
+
+    /**
+        Encapsulates some programmatic UI decisions on controller load
+     */
+    func setUIElements(){
+        statisticsButton.isEnabled = false
+        self.updateUIElements()
+    }//setUIElements
+    
+    /**
+     Gets called when number of cards changes. Mostly handles which buttons are enabled
+     */
+    func updateUIElements(){
+        DispatchQueue.main.async {
+            if self.deck!.getCardTotal() < 7{
+                self.simulatorButton.isEnabled = false
+            }
+            else{
+                self.simulatorButton.isEnabled = true
+            }
+        }
+    }//updateUIElements
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "CardSearchSegue"{
