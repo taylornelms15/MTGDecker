@@ -97,10 +97,9 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
                 return
                 
             }//if we didn't change anything
-            
-            let myPlayer: Player = self.deck!.inv_player!
-            
-            var activeMullSet = myPlayer.activeMulliganRuleset!
+
+            let myDeck = self.deck!
+            var activeMullSet = self.deck!.activeMulliganRuleset!
             
             if activeMullSet.isDefault{
                 
@@ -108,8 +107,8 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
                 
                 newMullSet.copyFromOther(activeMullSet, into: context)
                 
-                myPlayer.mulliganRulesetList!.insert(newMullSet)
-                myPlayer.activeMulliganRuleset = newMullSet
+                myDeck.mulliganRulesets!.insert(newMullSet)
+                myDeck.activeMulliganRuleset = newMullSet
                 
                 activeMullSet = newMullSet
                 

@@ -135,7 +135,7 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         
         self.simulator = Simulator(deck: deck!, intoContext: context)
         self.currentSuccessRule = self.deck!.activeSuccessRule
-        let rules: MulliganRuleset? = self.deck!.inv_player!.activeMulliganRuleset
+        let rules: MulliganRuleset? = self.deck!.activeMulliganRuleset
         
         if rules == nil{
             self.currentMulliganRuleset = loadDefaultSet()
@@ -152,8 +152,13 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
             return ruleSet.name == MulliganRuleset.LAND_DEFAULT_NAME
         }!//find the default
         
-        deck!.inv_player!.mulliganRulesetList?.insert(myDefault)
-        deck!.inv_player!.activeMulliganRuleset = myDefault
+        if deck!.mulliganRulesets == nil{
+            deck!.mulliganRulesets = Set<MulliganRuleset>([myDefault])
+        }//if
+        else{
+            deck!.mulliganRulesets!.insert(myDefault)
+        }//else
+        deck!.activeMulliganRuleset = myDefault
         
         do{
             try context.save()

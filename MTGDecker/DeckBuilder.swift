@@ -134,7 +134,7 @@ class DeckBuilder{
         
         //fetchCardDispatchGroup.wait()
         
-        if fetchCardDispatchGroup.wait(timeout: .now() + DeckBuilder.TIMEOUT_INTERVAL ) == DispatchTimeoutResult.timedOut{
+        if fetchCardDispatchGroup.wait(timeout: .now() + 20 /*DeckBuilder.TIMEOUT_INTERVAL*/ ) == DispatchTimeoutResult.timedOut{
             print("Timed out on internet pull for card \(cardName). Please try again.")
             fetchCardDispatchGroup.leave()
             return

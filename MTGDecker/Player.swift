@@ -22,7 +22,6 @@ public class Player: NSManagedObject {
     @NSManaged public var id: Int64
     @NSManaged public var name: String?
     @NSManaged public var activeDeck: Deck?
-    @NSManaged public var activeMulliganRuleset: MulliganRuleset?
     @NSManaged private var decks: NSSet?
     @NSManaged private var mulliganRulesets: NSSet?
     
@@ -39,17 +38,5 @@ public class Player: NSManagedObject {
             }
         }
     }//deckList
-    var mulliganRulesetList: Set<MulliganRuleset>?{
-        get{
-            return mulliganRulesets as! Set<MulliganRuleset>?
-        }//get
-        set{
-            if (newValue == nil){
-                mulliganRulesets = nil
-            }
-            else{
-                mulliganRulesets = NSSet(set: newValue!)
-            }
-        }//set
-    }//mulliganRulesetList
+
 }//Player
