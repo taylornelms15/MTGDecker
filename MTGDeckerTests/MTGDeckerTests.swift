@@ -9,19 +9,25 @@
 import XCTest
 import CoreData
 import MTGSDKSwift
+import Dispatch
 @testable import MTGDecker
 
-///The number of runs to do on sets of randomized test runs (higher number yields a greater chance of edge-case catches, at the cost of taking more time
+///The number of runs to do on sets of randomized test runs for totals subconditions(higher number yields a greater chance of edge-case catches, at the cost of taking more time
 let TEST_ITER_COUNT: Int = 50
+///the number of runs to do on the "test mulligan multiple" test.
+let TEST_MULL_MULT_COUNT: Int = 100
 
 class MTGDeckerTests: XCTestCase {
     
     let magic: Magic = Magic();
     var context: NSManagedObjectContext = (UIApplication.shared.delegate as! MTGDecker.AppDelegate).persistentContainer.viewContext
-    let cardAddGroup: DispatchGroup = DispatchGroup()
+    var cardAddGroup: DispatchGroup = DispatchGroup()
     var ratDeck: Deck? = nil
     var elfDeck: Deck? = nil
     var nayaDeck: Deck? = nil
+    
+    var observer1: NSObjectProtocol?
+    var observer2: NSObjectProtocol?
     
     func setUpInMemoryManagedObjectContext() -> NSManagedObjectContext {
         let managedObjectModel = NSManagedObjectModel.mergedModel(from: [Bundle.main])!
@@ -43,6 +49,8 @@ class MTGDeckerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
+        self.cardAddGroup = DispatchGroup()
+        
         self.context = setUpInMemoryManagedObjectContext()
         
         let deckEntity: NSEntityDescription = Deck.entityDescription(context: context)
@@ -56,10 +64,10 @@ class MTGDeckerTests: XCTestCase {
         nayaDeck!.name = "Naya Deck"
         let nayaBuilder: DeckBuilder = DeckBuilder(inContext: context, deck: nayaDeck!)
         
-        NotificationCenter.default.addObserver(forName: .cardAddNotification, object: nil, queue: nil) { (notification) in
+        observer1 = NotificationCenter.default.addObserver(forName: .cardAddNotification, object: nil, queue: nil) { (notification) in
             self.weHaveCardsNow(cardName: (notification.object as! String))
         }
-        NotificationCenter.default.addObserver(forName: .cardImageAddNotification, object: nil, queue: nil) { (notification) in
+        observer2 = NotificationCenter.default.addObserver(forName: .cardImageAddNotification, object: nil, queue: nil) { (notification) in
             self.weHavePicsNow(card: (notification.object as! MCard))
         }
         
@@ -127,13 +135,16 @@ class MTGDeckerTests: XCTestCase {
     }//setUp
     
     func weHaveCardsNow(cardName: String){
+
         cardAddGroup.leave()
     
     }//weHaveCardsNow
+    
     func weHavePicsNow(card: MCard){
+
         cardAddGroup.leave()
         
-    }//weHaveCardsNow
+    }//weHavePicsNow
     
     override func tearDown() {
         
@@ -149,17 +160,25 @@ class MTGDeckerTests: XCTestCase {
                 
             }
         }
+ 
+ 
+        NotificationCenter.default.removeObserver(observer1 as Any)
+        NotificationCenter.default.removeObserver(observer2 as Any)
+
+        
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }//tearDown
     
 
     
-    func testDecks() {
+    /**
+        Tests subconditions relating to the total number of cards fitting a given category. Verifies that they match for the specified card names, but not for other cards.
+     */
+    func testTotalsConditions() {
         
         let ratSimulator: Simulator = Simulator(deck: ratDeck!, intoContext: context)
         let elfSimulator: Simulator = Simulator(deck: elfDeck!, intoContext: context)
-        let nayaSimulator: Simulator = Simulator(deck: nayaDeck!, intoContext: context)
         
         XCTAssert(ratSimulator.deckSize == 60)
         XCTAssert(elfSimulator.deckSize == 62)
@@ -292,6 +311,44 @@ class MTGDeckerTests: XCTestCase {
             XCTAssertNoThrow(try elfSimulator.testHandAgainstCondition(handSize: 7, condition: landAndElfCondition))
         }
         
+    }//testTotalsCondition
+    
+    /**
+     Private function to run multiple tests of Totals subconditions
+     */
+    fileprivate func testTotalsCondition(_ elfSimulator: Simulator, _ myHand: inout [MCard], _ successNames: [String], _ testSubcondition: Subcondition) throws {
+        var count: Int = 0
+        var conditionResult: Bool = false
+        
+        for _ in 0 ..< TEST_ITER_COUNT{
+            elfSimulator.shuffleDeck()
+            
+            XCTAssertNoThrow(try myHand = elfSimulator.pullOutHand(fromIndex: 0, toIndex: 6))
+            count = myHand.filter { (card) -> Bool in
+                return successNames.contains(card.name)
+                }.count
+            
+            XCTAssertNoThrow(conditionResult = try elfSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: testSubcondition))
+            if count >= testSubcondition.numParam2 && count <= testSubcondition.numParam3{
+                if !conditionResult{
+                    print("Success names: \(successNames), hand: \(myHand)")
+                }
+                XCTAssertTrue(conditionResult)
+            }
+            else{
+                XCTAssertFalse(conditionResult)
+            }
+        }
+    }//testTotalsCondition
+    
+    
+    /**
+     Tests that mana pools accurately reflect the playability of particular cards
+     */
+    func testManaPool(){
+        
+        let ratSimulator: Simulator = Simulator(deck: ratDeck!, intoContext: context)
+        let nayaSimulator: Simulator = Simulator(deck: nayaDeck!, intoContext: context)
         
         //Test mana-pool checks
         let ratCard: MCard = ratSimulator.cards.first { (card) -> Bool in
@@ -367,7 +424,14 @@ class MTGDeckerTests: XCTestCase {
         goodPool.g = 1
         //print(goodPool.payCost(ofCard: nayaCard))
         
+    }//testManaPools
+    
+    /**
+     Specifies a sample hand from the Naya deck and tests various functions relating to the playability of some of its cards.
+     */
+    func testSampleHand(){
         
+        let nayaSimulator: Simulator = Simulator(deck: nayaDeck!, intoContext: context)
         
         //Create "sample hand" for nayaSimulator
         //[Jungle Shrine, Wind-Scarred Crag, Forest, Ghalta, Primal Hunger, Naya Hushblade, Mountain, Mutagenic Growth]
@@ -459,24 +523,49 @@ class MTGDeckerTests: XCTestCase {
         nayaKeepRule1.conditionList = Set<Condition>([multiCondition, multiCondition2])
         XCTAssert(try nayaSimulator.testHandAgainstKeepRule(handSize: 7, keeprule: nayaKeepRule1))
         
+
+        
         
         //MARK: MulliganRuleset shenanigans
         var result1: SimulationResult = SimulationResult()
         let result2: SimulationResult = SimulationResult()
         
         result1.numTrials = 4
-        result1.card7Successes = 4
+        result1.card7Keeps = 4
         result2.numTrials = 6
-        result2.card6Successes = 3
-        result2.card5Successes = 3
+        result2.card6Keeps = 3
+        result2.card5Keeps = 3
         
         result1 += result2
         XCTAssertEqual(result1.numTrials, 10)
-        XCTAssertNotEqual(result1.card7Successes, result2.card7Successes)
-        XCTAssertEqual(result1.card6Successes, result2.card6Successes)
+        XCTAssertNotEqual(result1.card7Keeps, result2.card7Keeps)
+        XCTAssertEqual(result1.card6Keeps, result2.card6Keeps)
+        
+        
+    }
+    
+    func testMulliganMultiple(){
+        
+        let nayaSimulator: Simulator = Simulator(deck: nayaDeck!, intoContext: context)
         
         //Testing the whole shebang
+        let creaturePlayable2: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        creaturePlayable2.type = .playableByTurn
+        creaturePlayable2.typeParam = .creature
         creaturePlayable2.numParam1 = 2
+
+        let landCondition: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        landCondition.type = .landTotal
+        landCondition.numParam2 = 2
+        landCondition.numParam3 = 5
+        
+        let manaCoverage: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        manaCoverage.type = .manaCoverage
+        
+        let creaturePlayable: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        creaturePlayable.type = .playable
+        creaturePlayable.typeParam = .creature
+        
         
         let condition7: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
         condition7.subconditionList = Set<Subcondition>([landCondition, creaturePlayable2])
@@ -498,36 +587,14 @@ class MTGDeckerTests: XCTestCase {
         
         nayaSimulator.shuffleDeck()
         self.measure{
-            let mulliganTestResult: SimulationResult = nayaSimulator.testDeckAgainstMulliganMultiple(ruleset: ruleset1, repetitions: 1000)
+            let mulliganTestResult: SimulationResult = nayaSimulator.testDeckAgainstMulliganMultiple(ruleset: ruleset1, repetitions: TEST_MULL_MULT_COUNT)
             print("\(mulliganTestResult)")
         }
 
     }//testDecks
     
-    fileprivate func testTotalsCondition(_ elfSimulator: Simulator, _ myHand: inout [MCard], _ successNames: [String], _ testSubcondition: Subcondition) throws {
-        var count: Int = 0
-        var conditionResult: Bool = false
-        
-        for _ in 0 ..< TEST_ITER_COUNT{
-            elfSimulator.shuffleDeck()
-            
-            XCTAssertNoThrow(try myHand = elfSimulator.pullOutHand(fromIndex: 0, toIndex: 6))
-            count = myHand.filter { (card) -> Bool in
-                return successNames.contains(card.name)
-                }.count
-            
-            XCTAssertNoThrow(conditionResult = try elfSimulator.testHandAgainstSubcondition(handSize: 7, subcondition: testSubcondition))
-            if count >= testSubcondition.numParam2 && count <= testSubcondition.numParam3{
-                if !conditionResult{
-                    print("Success names: \(successNames), hand: \(myHand)")
-                }
-                XCTAssertTrue(conditionResult)
-            }
-            else{
-                XCTAssertFalse(conditionResult)
-            }
-        }
-    }
+    
+
     
 }//MTGDeckerTests
 

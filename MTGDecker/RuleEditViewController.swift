@@ -50,6 +50,8 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
         else{
             ruleNameLabel.text = "Success Rule"
             
+            self.handSize = Int16(7)//Default to 7-card hand size for the purposes of limiting Totals condition
+            
             self.initSoftrule(using: self.success!)
         }//else (a success rule)
         
@@ -83,7 +85,6 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
             newKeep.copyFromSoft(softArrays: softRule, into: context)
             
             if newKeep == self.keep{
-                
                 context.performAndWait {
                     context.delete(newKeep)
                     
@@ -93,9 +94,7 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
                         NSLog("Found an error after deleting superfluous rule: \(error)")
                     }
                 }//performandwait
-                
                 return
-                
             }//if we didn't change anything
 
             let myDeck = self.deck!
@@ -129,6 +128,29 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
         }//if a keep rule
         else{
             
+            let newSuccess: SuccessRule = SuccessRule(entity: SuccessRule.entityDescription(context: context), insertInto: context)
+            
+            newSuccess.copyFromSoft(softArrays: softRule, into: context)
+            
+            if newSuccess == self.success{
+                context.performAndWait {
+                    context.delete(newSuccess)
+                    
+                    do{
+                        try context.save()
+                    }catch{
+                        NSLog("Found an error after deleting superfluous rule: \(error)")
+                    }
+                }//performandwait
+                return
+            }//if we didn't change anything
+            
+            let myDeck = self.deck!
+
+            myDeck.activeSuccessRule = newSuccess
+                
+            myDeck.successRuleList.insert(newSuccess)
+            
         }//if a success rule
         
         context.performAndWait {
@@ -152,7 +174,7 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
             if subsection.isEmpty == false{
                 numArrays += 1
             }
-        }
+        }//for
         
         return numArrays + 1 //include at least one section; put at least one "add" button in a fresh section
     }//numberOfSections
@@ -167,22 +189,22 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
             }//no header on the last entry (let the add-condition cell prompt "OR")
             else{
                 return "OR"
-            }
-        }
+            }//else
+        }//else
     }//titleForHeaderInSection
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         (view as! UITableViewHeaderFooterView).backgroundView?.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.lightGray
-    }
+    }//willDisplayHeaderView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section >= softRule.count{
             return 1
-        }
+        }//if
         else{
             return softRule[section].count + 1
-        }
+        }//else
     }//numberOfRowsInSection
     
     
@@ -261,7 +283,6 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete{
-            
             if softRule[indexPath.section].count == 1{
                 
                 softRule.remove(at: indexPath.section)//delete the whole section
@@ -291,13 +312,10 @@ class RuleEditViewController: UIViewController, UITableViewDataSource, UITableVi
                 ruleTableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
                 ruleTableView.endUpdates()
                 
-            }
-            
-            
+            }//else
+
         }//deleting
         
     }//commitEditingStyle (delete that row)
-    
-    
-    
+
 }//RuleEditViewController

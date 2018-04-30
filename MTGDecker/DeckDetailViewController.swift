@@ -254,9 +254,10 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
                 titleArray.append(MCard.typeSortArray[i])
             }//if we're using a type, put it's title in the list of used titles
         }//for
+
         
         return titleArray[section]
-    }
+    }//titleForHeaderInSection
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if deck!.getCardTotal() == 0{

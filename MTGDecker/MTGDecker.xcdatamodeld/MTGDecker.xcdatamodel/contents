@@ -139,6 +139,7 @@
     </entity>
     <entity name="SuccessRule" representedClassName=".SuccessRule" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isDefault" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="conditions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Condition" inverseName="inv_successrule" inverseEntity="Condition" syncable="YES"/>
         <relationship name="inv_deck" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Deck" inverseName="successRules" inverseEntity="Deck" syncable="YES"/>
@@ -155,6 +156,6 @@
         <element name="MulliganRuleset" positionX="-90" positionY="-288" width="128" height="180"/>
         <element name="Player" positionX="-414" positionY="-243" width="128" height="105"/>
         <element name="Subcondition" positionX="313" positionY="72" width="128" height="195"/>
-        <element name="SuccessRule" positionX="88" positionY="-162" width="128" height="120"/>
+        <element name="SuccessRule" positionX="88" positionY="-162" width="128" height="135"/>
     </elements>
 </model>

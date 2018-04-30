@@ -21,6 +21,7 @@ public class SuccessRule: NSManagedObject {
     
     @NSManaged public var id: Int64
     @NSManaged public var name: String?
+    @NSManaged public var isDefault: Bool
     @NSManaged private var conditions: NSSet?
     @NSManaged public var inv_deck: Deck?
     @NSManaged public var inv_deck_active: Deck?
@@ -33,6 +34,12 @@ public class SuccessRule: NSManagedObject {
             conditions = newValue as NSSet?
         }
     }//conditionList
+    
+    public static var PLAYABLE_DEFAULT_NAME = "Default - Playable"
+    public static var DEFAULT_NAMES: [String] = [
+                                                 SuccessRule.PLAYABLE_DEFAULT_NAME
+                                                ]
+    
     
     public static func == (lhs: SuccessRule, rhs: SuccessRule) -> Bool{
         return lhs.conditionList == rhs.conditionList
@@ -61,7 +68,7 @@ public class SuccessRule: NSManagedObject {
             for i in 0 ..< orderedMembers.count - 1{
                 resultString.append("(")
                 resultString.append(orderedMembers[i].summary())
-                resultString.append(") OR")
+                resultString.append(") OR ")
             }//for all but the last string
             resultString.append("(")
             resultString.append(orderedMembers.last!.summary())
@@ -96,6 +103,37 @@ public class SuccessRule: NSManagedObject {
         return result
     }//performanceRatio
     
+    func copyFromSoft(softArrays: [[Softcondition]], into context: NSManagedObjectContext){
+        
+        self.conditionList = Set<Condition>()
+        
+        for softConGroup in softArrays{
+            if !softConGroup.contains(where: { (soft) -> Bool in
+                return soft.isValid
+            }){
+                break;//if no valid softconditions in the condition, skip
+            }//if
+            
+            let newCondition: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
+            newCondition.subconditionList = Set<Subcondition>()
+            
+            for softcon in softConGroup{
+                if softcon.isValid == true{
+                    let newSubcon: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+                    
+                    newSubcon.copyFrom(softcon)
+                    
+                    newCondition.subconditionList!.insert(newSubcon)
+                    
+                }//if the softcondition has enough info
+            }//for each subcondition inside the condition
+            
+            self.conditionList!.insert(newCondition)
+            
+        }//for each Condition
+        
+    }//copyFromSoft
+    
     static func makeSoftSuccess(_ success: SuccessRule) -> [[Softcondition]]{
         var newSoftrule: [[Softcondition]] = []
         for cond in success.conditionList ?? []{
@@ -109,5 +147,26 @@ public class SuccessRule: NSManagedObject {
         
         return newSoftrule
     }//makeSoftSuccess
+    
+    static func makePlayableDefault(_ context: NSManagedObjectContext) -> SuccessRule{
+        let result = SuccessRule(entity: SuccessRule.entityDescription(context: context), insertInto: context)
+        
+        result.isDefault = true
+        
+        let playableCondition: Condition = Condition(entity: Condition.entityDescription(context: context), insertInto: context)
+        let playableSubcondition: Subcondition = Subcondition(entity: Subcondition.entityDescription(context: context), insertInto: context)
+        
+        //Creature playable by turn 2
+        playableSubcondition.type = .playableByTurn
+        playableSubcondition.typeParam = .creature
+        playableSubcondition.numParam1 = 2
+        
+        playableCondition.subconditionList = Set<Subcondition>([playableSubcondition])
+        result.conditionList = Set<Condition>([playableCondition])
+        
+        result.name = SuccessRule.PLAYABLE_DEFAULT_NAME
+
+        return result
+    }//makePlayableDefault
     
 }//SuccessRule

@@ -33,6 +33,9 @@ public class MulliganRuleset: NSManagedObject {
     
     public static var LAND_DEFAULT_NAME = "Default - Land Total"
     public static var PLAYABLE_DEFAULT_NAME = "Default - Playable"
+    public static var DEFAULT_NAMES: [String] = [MulliganRuleset.LAND_DEFAULT_NAME,
+                                                 MulliganRuleset.PLAYABLE_DEFAULT_NAME
+                                                ]
     
     /**
      Produces a human-readable summary of the rule. Mostly used for debugging

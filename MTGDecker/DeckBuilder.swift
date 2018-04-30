@@ -53,6 +53,8 @@ class DeckBuilder{
             let referencedCard: MCard = results[0]
             self.deck.addCard(referencedCard, context: context)
             
+            self.pullCardImageByNameAndURL(name: results[0].name, url: results[0].imageURL!, intoMCard: results[0])
+            
         }//if we already have the card in the app somewhere
             
         else{
@@ -141,7 +143,7 @@ class DeckBuilder{
         }
         
         if (cardResults.count == 0){
-            NSLog("Error retrieving card \(cardName); please try again another time")
+            print("Error retrieving card \(cardName); please try again another time")
             fetchCardDispatchGroup.leave()
         }
         else{
@@ -193,6 +195,17 @@ class DeckBuilder{
     }//pullCardImageByName
     
     func pullCardImageFromInternet(card: Card, intoMCard: MCard){
+        
+        if intoMCard.image != nil && intoMCard.image!.imageData != nil{
+            
+            NotificationCenter.default.post(name: .cardImageAddNotification, object: intoMCard)
+            
+            return
+            
+        }//if we already have an image for the card, no need to go any further
+        
+        
+        
         let magic: Magic = Magic()
         magic.fetchImageForCard(card) { (image, error) in
             

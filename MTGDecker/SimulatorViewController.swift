@@ -14,6 +14,7 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
     
     private var EPSILON: Double = 0.01
     private static var NUM_REPETITIONS_BASE: Int = 30000
+    private static var SUCCESS_SCALING: Double = 1.2
     
     var deck: Deck?
     var context: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -125,6 +126,17 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
                 newVC.deck = self.deck!
                 
             }//if editing a keep rule
+            if sender is SuccessRule{
+                let rule: SuccessRule = sender as! SuccessRule
+                
+                let newVC: RuleEditViewController = segue.destination as! RuleEditViewController
+                
+                newVC.success = rule
+                
+                newVC.deck = self.deck!
+                
+                
+            }//if editing a success rule
             
         }//if about to edit a rule
         
@@ -134,16 +146,25 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         //Model
         
         self.simulator = Simulator(deck: deck!, intoContext: context)
-        self.currentSuccessRule = self.deck!.activeSuccessRule
+        let activeSuccessRule = self.deck!.activeSuccessRule
+        
+        if activeSuccessRule == nil{
+            self.currentSuccessRule = loadDefaultSuccess()
+        }//if no successRule set
+        else{
+            self.currentSuccessRule = activeSuccessRule
+        }//else
+        
+        
         let rules: MulliganRuleset? = self.deck!.activeMulliganRuleset
         
         if rules == nil{
             self.currentMulliganRuleset = loadDefaultSet()
-        }
+        }//if
         else{
             self.currentMulliganRuleset = rules
-        }
-    }
+        }//else
+    }//loadModelRules
     
     func loadDefaultSet() -> MulliganRuleset{
         let myDelegate: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
@@ -169,7 +190,34 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
         return myDefault
     }//loadDefaultSet
     
+    func loadDefaultSuccess()->SuccessRule{
+        let myDelegate: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        let defaultRules: Set<SuccessRule> = myDelegate.successDefaults(context)
+        let myDefault: SuccessRule = defaultRules.first { (ruleSet) -> Bool in
+            return ruleSet.name == SuccessRule.PLAYABLE_DEFAULT_NAME
+        }!//find the default
+        
+        if deck!.successRuleList.isEmpty{
+            deck!.successRuleList = Set<SuccessRule>([myDefault])
+        }//if
+        else{
+            deck!.successRuleList.insert(myDefault)
+        }
+        deck!.activeSuccessRule = myDefault
+        
+        do{
+            try context.save()
+        }catch{
+            NSLog("Error setting some default mulligan rule sets! \(error)")
+        }//catch
+        
+        return myDefault
+        
+    }//loadDefaultSuccess
+    
     func updateResults(fromResult: SimulationResult){
+        /*
+        //Keep
         if fromResult.card7Percent > EPSILON{
             card7PercentLabel.text = fromResult.card7String()
         }
@@ -186,9 +234,28 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
             card3PercentLabel.text = fromResult.card3String()
         }
         
+        //Success
+        if fromResult.card7SPercent > EPSILON{
+            card7SuccessLabel.text = fromResult.card7SString()
+        }
+        if fromResult.card6SPercent > EPSILON{
+            card6SuccessLabel.text = fromResult.card6SString()
+        }
+        if fromResult.card5SPercent > EPSILON{
+            card5SuccessLabel.text = fromResult.card5SString()
+        }
+        if fromResult.card4SPercent > EPSILON{
+            card4SuccessLabel.text = fromResult.card4SString()
+        }
+        if fromResult.card3SPercent > EPSILON{
+            card3SuccessLabel.text = fromResult.card3SString()
+        }
+        */
         UIView.animate(withDuration: 1.0) {
             
             //For each hand-size condition, check if we got more than EPSILON percentage hands. If so, display the labels for that result. Else, make labels disappear
+            
+            //Keep
             
             if fromResult.card7Percent > self.EPSILON{
                 self.card7PercentLabel.text = fromResult.card7String()
@@ -235,6 +302,45 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
                 self.card3PercentLabel.alpha = 0.0
                 self.card3HeaderLabel.alpha = 0.0
             }
+            
+            //Success
+            
+            if fromResult.card7SPercent > self.EPSILON{
+                self.card7SuccessLabel.text = fromResult.card7SString()
+                self.card7SuccessLabel.alpha = 1.0
+            }
+            else{
+                self.card7SuccessLabel.alpha = 0.0
+            }
+            if fromResult.card6SPercent > self.EPSILON{
+                self.card6SuccessLabel.text = fromResult.card6SString()
+                self.card6SuccessLabel.alpha = 1.0
+            }
+            else{
+                self.card6SuccessLabel.alpha = 0.0
+            }
+            if fromResult.card5SPercent > self.EPSILON{
+                self.card5SuccessLabel.text = fromResult.card5SString()
+                self.card5SuccessLabel.alpha = 1.0
+            }
+            else{
+                self.card5SuccessLabel.alpha = 0.0
+            }
+            if fromResult.card4SPercent > self.EPSILON{
+                self.card4SuccessLabel.text = fromResult.card4SString()
+                self.card4SuccessLabel.alpha = 1.0
+            }
+            else{
+                self.card4SuccessLabel.alpha = 0.0
+            }
+            if fromResult.card3SPercent > self.EPSILON{
+                self.card3SuccessLabel.text = fromResult.card3SString()
+                self.card3SuccessLabel.alpha = 1.0
+            }
+            else{
+                self.card3SuccessLabel.alpha = 0.0
+            }
+            
         }//animate changes
         
         
@@ -248,8 +354,12 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
     @IBAction func simulateButtonPress(_ sender: UITapGestureRecognizer) {
         DispatchQueue.global(qos: .userInitiated).async {
             //TODO: put the success rule calculations into the ratio equation
-            let repetitions: Int = Int(Double(SimulatorViewController.NUM_REPETITIONS_BASE) * self.currentMulliganRuleset!.performanceRatio)
-            let result: SimulationResult = self.simulator!.testDeckAgainstMulliganMultiple(ruleset: self.currentMulliganRuleset!, repetitions: repetitions)
+            let repetitions: Int = Int(
+                Double(SimulatorViewController.NUM_REPETITIONS_BASE)
+                * self.currentMulliganRuleset!.performanceRatio
+                * ((self.currentSuccessRule!.performanceRatio + SimulatorViewController.SUCCESS_SCALING) / 2.0)
+            )//repetitions
+            let result: SimulationResult = self.simulator!.testDeckAgainstMulliganMultiple(ruleset: self.currentMulliganRuleset!, repetitions: repetitions, success: self.currentSuccessRule!)
             
             DispatchQueue.main.async {
                 self.updateResults(fromResult: result)
@@ -372,7 +482,8 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
                 ruleCell.softInit(path: indexPath, keep: myKeepRule!)
             }//if a keepRule
             else{
-                let mySuccessRule = SuccessRule(entity: SuccessRule.entityDescription(context: context), insertInto: context)
+                let mySuccessRule: SuccessRule = self.currentSuccessRule!
+
                 ruleCell.softInit(path: indexPath, success: mySuccessRule)
             }//if a successRule
             
@@ -404,8 +515,9 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
             
         }//if a keepRule
         else{
-            //TODO: handle success rules
-            return
+            let mySuccessRule: SuccessRule = self.currentSuccessRule!
+            
+            self.performSegue(withIdentifier: "ruleEditSegue", sender: (mySuccessRule))
             
         }//if a successRule
         

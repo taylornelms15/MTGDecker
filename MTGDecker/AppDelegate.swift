@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initPlayerList(context)
         initCardNameList(context)
         _ = mulliganDefaults(context)
+        _ = successDefaults(context)
         
         
         return true
@@ -140,7 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         var myMulliganDefaults: Set<MulliganRuleset> = Set<MulliganRuleset>()
         
-        if results.count < 2{
+        if results.count < MulliganRuleset.DEFAULT_NAMES.count{
             myMulliganDefaults.insert(MulliganRuleset.makeLandDefault(context))
             myMulliganDefaults.insert(MulliganRuleset.makePlayableDefault(context))
             
@@ -157,12 +158,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 myMulliganDefaults.insert(result)
             }//for
         }//if just finding the defaults
-        
 
-        
         return myMulliganDefaults
         
     }//initMulliganDefaults
+    
+    func successDefaults(_ context: NSManagedObjectContext) -> Set<SuccessRule>{
+        let sucFR: NSFetchRequest<SuccessRule> = SuccessRule.fetchRequest()
+        sucFR.predicate = NSPredicate(format: "isDefault = true")
+        
+        var results: [SuccessRule] = []
+        
+        do {
+            results = try context.fetch(sucFR)
+        } catch {
+            NSLog("Problem finding default success rule rulesets: \(error)")
+        }
+        
+        var mySuccessRuleDefaults: Set<SuccessRule> = Set<SuccessRule>()
+        
+        if results.count < SuccessRule.DEFAULT_NAMES.count{
+            mySuccessRuleDefaults.insert(SuccessRule.makePlayableDefault(context))
+            
+            do{
+                try context.save()
+            }//do
+            catch{
+                NSLog("Error saving fetchrequest to core data: \(error)")
+            }//catch
+            
+        }//if making fresh defaults
+        else{
+            for result in results{
+                mySuccessRuleDefaults.insert(result)
+            }//for
+        }//if just finding the defaults
+        
+        return mySuccessRuleDefaults
+        
+    }//initSuccessDefaults
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

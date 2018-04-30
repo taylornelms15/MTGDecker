@@ -163,7 +163,7 @@ internal class Simulator{
     /**
      Tests a deck against the given set of mulligan rules a given number of times. Defaults to a 7-card hand draw initially.
     */
-    internal func testDeckAgainstMulliganMultiple(ruleset: MulliganRuleset, repetitions: Int) -> SimulationResult{
+    internal func testDeckAgainstMulliganMultiple(ruleset: MulliganRuleset, repetitions: Int, success: SuccessRule? = nil) -> SimulationResult{
         NotificationCenter.default.post(name: .simulatorStartedNotification , object: nil)
         
         var result: SimulationResult = SimulationResult()
@@ -186,7 +186,7 @@ internal class Simulator{
                 for _ in 0 ..< i{
                     testSimulator.shuffleDeck()
                     do{
-                        let testResult: SimulationResult = try testSimulator.testDeckAgainstMulliganRuleset(ruleset: testRuleset, handSize: 7)
+                        let testResult: SimulationResult = try testSimulator.testDeckAgainstMulliganRuleset(ruleset: testRuleset, handSize: 7, success: success)
                         subResult += testResult
                     } catch{
                         NSLog("Error testing the deck a bunch: \(error)")
@@ -204,34 +204,7 @@ internal class Simulator{
             }//asynchronous simulation thread
             
         }//for each thread
-        
-        
-        
-        
-        /*
-        for _ in 0 ..< repetitions{
-            simulatorGroup.enter()
-            let testContext: NSManagedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            testContext.parent = self.context
-            DispatchQueue.global(qos: .userInitiated).async {
 
-                let testRuleset: MulliganRuleset = testContext.object(with: ruleset.objectID) as! MulliganRuleset
-                let testSimulator: Simulator = Simulator(simulator: self, intoContext: testContext)
-                testSimulator.shuffleDeck()
-                do{
-                    let testResult: SimulationResult = try testSimulator.testDeckAgainstMulliganRuleset(ruleset: testRuleset, handSize: 7)
-                resultQueue.sync {
-                    result += testResult
-                    //NotificationCenter.default.post(name: .simulatorProgressNotification , object: Float(result.numTrials) / Float(repetitions))
-                    simulatorGroup.leave()
-                }//result update queue
-                } catch{
-                    NSLog("Error testing the deck a bunch: \(error)")
-                }
-            }//global queue
-
-        }//for
-         */
         
         simulatorGroup.wait()//wait for all the repetitions to finish
         
@@ -247,7 +220,7 @@ internal class Simulator{
      - parameter handSize: the size of the hand to draw off the current deck.
      - returns: A `SimulationResult` object encapsulating the relevant metadata of how that particular hand draw operated
      */
-    internal func testDeckAgainstMulliganRuleset(ruleset: MulliganRuleset, handSize: Int) throws -> SimulationResult{
+    internal func testDeckAgainstMulliganRuleset(ruleset: MulliganRuleset, handSize: Int, success: SuccessRule? = nil) throws -> SimulationResult{
         if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
         if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
         if handSize > 7{ throw SimulatorError.cardIndexOOB(message: "Mulligan rules not supported for hand sizes larger than 7") }
@@ -259,18 +232,32 @@ internal class Simulator{
                 if try self.testHandAgainstKeepRule(handSize: handSize, keeprule: ruleset.keepRule7!){
                     let result: SimulationResult = SimulationResult()
                     result.numTrials = 1
-                    result.card7Successes = 1
+                    result.card7Keeps = 1
+                    
+                    if success != nil{
+                        if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                            result.card7Success = 1
+                        }
+                    }//if we have a success rule
+                    
                     return result
                 }//if we pass the test
                 else{
                     self.shuffleDeck()
-                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1) //recurse down to the smaller size
-                }
-            }
+                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1, success: success) //recurse down to the smaller size
+                }//if we don't pass the test
+            }//if we have a keepRule7
             else{
                 let result: SimulationResult = SimulationResult()
                 result.numTrials = 1
-                result.card7Successes = 1
+                result.card7Keeps = 1
+                
+                if success != nil{
+                    if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                        result.card7Success = 1
+                    }
+                }//if we have a success rule
+                
                 return result
             }//if there isn't a rule for 7-card hands, keep all 7-card hands
         case 6:
@@ -278,18 +265,32 @@ internal class Simulator{
                 if try self.testHandAgainstKeepRule(handSize: handSize, keeprule: ruleset.keepRule6!){
                     let result: SimulationResult = SimulationResult()
                     result.numTrials = 1
-                    result.card6Successes = 1
+                    result.card6Keeps = 1
+                    
+                    if success != nil{
+                        if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                            result.card6Success = 1
+                        }
+                    }//if we have a success rule
+                    
                     return result
                 }//if we pass the test
                 else{
                     self.shuffleDeck()
-                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1) //recurse down to the smaller size
+                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1, success: success) //recurse down to the smaller size
                 }
             }
             else{
                 let result: SimulationResult = SimulationResult()
                 result.numTrials = 1
-                result.card6Successes = 1
+                result.card6Keeps = 1
+                
+                if success != nil{
+                    if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                        result.card6Success = 1
+                    }
+                }//if we have a success rule
+                
                 return result
         }//if there isn't a rule for 6-card hands, keep all 6-card hands
         case 5:
@@ -297,18 +298,32 @@ internal class Simulator{
                 if try self.testHandAgainstKeepRule(handSize: handSize, keeprule: ruleset.keepRule5!){
                     let result: SimulationResult = SimulationResult()
                     result.numTrials = 1
-                    result.card5Successes = 1
+                    result.card5Keeps = 1
+                    
+                    if success != nil{
+                        if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                            result.card5Success = 1
+                        }
+                    }//if we have a success rule
+                    
                     return result
                 }//if we pass the test
                 else{
                     self.shuffleDeck()
-                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1) //recurse down to the smaller size
+                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1, success: success) //recurse down to the smaller size
                 }
             }
             else{
                 let result: SimulationResult = SimulationResult()
                 result.numTrials = 1
-                result.card5Successes = 1
+                result.card5Keeps = 1
+                
+                if success != nil{
+                    if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                        result.card5Success = 1
+                    }
+                }//if we have a success rule
+                
                 return result
         }//if there isn't a rule for 6-card hands, keep all 6-card hands
         case 4:
@@ -316,29 +331,83 @@ internal class Simulator{
                 if try self.testHandAgainstKeepRule(handSize: handSize, keeprule: ruleset.keepRule4!){
                     let result: SimulationResult = SimulationResult()
                     result.numTrials = 1
-                    result.card4Successes = 1
+                    result.card4Keeps = 1
+                    
+                    if success != nil{
+                        if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                            result.card4Success = 1
+                        }
+                    }//if we have a success rule
+                    
                     return result
                 }//if we pass the test
                 else{
                     self.shuffleDeck()
-                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1) //recurse down to the smaller size
+                    return try self.testDeckAgainstMulliganRuleset(ruleset: ruleset, handSize: handSize - 1, success: success) //recurse down to the smaller size
                 }
             }
             else{
                 let result: SimulationResult = SimulationResult()
                 result.numTrials = 1
-                result.card4Successes = 1
+                result.card4Keeps = 1
+                
+                if success != nil{
+                    if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                        result.card4Success = 1
+                    }
+                }//if we have a success rule
+                
                 return result
         }//if there isn't a rule for 6-card hands, keep all 6-card hands
         case 3://hard default to "accept all 3-card hands"
             let result: SimulationResult = SimulationResult()
             result.numTrials = 1
-            result.card3Successes = 1
+            result.card3Keeps = 1
+            
+            if success != nil{
+                if try self.testHandAgainstSuccessRule(handSize: handSize, successrule: success!){
+                    result.card3Success = 1
+                }
+            }//if we have a success rule
+            
             return result
-        default: throw SimulatorError.cardIndexOOB(message: "Mulligan rules not supported for hand sizes larger than 7 or smaller than 4")
+        default: throw SimulatorError.cardIndexOOB(message: "Mulligan rules not supported for hand sizes larger than 7 or smaller than 3")
             
         }//which hand size
     }//testDeckAgainstMulliganRuleset
+    
+    /**
+     Tests a hand of a given size against a given Success Rule. Throws most of the heavy lifting to the testHandAgainstCondition function
+     
+     Notably, this differs from testing conditions in that subconditions are AND'ed together, while conditions are OR'd together, for the purposes of evaluating rules.
+     - parameter handSize: The size of the hand to test against the subcondition. Without shuffling, tests this many cards from the top of the deck against this.
+     - parameter successrule: The Success Rule against which we want to test the hand.
+     - returns: Whether or not the hand passes the given condition
+     */
+    internal func testHandAgainstSuccessRule(handSize: Int, successrule: SuccessRule) throws -> Bool{
+        if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
+        if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
+        
+        if successrule.conditionList != nil && successrule.conditionList!.count != 0{
+            for condition in successrule.conditionList!{
+                do{
+                    if try self.testHandAgainstCondition(handSize: handSize, condition: condition, lookingForward: true){
+                        return true
+                    }//if passes the condition
+                }
+                catch{
+                    NSLog("Error testing condition. Handsize: \(handSize), Error: \(error)")
+                }
+            }//for each condition
+            
+            return false //there were conditions tested, but none met
+            
+        }//if rule has
+        else{
+            return true //empty success rule == "keep all hands"
+        }//else (no subconditions in list)
+        
+    }//testHandAgainstSuccessRule
     
     /**
      Tests a hand of a given size against a given Keep Rule. Throws most of the heavy lifting to the testHandAgainstCondition function
@@ -380,14 +449,14 @@ internal class Simulator{
      - throws: Throws SimulatorError.cardIndexOOB if handSize is larger than the size of the deck, or less than 1
      - returns: Whether or not the hand passes the given condition
      */
-    internal func testHandAgainstCondition(handSize: Int, condition: Condition) throws -> Bool{
+    internal func testHandAgainstCondition(handSize: Int, condition: Condition, lookingForward: Bool = false) throws -> Bool{
         if handSize < 0{ throw SimulatorError.cardIndexOOB(message: "Unable to test a hand with fewer than 1 card") }
         if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
         
         if condition.subconditionList != nil{
             if condition.subconditionList!.count != 0{
                 for subcondition in condition.subconditionList!{
-                    if try self.testHandAgainstSubcondition(handSize: handSize, subcondition: subcondition) == false{
+                    if try self.testHandAgainstSubcondition(handSize: handSize, subcondition: subcondition, lookingForward: lookingForward) == false{
                         return false
                     }//if any subconditions are not met, the condition is not met
                 }//for each subcondition
