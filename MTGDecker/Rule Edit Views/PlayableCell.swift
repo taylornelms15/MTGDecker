@@ -23,11 +23,11 @@ class PlayableCell: ConditionCell, UIPickerViewDelegate, UIPickerViewDataSource{
                                         "sorcery"
                                         ]//typeOptions
 
-    static var turnOption: [String] = ["any turn",
-                                       "turn 1",
-                                       "turn 2",
-                                       "turn 3",
-                                       "turn 4"
+    static var turnOption: [String] = ["with cards in hand",
+                                       "by turn 1",
+                                       "by turn 2",
+                                       "by turn 3",
+                                       "by turn 4"
                                         ]//turnOption
     
     @IBOutlet var typeField: UITextField!
@@ -204,5 +204,6 @@ class PlayableCell: ConditionCell, UIPickerViewDelegate, UIPickerViewDataSource{
             return PlayableCell.turnOption.count
         }//switch
     }//numberOfRowsInComponent
+
     
 }//PlayableCell

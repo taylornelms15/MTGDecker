@@ -183,7 +183,7 @@ internal class Simulator{
                 
                 var subResult: SimulationResult = SimulationResult()
                 
-                for _ in 0 ..< i{
+                for j in 0 ..< i{
                     testSimulator.shuffleDeck()
                     do{
                         let testResult: SimulationResult = try testSimulator.testDeckAgainstMulliganRuleset(ruleset: testRuleset, handSize: 7, success: success)
@@ -191,6 +191,16 @@ internal class Simulator{
                     } catch{
                         NSLog("Error testing the deck a bunch: \(error)")
                     }
+                    
+                    if j == i / 4 || j == i / 2 || j == (3 * i) / 4{
+                        resultQueue.sync {
+                            result += subResult
+                            NotificationCenter.default.post(name: .simulatorProgressNotification , object: Float(result.numTrials) / Float(repetitions))
+                        }//result update queue
+                        
+                        subResult = SimulationResult()//reset to 0 after we added partial progress
+                    }//if we're partway there (1/4, 1/2, 3/4 through)
+                    
                     
                 }//for each of the i sub-repetitions
                 
@@ -422,7 +432,14 @@ internal class Simulator{
         if handSize > deckSize{ throw SimulatorError.cardIndexOOB(message: "Cannot test more cards than exist in the deck") }
         
         if keeprule.conditionList != nil && keeprule.conditionList!.count != 0{
-            for condition in keeprule.conditionList!{
+            var condArray: Array<Condition> = Array<Condition>(keeprule.conditionList!)
+            
+            condArray.sort { (lhs, rhs) -> Bool in
+                return lhs.performanceRatio < rhs.performanceRatio
+            }
+            
+            
+            for condition in condArray{
                 do{
                     if try self.testHandAgainstCondition(handSize: handSize, condition: condition){
                         return true

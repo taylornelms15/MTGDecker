@@ -20,7 +20,7 @@ class RuleEditTableView: UITableView{
         IndexPath(row: 1, section: 0) : "6-Card Hands",
         IndexPath(row: 2, section: 0) : "5-Card Hands",
         IndexPath(row: 3, section: 0) : "4-Card Hands",
-        IndexPath(row: 0, section: 1) : "Hand-Draw Success Condition"
+        IndexPath(row: 0, section: 1) : "Desirability Condition"
     ]//tableTitles
     static var sectionTitles: [String] = ["Mulligan Rules", "Other Conditions"]
     

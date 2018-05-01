@@ -262,8 +262,8 @@ public class Subcondition: NSManagedObject {
     public var performanceRatio: Double{
         switch self.type{
         case .playableByTurn:
-            if numParam1 <= 2{ return 0.3 }//less performance effect for a smaller number of tested turns
-            return 0.2
+            if numParam1 <= 2{ return 0.2 }//less performance effect for a smaller number of tested turns
+            return 0.13
         case .playable:
             return 0.5
         case .manaCoverage:

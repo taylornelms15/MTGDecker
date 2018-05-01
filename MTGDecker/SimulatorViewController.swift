@@ -13,7 +13,7 @@ import CoreData
 class SimulatorViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
     private var EPSILON: Double = 0.01
-    private static var NUM_REPETITIONS_BASE: Int = 30000
+    private static var NUM_REPETITIONS_BASE: Int = 25000
     private static var SUCCESS_SCALING: Double = 1.2
     
     var deck: Deck?
@@ -216,41 +216,7 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
     }//loadDefaultSuccess
     
     func updateResults(fromResult: SimulationResult){
-        /*
-        //Keep
-        if fromResult.card7Percent > EPSILON{
-            card7PercentLabel.text = fromResult.card7String()
-        }
-        if fromResult.card6Percent > EPSILON{
-            card6PercentLabel.text = fromResult.card6String()
-        }
-        if fromResult.card5Percent > EPSILON{
-            card5PercentLabel.text = fromResult.card5String()
-        }
-        if fromResult.card4Percent > EPSILON{
-            card4PercentLabel.text = fromResult.card4String()
-        }
-        if fromResult.card3Percent > EPSILON{
-            card3PercentLabel.text = fromResult.card3String()
-        }
-        
-        //Success
-        if fromResult.card7SPercent > EPSILON{
-            card7SuccessLabel.text = fromResult.card7SString()
-        }
-        if fromResult.card6SPercent > EPSILON{
-            card6SuccessLabel.text = fromResult.card6SString()
-        }
-        if fromResult.card5SPercent > EPSILON{
-            card5SuccessLabel.text = fromResult.card5SString()
-        }
-        if fromResult.card4SPercent > EPSILON{
-            card4SuccessLabel.text = fromResult.card4SString()
-        }
-        if fromResult.card3SPercent > EPSILON{
-            card3SuccessLabel.text = fromResult.card3SString()
-        }
-        */
+
         UIView.animate(withDuration: 1.0) {
             
             //For each hand-size condition, check if we got more than EPSILON percentage hands. If so, display the labels for that result. Else, make labels disappear
@@ -357,7 +323,7 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
             let repetitions: Int = Int(
                 Double(SimulatorViewController.NUM_REPETITIONS_BASE)
                 * self.currentMulliganRuleset!.performanceRatio
-                * ((self.currentSuccessRule!.performanceRatio + SimulatorViewController.SUCCESS_SCALING) / 2.0)
+                * ((5.0 * self.currentSuccessRule!.performanceRatio + SimulatorViewController.SUCCESS_SCALING) / 6.0)
             )//repetitions
             let result: SimulationResult = self.simulator!.testDeckAgainstMulliganMultiple(ruleset: self.currentMulliganRuleset!, repetitions: repetitions, success: self.currentSuccessRule!)
             
@@ -411,12 +377,11 @@ class SimulatorViewController: UIViewController, UITableViewDataSource, UITableV
     
     func postProgress(progress: Float){
         
-        if progressVC != nil{
-            DispatchQueue.main.sync {
-                progressVC!.progressView.setProgress(progress, animated: true)
-            }
-            
-        }//if there's a progress VC up
+        DispatchQueue.main.async {
+            if self.progressVC != nil{
+                self.progressVC!.progressView.setProgress(progress, animated: true)
+            }//if we have a progressVC
+        }//async
         
     }//postProgress
     

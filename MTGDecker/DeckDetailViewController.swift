@@ -99,7 +99,7 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
     }
     
     func presentCardImage(forCard: MCard){
-        if (forCard.image == nil){
+        if (forCard.image == nil || forCard.image!.image == nil){
             
             print("No image yet for card \(forCard.name)")
             
@@ -113,9 +113,11 @@ class DeckDetailViewController: UITableViewController, UIPopoverPresentationCont
                 self.builder!.pullCardImageByNameAndURL(name: forCard.name, url: imageURL, intoMCard: forCard)
             }
 
+            return
+            
         }//if the card has no image
         
-        let cardImage: UIImage = forCard.image!.image
+        let cardImage: UIImage = forCard.image!.image!
         
         let newVC: CardImageViewController = storyboard!.instantiateViewController(withIdentifier: "CardImageViewController") as! CardImageViewController
         newVC.modalPresentationStyle = .popover

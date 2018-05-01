@@ -420,19 +420,19 @@
                                         <rect key="frame" x="0.0" y="0.0" width="343.5" height="25.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Hand Size" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XSp-di-C63">
-                                                <rect key="frame" x="0.0" y="0.0" width="128.5" height="25.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="137.5" height="25.5"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
                                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="% Drawn" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cNE-fn-WMh">
-                                                <rect key="frame" x="128.5" y="0.0" width="88" height="25.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="% Kept" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cNE-fn-WMh">
+                                                <rect key="frame" x="137.5" y="0.0" width="70" height="25.5"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
                                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="% Success" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="znR-Ip-RBU">
-                                                <rect key="frame" x="216.5" y="0.0" width="127" height="25.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="% Desirable" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="znR-Ip-RBU">
+                                                <rect key="frame" x="207.5" y="0.0" width="136" height="25.5"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
                                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                                 <nil key="highlightedColor"/>
@@ -645,7 +645,7 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Dtc-3h-RTL" customClass="RuleTable" customModule="MTGDecker" customModuleProvider="target">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Dtc-3h-RTL" customClass="RuleTable" customModule="MTGDecker" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="150" width="375" height="517"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -909,32 +909,32 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="uIh-qs-sWg">
-                                                    <rect key="frame" x="15" y="6" width="345" height="30"/>
+                                                    <rect key="frame" x="9" y="6" width="357.5" height="30"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Contains" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oj0-cB-vRF">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="745" text="Contains" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="Oj0-cB-vRF">
                                                             <rect key="frame" x="0.0" y="0.0" width="68" height="30"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <textField opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="745" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="non-land card" borderStyle="roundedRect" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="8pI-kJ-EsT">
-                                                            <rect key="frame" x="72" y="0.0" width="104.5" height="30"/>
+                                                        <textField opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="744" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="creature" borderStyle="roundedRect" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="8pI-kJ-EsT">
+                                                            <rect key="frame" x="72" y="0.0" width="75" height="30"/>
                                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="s1J-3c-ohB"/>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="s1J-3c-ohB"/>
                                                             </constraints>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                         </textField>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="playable by" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dAv-qr-izd">
-                                                            <rect key="frame" x="180.5" y="0.0" width="86.5" height="30"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="746" text="playable" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="dAv-qr-izd">
+                                                            <rect key="frame" x="151" y="0.0" width="63.5" height="30"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="any turn" borderStyle="roundedRect" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="QEu-Pl-mEn">
-                                                            <rect key="frame" x="271" y="0.0" width="74" height="30"/>
+                                                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="743" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="with cards in hand" borderStyle="roundedRect" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="QEu-Pl-mEn">
+                                                            <rect key="frame" x="218.5" y="0.0" width="139" height="30"/>
                                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="QDA-is-0Kv"/>
@@ -947,8 +947,9 @@
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="uIh-qs-sWg" firstAttribute="leading" secondItem="saR-Ev-udr" secondAttribute="leading" constant="15" id="F2T-RW-n30"/>
-                                                <constraint firstAttribute="trailing" secondItem="uIh-qs-sWg" secondAttribute="trailing" constant="15" id="VQj-N2-upl"/>
+                                                <constraint firstItem="uIh-qs-sWg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="saR-Ev-udr" secondAttribute="leading" constant="5" id="DqQ-fO-R7N"/>
+                                                <constraint firstItem="uIh-qs-sWg" firstAttribute="leading" secondItem="saR-Ev-udr" secondAttribute="leading" priority="740" constant="15" id="F2T-RW-n30"/>
+                                                <constraint firstItem="uIh-qs-sWg" firstAttribute="centerX" secondItem="saR-Ev-udr" secondAttribute="centerX" id="OIL-gl-TCC"/>
                                                 <constraint firstItem="uIh-qs-sWg" firstAttribute="centerY" secondItem="saR-Ev-udr" secondAttribute="centerY" id="kYf-Cv-lqW"/>
                                             </constraints>
                                         </tableViewCellContentView>

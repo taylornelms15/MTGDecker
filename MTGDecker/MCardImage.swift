@@ -23,12 +23,20 @@ public class MCardImage: NSManagedObject {
     @NSManaged public var imageData: NSData?
     @NSManaged public var inv_mcard: MCard?
     
-    public var image: UIImage {
+    public var image: UIImage? {
         get{
+            if imageData == nil{
+                return nil
+            }
+            
             return UIImage(data: imageData! as Data)!
         }
         set{
-            imageData = NSData(data: UIImagePNGRepresentation(newValue)!)
+            if newValue == nil{
+                imageData = nil
+            }
+            
+            imageData = NSData(data: UIImagePNGRepresentation(newValue!)!)
         }
     }//image
     
