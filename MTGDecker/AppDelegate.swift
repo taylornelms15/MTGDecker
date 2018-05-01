@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initCardNameList(context)
         _ = mulliganDefaults(context)
         _ = successDefaults(context)
-        _ = basicLandDefaults(context)
+        basicLandDefaults(context)
         
         
         return true
@@ -199,7 +199,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     }//initSuccessDefaults
     
-    func basicLandDefaults(_ context: NSManagedObjectContext) -> Set<MCard>{
+    func basicLandDefaults(_ context: NSManagedObjectContext){
         var landDeck: Deck? = nil
         var landBuilder: DeckBuilder? = nil
         
@@ -239,11 +239,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
             }//if we don't have that card
         }//for each entry in the dictionary
-        
-        
-        
-        
-        return Set<MCard>()
+
     }//basicLandDefaults
     
     func addLandByMultiverseId(name: String, id: Int, using builder: DeckBuilder){
