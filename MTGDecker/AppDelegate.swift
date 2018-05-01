@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initCardNameList(context)
         _ = mulliganDefaults(context)
         _ = successDefaults(context)
+        _ = basicLandDefaults(context)
         
         
         return true
@@ -197,6 +198,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return mySuccessRuleDefaults
         
     }//initSuccessDefaults
+    
+    func basicLandDefaults(_ context: NSManagedObjectContext) -> Set<MCard>{
+        var landDeck: Deck? = nil
+        var landBuilder: DeckBuilder? = nil
+        
+        let landFR: NSFetchRequest<MCard> = MCard.fetchRequest()
+        landFR.predicate = NSPredicate(format: "name = %@ OR name = %@ OR name = %@ OR name = %@ OR name = %@ OR name = %@", "Plains", "Island", "Swamp", "Mountain", "Forest", "Wastes")
+        
+        var results: [MCard] = []
+        
+        do {
+            results = try context.fetch(landFR)
+        } catch {
+            NSLog("Problem finding default basic lands: \(error)")
+        }
+        
+        if results.count != MCard.BASIC_LAND_DEFAULTS.count{
+            landDeck = Deck(entity: Deck.entityDescription(context: context), insertInto: context)
+            landBuilder = DeckBuilder(inContext: context, deck: landDeck!)
+        }//if we have fewer than 6 results
+        else{
+            print("Have all relevant land defaults")
+        }
+        
+        for entry in MCard.BASIC_LAND_DEFAULTS{
+            if !results.contains(where: { (card) -> Bool in
+                return card.name == entry.key
+            }){
+                
+                self.addLandByMultiverseId(name: entry.key, id: entry.value, using: landBuilder!)
+                
+                context.performAndWait {
+                    do{
+                        try context.save()
+                    }catch{
+                        NSLog("Error saving a basic land (\(entry.key)) into the Defaults deck: \(error)")
+                    }
+                }
+                
+            }//if we don't have that card
+        }//for each entry in the dictionary
+        
+        
+        
+        
+        return Set<MCard>()
+    }//basicLandDefaults
+    
+    func addLandByMultiverseId(name: String, id: Int, using builder: DeckBuilder){
+    
+        builder.addCardByName(name, with: id)
+        
+        print("Added default \(name)")
+        
+    }//addLandByMultiverseId
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

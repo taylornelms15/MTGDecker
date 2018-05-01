@@ -12,6 +12,7 @@ import CoreData
 import MTGSDKSwift
 
 
+
 public class MCard: NSManagedObject, Comparable {
 
     
@@ -31,6 +32,15 @@ public class MCard: NSManagedObject, Comparable {
                                                          "Sorcery" : 4,
                                                          "Instant" : 5,
                                                          "Land" : 6]
+    
+    ///Static variable depicting what to use as the Default basic land cards. Defaulting to Dominaria normal lands, and a cool full-art Wastes from Oath of the Gatewatch
+    public static var BASIC_LAND_DEFAULTS: [String: Int] = ["Plains"    : 443138,
+                                                            "Island"    : 443142,
+                                                            "Swamp"     : 443148,
+                                                            "Mountain"  : 443150,
+                                                            "Forest"    : 443154,
+                                                            "Wastes"    : 407696]
+    
     
     @NSManaged public var cmc: Int16
     @NSManaged public var flavor: String?

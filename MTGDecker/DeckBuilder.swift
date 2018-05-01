@@ -37,7 +37,7 @@ class DeckBuilder{
     }//addCardsByNames
     
     
-    func addCardByName(_ cardName: String){
+    func addCardByName(_ cardName: String, with multiverseID: Int? = nil){
         
         let cardFR: NSFetchRequest<MCard> = MCard.fetchRequest()
         cardFR.predicate = NSPredicate(format: "name = %@", cardName)
@@ -58,16 +58,22 @@ class DeckBuilder{
         }//if we already have the card in the app somewhere
             
         else{
-            pullCardFromInternet(cardName)
+            pullCardFromInternet(cardName, with: multiverseID)
         }//if we don't have the card in the app somewhere
 
         NotificationCenter.default.post(name: .cardAddNotification, object: cardName)
         
     }//addCardByName
     
-    private func pullCardFromInternet(_ cardName: String) {
+    private func pullCardFromInternet(_ cardName: String, with multiverseID: Int? = nil) {
         let magic: Magic = Magic()
         let nameParam: CardSearchParameter = CardSearchParameter(parameterType: .name, value: cardName)
+        var idParam: CardSearchParameter = CardSearchParameter(parameterType: .name, value: cardName)
+        if multiverseID != nil{
+            idParam = CardSearchParameter(parameterType: .multiverseid, value: "\(multiverseID!)")
+        }
+        
+        
         magic.fetchPageSize = "100"
         var cardResults: [Card] = []
         
@@ -75,7 +81,7 @@ class DeckBuilder{
         
         fetchCardDispatchGroup.enter()
         DispatchQueue.global().async(group: fetchCardDispatchGroup, qos: .userInitiated, flags: []) {
-            magic.fetchCards([nameParam]) {
+            magic.fetchCards([nameParam, idParam]) {
                 cards, error in
                 
                 if error != nil {
@@ -103,8 +109,16 @@ class DeckBuilder{
                     setCode = printedSets.last!
                 }
                 
+
+                
                 //Pulls card info from the internet again, this time with the specification that it is from the most recent printing of the card.
-                let setParam: CardSearchParameter = CardSearchParameter(parameterType: .set, value: setCode)
+                //If we've specified the id, trick this, make setParam really an idParam
+                var setParam: CardSearchParameter = CardSearchParameter(parameterType: .set, value: setCode)
+                if multiverseID != nil{
+                    setParam = idParam
+                }//if we have a multiverse ID
+                
+                
                 magic.fetchCards([nameParam, setParam], completion: { (recentCards, error) in
                     if error != nil{
                         NSLog("\(String(describing: error))")
