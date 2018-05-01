@@ -68,6 +68,7 @@ class DeckBuilder{
     private func pullCardFromInternet(_ cardName: String) {
         let magic: Magic = Magic()
         let nameParam: CardSearchParameter = CardSearchParameter(parameterType: .name, value: cardName)
+        magic.fetchPageSize = "100"
         var cardResults: [Card] = []
         
         let fetchCardDispatchGroup: DispatchGroup = DispatchGroup()

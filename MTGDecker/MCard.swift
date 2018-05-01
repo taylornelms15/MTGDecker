@@ -127,6 +127,10 @@ public class MCard: NSManagedObject, Comparable {
     
     //MARK: Make the MCard
     
+
+    
+    
+    
     public func copyFromCard(card: Card){
         name = card.name!
         rarity = card.rarity
@@ -148,6 +152,11 @@ public class MCard: NSManagedObject, Comparable {
         toughness = card.toughness
         setCode = card.set
         
+        self.copyCostFromCard(card)
+        
+    }//copyFromCard
+    
+    fileprivate func copyCostFromCard(_ card: Card) {
         isWhite = false; isBlue = false; isBlack = false; isRed = false; isGreen = false; isColorless = true;
         let manaString: String? = card.manaCost
         if manaString != nil{
@@ -159,7 +168,7 @@ public class MCard: NSManagedObject, Comparable {
                     isWhite = true
                     isColorless = false
                     break
-                
+                    
                 case "U":
                     blueCost += 1
                     isBlue = true
@@ -290,8 +299,7 @@ public class MCard: NSManagedObject, Comparable {
             isGreen = false
             isColorless = true
         }//if devoid
-        
-    }//copyFromCard
+    }//copyCostFromCard
     
     public static func <(lhs: MCard, rhs: MCard) -> Bool {
         return lhs.name < rhs.name

@@ -370,7 +370,24 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         
     }//FieldCard
     
+    //MARK: Card location business
+    
+    enum CardLocationType{
+        case hand
+        case battlefield
+        case library
+        case graveyard
+        case exiled
+    }//cardLocation
+    
 }//FieldState
+
+struct CardLocation{
+    
+    var location: FieldState.CardLocationType = .exiled
+    var index: Int?
+    
+}//CardLocation
 
 enum FieldStateError: Error{
     case notInHand(message: String)
