@@ -27,10 +27,23 @@ class AbilityParameter: NSObject, NSCoding{
     }//decode
     
     
+    
+    static func parameterFunction(parameter: abParamType)->((FieldState, CardLocation) -> Set<FieldState>? ){
+        switch parameter{
+        case .tap:
+            return AbilityParameter.funcTap
+        default:
+            return AbilityParameter.funcUntap
+        }//switch
+
+    }//parameterFunction
+    
+    
 }//AbilityParameter
 
 enum abParamType: Int32{
     case none
+    case tap
     case w
     case u
     case b

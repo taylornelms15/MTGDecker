@@ -24,6 +24,7 @@
 		9533B0822077D78B009D570A /* DeckBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9533B0812077D78B009D570A /* DeckBuilder.swift */; };
 		954D8B9F2091FB9D000A7070 /* LandConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954D8B9E2091FB9D000A7070 /* LandConditionCell.swift */; };
 		954D8BA12092B238000A7070 /* Softcondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954D8BA02092B238000A7070 /* Softcondition.swift */; };
+		9550173F209928AB007F8E0D /* AbilityParameter_Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9550173E209928AB007F8E0D /* AbilityParameter_Functions.swift */; };
 		95578439207C2A28007F45E8 /* MCardLand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95578438207C2A27007F45E8 /* MCardLand.swift */; };
 		9557843B207E4E12007F45E8 /* FieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9557843A207E4E12007F45E8 /* FieldState.swift */; };
 		9557843D207E68FA007F45E8 /* ManaPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9557843C207E68FA007F45E8 /* ManaPool.swift */; };
@@ -116,6 +117,7 @@
 		9533B0812077D78B009D570A /* DeckBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBuilder.swift; sourceTree = "<group>"; };
 		954D8B9E2091FB9D000A7070 /* LandConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandConditionCell.swift; sourceTree = "<group>"; };
 		954D8BA02092B238000A7070 /* Softcondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Softcondition.swift; sourceTree = "<group>"; };
+		9550173E209928AB007F8E0D /* AbilityParameter_Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbilityParameter_Functions.swift; sourceTree = "<group>"; };
 		95578438207C2A27007F45E8 /* MCardLand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCardLand.swift; sourceTree = "<group>"; };
 		9557843A207E4E12007F45E8 /* FieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldState.swift; sourceTree = "<group>"; };
 		9557843C207E68FA007F45E8 /* ManaPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManaPool.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				95578438207C2A27007F45E8 /* MCardLand.swift */,
 				95D6D1C12098E8E0003E5014 /* Ability.swift */,
 				95D6D1C32098E9F7003E5014 /* AbilityParameter.swift */,
+				9550173E209928AB007F8E0D /* AbilityParameter_Functions.swift */,
 				95D2811D2069BABE008648D0 /* SuccessRule.swift */,
 				95D281032069B90A008648D0 /* MulliganRuleset.swift */,
 				95D2810B2069B90A008648D0 /* KeepRule.swift */,
@@ -529,6 +532,7 @@
 				95A22B3720686F2400331C4B /* CardNameList.swift in Sources */,
 				95F6721C206AF58800D0034D /* CardTableCell.swift in Sources */,
 				950959DF208F5261007A2812 /* ConditionCell.swift in Sources */,
+				9550173F209928AB007F8E0D /* AbilityParameter_Functions.swift in Sources */,
 				955C6304206A988C0096319E /* PlayerSelTableView.swift in Sources */,
 				950959DA208D005F007A2812 /* RuleEditViewController.swift in Sources */,
 				9500686C206AC09C0047B1B6 /* DeckDetailViewController.swift in Sources */,
