@@ -596,21 +596,22 @@ class MTGDeckerTests: XCTestCase {
     func testAbilities(){
         let elfSimulator: Simulator = Simulator(deck: elfDeck!, intoContext: context)
         
-        elfSimulator.cards.sort { (lhs, rhs) -> Bool in
-            if lhs.name == "Forest" && rhs.name != "Forest"{
-                return true
-            }
-            else{
-                return lhs < rhs
-            }
-        }//sort so that forests are at the front
+        var forestIndexes: [Int] = []
+        
+        for i in 0..<elfSimulator.cards.count{
+            if elfSimulator.cards[i].name == "Forest"{
+                forestIndexes.append(i)
+                if forestIndexes.count >= 4{
+                    break
+                }//if
+            }//if
+        }//for
         
         //***
         //First two cards are forests
         //***
-        elfSimulator.cards.swapAt(0, elfSimulator.cards.index { (card) -> Bool in
-            card.name == "Forest"
-            }!)
+        elfSimulator.cards.swapAt(0, forestIndexes[0])//Forest
+        elfSimulator.cards.swapAt(1, forestIndexes[1])//Forest
         elfSimulator.cards.swapAt(2, elfSimulator.cards.index { (card) -> Bool in
             card.name == "Llanowar Elves"
             }!)
@@ -642,12 +643,12 @@ class MTGDeckerTests: XCTestCase {
             fieldcard.card.name == "Llanowar Elves"
         }))
     
-        var possibleStates = sampleMysticAbility.executeAbility(currentState: elfState, at: elfPosition)
-        XCTAssertNil(possibleStates)//cannot tap the summoning-sick Llanowar Elves
+        var possibleElfStates = sampleMysticAbility.executeAbility(currentState: elfState, at: elfPosition)
+        XCTAssertNil(possibleElfStates)//cannot tap the summoning-sick Llanowar Elves
         
         elfState.advanceTurn()
-        possibleStates = sampleMysticAbility.executeAbility(currentState: elfState, at: elfPosition)
-        elfState = possibleStates!.first!
+        possibleElfStates = sampleMysticAbility.executeAbility(currentState: elfState, at: elfPosition)
+        elfState = possibleElfStates!.first!
         
         XCTAssert(elfState.manaPool.g == 1)
         XCTAssert(elfState.battlefield.first(where: { (fieldcard) -> Bool in

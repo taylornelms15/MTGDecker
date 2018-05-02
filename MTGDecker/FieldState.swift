@@ -14,10 +14,16 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
     ///The raw list of cards we're using as our deck. By default, initial hand, library, and graveyard are pulled from this
     var cardDeck: [MCard]
     var hand: [MCard] = []
-    var library: [MCard] = []
+    lazy var library: [MCard] = {
+        if parent == nil{return []}
+        let tempLibrary: [MCard] = Array<MCard>(parent!.library)
+        parent = nil
+        return tempLibrary
+    }()
     var graveyard: [MCard] = []
     var battlefield: [FieldCard] = []
     var manaPool: ManaPool = ManaPool()
+    var parent: FieldState? = nil
     
     var turnNumber: Int = 1
     var hasPlayedLand: Bool = false
@@ -37,7 +43,8 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
     internal init(state: FieldState){
         self.cardDeck = Array<MCard>(state.cardDeck)
         self.hand = Array<MCard>(state.hand)
-        self.library = Array<MCard>(state.library)
+        self.parent = state
+        //self.library = Array<MCard>(state.library)
         self.battlefield = Array<FieldCard>(state.battlefield)
         self.manaPool = ManaPool(pool: state.manaPool)
         
@@ -52,17 +59,16 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         //hand, graveyard, battlefield: not order-dependent
         if !lhs.hand.containsSameElements(as: rhs.hand){
             return false
-        }
-        if !lhs.graveyard.containsSameElements(as: rhs.graveyard){
-            return false
-        }
+        }//if
         if !lhs.battlefield.containsSameElements(as: rhs.battlefield){
             return false
-        }
-
+        }//if
+        if !lhs.graveyard.containsSameElements(as: rhs.graveyard){
+            return false
+        }//if
         if lhs.library != rhs.library{
             return false
-        }
+        }//if
         
         return true
     }//operator ==
@@ -341,6 +347,100 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         
         return result
     }//possibleManaPools
+    
+    //MARK: Card Location Functions
+    
+    public func cardAtLocation(_ location: CardLocation)->MCard?{
+        if location.index == nil || location.index! < 0{
+            return nil
+        }//index OOB
+        
+        switch location.location{
+        case .hand:
+            if location.index! > self.hand.count{
+                return nil
+            }//if
+            return self.hand[location.index!]
+        case .battlefield:
+            if location.index! > self.battlefield.count{
+                return nil
+            }//if
+            return self.battlefield[location.index!].card
+        case .graveyard:
+            if location.index! > self.graveyard.count{
+                return nil
+            }//if
+            return self.graveyard[location.index!]
+        case .library:
+            if location.index! > self.library.count{
+                return nil
+            }//if
+            return self.library[location.index!]
+        case .exiled:
+            return nil//we don't bring things back from the dead! Eat it, Squee!
+        }//switch
+    }//cardAtLocation
+    
+    public func newLocation(for card: MCard, insteadof oldLocation: CardLocation) -> CardLocation?{
+        switch oldLocation.location{
+        case .hand:
+            let position = self.findInHand(card)
+            if position != nil{return position}
+        case .library:
+            let position = self.findInLibrary(card)
+            if position != nil{return position}
+        case .battlefield:
+            let position = self.findInBattlefield(card)
+            if position != nil{return position}
+        case .graveyard:
+            let position = self.findInGraveyard(card)
+            if position != nil{return position}
+        case .exiled:
+            return nil
+        }//switch
+        
+        //Looks in graveyard for the card first
+        var position = self.findInGraveyard(card)
+        if position != nil{return position}
+        
+        //Then looks on the battlefield
+        position = self.findInBattlefield(card)
+        if position != nil{return position}
+        
+        return nil
+    }//newLocationForCard
+    
+    public func findInHand(_ card: MCard) -> CardLocation?{
+        let reverseIndex: Int? = hand.reversed().index(of: card)//find the last one here
+        if reverseIndex == nil{return nil}
+        
+        return CardLocation(location: .hand, index: hand.count - 1 - reverseIndex!)
+    }//findInHand
+    
+    public func findInBattlefield(_ card: MCard) -> CardLocation?{
+        let reverseIndex: Int? = battlefield.reversed().index { (fieldcard) -> Bool in
+            return fieldcard.card == card
+        }
+        if reverseIndex == nil{return nil}
+        
+        return CardLocation(location: .battlefield, index: battlefield.count - 1 - reverseIndex!)
+    }//findInBattlefield
+    
+    public func findInLibrary(_ card: MCard) -> CardLocation?{
+        let reverseIndex: Int? = library.reversed().index(of: card)//find the last one here
+        if reverseIndex == nil{return nil}
+        
+        return CardLocation(location: .library, index: library.count - 1 - reverseIndex!)
+    }//findInLibrary
+    
+    public func findInGraveyard(_ card: MCard) -> CardLocation?{
+        let reverseIndex: Int? = graveyard.reversed().index(of: card)//find the last one here
+        if reverseIndex == nil{return nil}
+        
+        return CardLocation(location: .graveyard, index: graveyard.count - 1 - reverseIndex!)
+    }//findInGraveyard
+    
+    //MARK: Descriptions and Enums
     
     public var description: String{
         var handString = "\tHand: {"

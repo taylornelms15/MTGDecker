@@ -105,6 +105,8 @@ class Ability: NSManagedObject{
     
     func executeAbility(currentState: FieldState, at location: CardLocation) -> Set<FieldState>?{
 
+        let currentCard: MCard = currentState.cardAtLocation(location)!
+        
         let costPaidStates: Set<FieldState>? = self.executeCost(currentState: currentState, atLocation: location)
         
         if costPaidStates == nil{
@@ -115,9 +117,18 @@ class Ability: NSManagedObject{
         
         for state in costPaidStates!{
             
-            //TODO: make sure card location stays the same, or gets updated
+            var changedLocation: CardLocation? = nil
             
-            let effectsStates: Set<FieldState>? = self.executeEffect(currentState: state, atLocation: location)
+            if state.cardAtLocation(location) != currentCard{
+                changedLocation = state.newLocation(for: currentCard, insteadof: location)
+                if changedLocation == nil{
+                    //TODO: deal with cards going into exile?
+                    print("A card just got knocked off the table and out of the game in the process of activating its effect.")
+                    print("I'm sorry for your loss. It was \(currentCard), and the play field was like \n\(currentState)\n***And then it became***\n\(state)")
+                }//if
+            }//if our card moved
+            
+            let effectsStates: Set<FieldState>? = self.executeEffect(currentState: state, atLocation: changedLocation ?? location)
             
             if effectsStates != nil{
                 result.formUnion(effectsStates!)
