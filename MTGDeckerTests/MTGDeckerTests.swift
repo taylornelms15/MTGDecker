@@ -593,6 +593,73 @@ class MTGDeckerTests: XCTestCase {
 
     }//testDecks
     
+    func testAbilities(){
+        let elfSimulator: Simulator = Simulator(deck: elfDeck!, intoContext: context)
+        
+        elfSimulator.cards.sort { (lhs, rhs) -> Bool in
+            if lhs.name == "Forest" && rhs.name != "Forest"{
+                return true
+            }
+            else{
+                return lhs < rhs
+            }
+        }//sort so that forests are at the front
+        
+        //***
+        //First two cards are forests
+        //***
+        elfSimulator.cards.swapAt(0, elfSimulator.cards.index { (card) -> Bool in
+            card.name == "Forest"
+            }!)
+        elfSimulator.cards.swapAt(2, elfSimulator.cards.index { (card) -> Bool in
+            card.name == "Llanowar Elves"
+            }!)
+        elfSimulator.cards.swapAt(3, elfSimulator.cards.index { (card) -> Bool in
+            card.name == "Elvish Archdruid"
+            }!)
+        elfSimulator.cards.swapAt(4, elfSimulator.cards.index { (card) -> Bool in
+            card.name == "Alloy Myr"
+            }!)
+        elfSimulator.cards.swapAt(5, elfSimulator.cards.index { (card) -> Bool in
+            card.name == "Bow of Nylea"
+            }!)
+        elfSimulator.cards.swapAt(6, elfSimulator.cards.index { (card) -> Bool in
+            card.name == "Nissa Revane"
+            }!)
+        
+        var elfState = FieldState(deck: elfSimulator.cards, handSize: 7)
+        
+        let sampleMysticAbility: Ability = Ability(entity: Ability.entityDescription(context: context), insertInto: context)
+        let mysticCost: AbilityParameter = AbilityParameter(.tap)
+        let mysticEffect: AbilityParameter = AbilityParameter(.addG)
+        
+        sampleMysticAbility.costParams = [[mysticCost]]
+        sampleMysticAbility.effectParams = [[mysticEffect]]
+        
+        XCTAssertNoThrow(elfState = try elfState.playCard(name: "Forest").first!)
+        XCTAssertNoThrow(elfState = try elfState.playCard(name: "Llanowar Elves").first!)
+        let elfPosition: CardLocation = CardLocation(location: .battlefield, index: elfState.battlefield.index(where: { (fieldcard) -> Bool in
+            fieldcard.card.name == "Llanowar Elves"
+        }))
+    
+        var possibleStates = sampleMysticAbility.executeAbility(currentState: elfState, at: elfPosition)
+        XCTAssertNil(possibleStates)//cannot tap the summoning-sick Llanowar Elves
+        
+        elfState.advanceTurn()
+        possibleStates = sampleMysticAbility.executeAbility(currentState: elfState, at: elfPosition)
+        elfState = possibleStates!.first!
+        
+        XCTAssert(elfState.manaPool.g == 1)
+        XCTAssert(elfState.battlefield.first(where: { (fieldcard) -> Bool in
+            return fieldcard.card.name == "Llanowar Elves"
+        })!.isTapped)
+
+        
+        
+        
+        
+    }//testAbilities
+    
     
 
     

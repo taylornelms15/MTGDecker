@@ -82,8 +82,8 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         manaPool = ManaPool()//clear the mana pool
         
         for i in 0 ..< battlefield.count{
-            if battlefield[i].isTapped{
-                let newCard: FieldCard = FieldCard(card: battlefield[i].card, isTapped: false)
+            if battlefield[i].isTapped || battlefield[i].isSick{
+                let newCard: FieldCard = FieldCard(card: battlefield[i].card, isTapped: false, isSick: false)
                 battlefield[i] = newCard
             }
         }//for each card on the battlefield
@@ -124,7 +124,7 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
             
             let newState: FieldState = FieldState(state: self)
             
-            let playedCard: FieldCard = FieldCard(card: newState.hand.remove(at: cardIndex), isTapped: (card as! MCardLand).comesInTapped)
+            let playedCard: FieldCard = FieldCard(card: newState.hand.remove(at: cardIndex), isTapped: (card as! MCardLand).comesInTapped, isSick: false)
             newState.battlefield.append(playedCard)
             newState.hasPlayedLand = true
             
@@ -151,7 +151,12 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
                 let newState: FieldState = FieldState(state: state)
                 newState.hand.remove(at: cardIndex)
                 newState.manaPool = costResult
-                newState.battlefield.append( FieldCard(card: card, isTapped: false))
+                if card.isCreature(){
+                    newState.battlefield.append( FieldCard(card: card, isTapped: false, isSick: true))
+                }
+                else{
+                    newState.battlefield.append( FieldCard(card: card, isTapped: false, isSick: false))
+                }
                 resultStates.insert(newState)
             }
         }
@@ -295,7 +300,7 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         //Put all lands from hand onto battlefield
         for card in testState.hand{
             if card.isLand(){
-                let newFieldCard = FieldCard(card: card, isTapped: false)
+                let newFieldCard = FieldCard(card: card, isTapped: false, isSick: false)
                 testState.battlefield.append(newFieldCard)
             }
         }
@@ -303,7 +308,7 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
         //untap anything on our battlefield
         for i in 0 ..< testState.battlefield.count{
             if testState.battlefield[i].isTapped{
-                let newCard: FieldCard = FieldCard(card: testState.battlefield[i].card, isTapped: false)
+                let newCard: FieldCard = FieldCard(card: testState.battlefield[i].card, isTapped: false, isSick: false)
                 testState.battlefield[i] = newCard
             }
         }//for each card on the battlefield
@@ -356,6 +361,7 @@ internal class FieldState: CustomStringConvertible, Equatable, Hashable{
  
         var card: MCard
         var isTapped: Bool = false
+        var isSick: Bool = false
         
         public var description: String{
             return "[\(card.name)\(isTapped ? ", tapped" : "" )]"

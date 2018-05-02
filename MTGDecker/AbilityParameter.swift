@@ -11,7 +11,7 @@ import CoreData
 
 class AbilityParameter: NSObject, NSCoding{
 
-    var parameter: abParamType = .none
+    var parameter: abParamType
     
     enum CodingKeys: String, CodingKey {
         case parameter
@@ -27,13 +27,40 @@ class AbilityParameter: NSObject, NSCoding{
     }//decode
     
     
+    override init(){
+        self.parameter = .none
+    }//init
     
-    static func parameterFunction(parameter: abParamType)->((FieldState, CardLocation) -> Set<FieldState>? ){
+    init(_ parameter: abParamType){
+        self.parameter = parameter
+    }//init
+    
+    
+    
+    static func parameterFunction(_ parameter: abParamType)->((FieldState, CardLocation) -> Set<FieldState>? ){
         switch parameter{
+        case .none:
+            return AbilityParameter.funcNone
         case .tap:
             return AbilityParameter.funcTap
-        default:
+        case .untap:
             return AbilityParameter.funcUntap
+        case .addW:
+            return AbilityParameter.addW
+        case .addU:
+            return AbilityParameter.addU
+        case .addB:
+            return AbilityParameter.addB
+        case .addR:
+            return AbilityParameter.addR
+        case .addG:
+            return AbilityParameter.addG
+        case .addC:
+            return AbilityParameter.addC
+        case .addAny:
+            return AbilityParameter.addAny
+        default:
+            return AbilityParameter.funcNone
         }//switch
 
     }//parameterFunction
@@ -44,9 +71,19 @@ class AbilityParameter: NSObject, NSCoding{
 enum abParamType: Int32{
     case none
     case tap
-    case w
-    case u
-    case b
-    case r
-    case g
+    case untap
+    case addW
+    case addU
+    case addB
+    case addR
+    case addG
+    case addC
+    case addAny
+    case costW
+    case costU
+    case costB
+    case costR
+    case costG
+    case costC
+    case costAny
 }//abParamType
