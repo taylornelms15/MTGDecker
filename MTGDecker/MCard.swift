@@ -163,6 +163,7 @@ public class MCard: NSManagedObject, Comparable {
         setCode = card.set
         
         self.copyCostFromCard(card)
+        self.parseForAbilities(withText: self.text, into: self.managedObjectContext!)
         
     }//copyFromCard
     

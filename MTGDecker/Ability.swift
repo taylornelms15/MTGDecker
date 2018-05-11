@@ -21,6 +21,43 @@ class Ability: NSManagedObject{
     }//entityDescription
     
     
+    func isManaAbility()->Bool{
+        
+        //If any of the effect parameters generates mana, return true
+        for effectChoice in effectParams{
+            for effectParam in effectChoice{
+                if effectParam.generatesMana(){
+                    return true
+                }
+            }
+        }
+        //else, return false
+        return false
+    }//isManaAbility
+    
+    func totalManaYield()->Int{
+        
+        var possibleCosts: [Int] = []
+        var possibleYields: [Int] = []
+        
+        for cost in self.costParams{
+            var costAmount: Int = 0
+            for parameter in cost{
+                costAmount += parameter.manaYield()
+            }
+            possibleCosts.append(costAmount)
+        }//for
+        for effect in self.costParams{
+            var yieldAmount: Int = 0
+            for parameter in effect{
+                yieldAmount += parameter.manaYield()
+            }
+            possibleYields.append(yieldAmount)
+        }//for
+        
+        return (possibleYields.max() ?? 0) - (possibleCosts.max() ?? 0)
+    }//totalManaYield
+    
     func canPayCost(currentState: FieldState, at location: CardLocation) -> Bool{
         
         
@@ -141,5 +178,30 @@ class Ability: NSManagedObject{
         
         return result
     }//executeAbility
+    
+    func toString() -> String{
+        var costString = "["
+        for cost in costParams{
+            costString += "[ "
+            for parameter in cost{
+                costString += parameter.toString() + " "
+            }//for parameter
+            costString += "]"
+        }//for cost
+        costString += "]"
+        
+        var effectString = "["
+        for effect in effectParams{
+            effectString += "[ "
+            for parameter in effect{
+                effectString += parameter.toString() + " "
+            }//for parameter
+            effectString += "]"
+        }//for cost
+        effectString += "]"
+        
+        return costString + " : " + effectString
+        
+    }//toString
     
 }//Ability

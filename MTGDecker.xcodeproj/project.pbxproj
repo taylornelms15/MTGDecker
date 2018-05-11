@@ -42,6 +42,7 @@
 		956119DC206535B5008943A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 956119DA206535B5008943A3 /* LaunchScreen.storyboard */; };
 		956119E7206535B5008943A3 /* MTGDeckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119E6206535B5008943A3 /* MTGDeckerTests.swift */; };
 		956119F2206535B5008943A3 /* MTGDeckerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956119F1206535B5008943A3 /* MTGDeckerUITests.swift */; };
+		95A1DE25209CC06D00BE2F61 /* MCardAbilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A1DE24209CC06D00BE2F61 /* MCardAbilities.swift */; };
 		95A22B3720686F2400331C4B /* CardNameList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A22B3520686F2400331C4B /* CardNameList.swift */; };
 		95A22B3B2068769400331C4B /* CentralNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A22B3A2068769400331C4B /* CentralNavController.swift */; };
 		95D280FA2069AF66008648D0 /* CardNameStarter.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 95D280F92069AF66008648D0 /* CardNameStarter.rtf */; };
@@ -143,6 +144,7 @@
 		956119ED206535B5008943A3 /* MTGDeckerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MTGDeckerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		956119F1206535B5008943A3 /* MTGDeckerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTGDeckerUITests.swift; sourceTree = "<group>"; };
 		956119F3206535B5008943A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		95A1DE24209CC06D00BE2F61 /* MCardAbilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCardAbilities.swift; sourceTree = "<group>"; };
 		95A22B3520686F2400331C4B /* CardNameList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNameList.swift; sourceTree = "<group>"; };
 		95A22B3A2068769400331C4B /* CentralNavController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralNavController.swift; sourceTree = "<group>"; };
 		95D280F92069AF66008648D0 /* CardNameStarter.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = CardNameStarter.rtf; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				95D281072069B90A008648D0 /* Player.swift */,
 				95D280FF2069B90A008648D0 /* DeckNew.swift */,
 				95D281092069B90A008648D0 /* MCard.swift */,
+				95A1DE24209CC06D00BE2F61 /* MCardAbilities.swift */,
 				95578438207C2A27007F45E8 /* MCardLand.swift */,
 				95D6D1C12098E8E0003E5014 /* Ability.swift */,
 				95D6D1C32098E9F7003E5014 /* AbilityParameter.swift */,
@@ -568,6 +571,7 @@
 				955C6301206A93690096319E /* PlayerSelectTableViewController.swift in Sources */,
 				95D2811B2069B90A008648D0 /* KeepRule.swift in Sources */,
 				95A22B3B2068769400331C4B /* CentralNavController.swift in Sources */,
+				95A1DE25209CC06D00BE2F61 /* MCardAbilities.swift in Sources */,
 				95D2811F2069BABE008648D0 /* SuccessRule.swift in Sources */,
 				95578439207C2A28007F45E8 /* MCardLand.swift in Sources */,
 				95F67221206B0AD400D0034D /* CardSearchCell.swift in Sources */,

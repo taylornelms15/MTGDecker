@@ -332,7 +332,7 @@ extension AbilityParameter{
     /**
      Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
      
-     Relevant ability text: {W}
+     Relevant ability text: {C}
      
      - parameter currentState: The current state of the playing field
      - parameter location: The location of the card whose ability we are activating
@@ -405,6 +405,316 @@ extension AbilityParameter{
     /**
      Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
      
+     Relevant ability text: {W/U}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costWU(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.w > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.w -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.u > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.u -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costWU
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {U/B}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costUB(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.u > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.u -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.b > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.b -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costUB
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {B/R}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costBR(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.b > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.b -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.r > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.r -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costBR
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {R/G}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costRG(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.r > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.r -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.g > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.g -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costRG
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {G/W}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costGW(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.g > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.g -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.w > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.w -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costGW
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {W/B}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costWB(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.w > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.w -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.b > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.b -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costWB
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {U/R}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costUR(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.u > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.u -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.r > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.r -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costUR
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {B/G}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costBG(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.b > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.b -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.g > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.g -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costBG
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {R/W}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costRW(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.r > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.r -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.w > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.w -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costRW
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: {G/U}
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func costGU(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        if currentState.manaPool.g > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.g -= 1
+            resultStates.insert(resultState)
+        }
+        if currentState.manaPool.u > 0{
+            let resultState: FieldState = FieldState(state: currentState)
+            resultState.manaPool.u -= 1
+            resultStates.insert(resultState)
+        }
+        
+        if resultStates.count > 0{
+            return resultStates
+        }
+        return nil
+    }//costGU
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
      Relevant ability text: Sacrifice [cardname]
      
      - parameter currentState: The current state of the playing field
@@ -412,7 +722,7 @@ extension AbilityParameter{
      - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
      
      */
-    static func sacrifice(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+    static func sacrificeSelf(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
         if location.location != .battlefield || location.index == nil || location.index! < 0 || location.index! >= currentState.battlefield.count{
             return nil
         }//Cannot sacrifice something if it's not on the battlefield, or if we're pointing at a location nowhere close to the battlefield
@@ -425,5 +735,175 @@ extension AbilityParameter{
         
         return Set<FieldState>([myNewState])
     }//sacrifice
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: Untap target land
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func untapLand(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        let validLands = currentState.battlefield.filter { (fieldCard) -> Bool in
+            return fieldCard.card.isLand() && fieldCard.isTapped
+        }//filter down to the tapped lands
+        
+        if validLands.count < 1{
+            return nil
+        }//if
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        for landFieldcard in validLands{
+            let newState: FieldState = FieldState(state: currentState)
+            let validIndex = newState.battlefield.index { (candidate) -> Bool in
+                return candidate == landFieldcard
+            }!
+            newState.battlefield[validIndex].isTapped = true
+            resultStates.insert(newState)
+        }//for each valid, tapped land
+
+        return resultStates
+    }//untapLand
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: Untap target Forest
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func untapForest(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        let validLands = currentState.battlefield.filter { (fieldCard) -> Bool in
+            return fieldCard.card.isLand() && fieldCard.isTapped && (fieldCard.card.subtypes?.contains("Forest") ?? false)
+        }//filter down to the tapped lands
+        
+        if validLands.count < 1{
+            return nil
+        }//if
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        for landFieldcard in validLands{
+            let newState: FieldState = FieldState(state: currentState)
+            let validIndex = newState.battlefield.index { (candidate) -> Bool in
+                return candidate == landFieldcard
+                }!
+            newState.battlefield[validIndex].isTapped = true
+            resultStates.insert(newState)
+        }//for each valid, tapped land
+        
+        return resultStates
+    }//untapForest
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: Untap target basic land
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func untapBasicLand(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        let validLands = currentState.battlefield.filter { (fieldCard) -> Bool in
+            return fieldCard.card.isLand() && fieldCard.isTapped && (fieldCard.card.supertypes?.contains("Basic") ?? false)
+        }//filter down to the tapped lands
+        
+        if validLands.count < 1{
+            return nil
+        }//if
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        for landFieldcard in validLands{
+            let newState: FieldState = FieldState(state: currentState)
+            let validIndex = newState.battlefield.index { (candidate) -> Bool in
+                return candidate == landFieldcard
+                }!
+            newState.battlefield[validIndex].isTapped = true
+            resultStates.insert(newState)
+        }//for each valid, tapped land
+        
+        return resultStates
+    }//untapBasicLand
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: Untap target creature
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func untapCreature(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        let validLands = currentState.battlefield.filter { (fieldCard) -> Bool in
+            return fieldCard.card.isCreature() && fieldCard.isTapped
+        }//filter down to the tapped creatures
+        
+        if validLands.count < 1{
+            return nil
+        }//if
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        for landFieldcard in validLands{
+            let newState: FieldState = FieldState(state: currentState)
+            let validIndex = newState.battlefield.index { (candidate) -> Bool in
+                return candidate == landFieldcard
+                }!
+            newState.battlefield[validIndex].isTapped = true
+            resultStates.insert(newState)
+        }//for each valid, tapped creature
+        
+        return resultStates
+    }//untapCreature
+    
+    /**
+     Executes a given parameter of an ability and returns a set of possible states after that parameter's execution.
+     
+     Relevant ability text: Untap target artifact
+     
+     - parameter currentState: The current state of the playing field
+     - parameter location: The location of the card whose ability we are activating
+     - returns: Set of all possible field states after execution of ability parameter. If execution is impossible for whatever reason (such as if a cost cannot be paid, or no valid target exists), returns nil.
+     
+     */
+    static func untapArtifact(currentState: FieldState, location: CardLocation) -> Set<FieldState>?{
+        
+        let validLands = currentState.battlefield.filter { (fieldCard) -> Bool in
+            return fieldCard.card.isArtifact() && fieldCard.isTapped
+        }//filter down to the tapped artifacts
+        
+        if validLands.count < 1{
+            return nil
+        }//if
+        
+        var resultStates: Set<FieldState> = Set<FieldState>()
+        
+        for landFieldcard in validLands{
+            let newState: FieldState = FieldState(state: currentState)
+            let validIndex = newState.battlefield.index { (candidate) -> Bool in
+                return candidate == landFieldcard
+                }!
+            newState.battlefield[validIndex].isTapped = true
+            resultStates.insert(newState)
+        }//for each valid, tapped artifact
+        
+        return resultStates
+    }//untapArtifact
     
 }//AbilityParameter_Functions
